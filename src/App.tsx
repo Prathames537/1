@@ -24,6 +24,9 @@ import FeedbackPage from "./pages/FeedbackPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import EmergencyServicesPage from "./pages/EmergencyServicesPage";
 import RemindersPage from "./pages/RemindersPage";
+import EmergencyHelpPage from "./pages/EmergencyHelpPage";
+import BloodBankPage from "./pages/BloodBankPage";
+import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +64,9 @@ const App = () => (
           <Route path="/documents" element={<DocumentsPage />} />
           <Route path="/emergency" element={<EmergencyServicesPage />} />
           <Route path="/reminders" element={<RemindersPage />} />
+          <Route path="/emergency-help" element={<EmergencyHelpPage />} />
+          <Route path="/blood-bank" element={<BloodBankPage />} />
+          <Route path="/organ-repository" element={<OrganRepositoryPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
