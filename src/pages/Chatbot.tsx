@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -17,6 +17,12 @@ export default function Chatbot() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Clear chat history on component mount or HMR to start fresh
+  useEffect(() => {
+    setMessages([]);
+    setInput("");
+  }, []);
 
   // Load chat history for logged-in user
   // Removed unused fetchHistory function
