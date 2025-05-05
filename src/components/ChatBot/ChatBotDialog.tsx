@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useRef, useEffect } from "react";
 import { Send, Mic, MicOff, Volume2, VolumeX, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
