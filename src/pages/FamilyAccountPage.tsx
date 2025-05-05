@@ -38,7 +38,7 @@ const FamilyAccountPage = () => {
     e.preventDefault();
     setLoading(true); setSaved(false);
     try {
-      for (const mem of members) {
+      for (let i = 0; i < members.length; i++) {
         // Placeholder for the removed getAuth and addFamilyMember functions
       }
       setSaved(true);

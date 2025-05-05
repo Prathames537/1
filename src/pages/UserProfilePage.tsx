@@ -17,14 +17,14 @@ const UserProfilePage = () => {
       setError(null);
       try {
         // const auth = getAuth();
-        const user = auth.currentUser;
-        if (user) {
-          const data = await getUserProfile(user.uid);
-          setProfile(data);
-          setForm(data || {});
-        } else {
-          setError('No user logged in');
-        }
+        // const user = auth.currentUser;
+        // if (user) {
+        const data = await getUserProfile();
+        setProfile(data);
+        setForm(data || {});
+        // } else {
+        //   setError('No user logged in');
+        // }
       } catch (err: any) {
         setError("Failed to load profile: " + (err?.message || 'Unknown error'));
       } finally {
@@ -43,14 +43,14 @@ const UserProfilePage = () => {
     setError(null);
     try {
       // const auth = getAuth();
-      const user = auth.currentUser;
-      if (user) {
-        await updateUserProfile(user.uid, form);
-        setProfile({ ...profile, ...form } as UserProfile);
-        setEdit(false);
-      } else {
-        setError('No user logged in');
-      }
+      // const user = auth.currentUser;
+      // if (user) {
+      await updateUserProfile(form);
+      setProfile({ ...profile, ...form } as UserProfile);
+      setEdit(false);
+      // } else {
+      //   setError('No user logged in');
+      // }
     } catch (err: any) {
       setError("Failed to update profile: " + (err?.message || 'Unknown error'));
     } finally {

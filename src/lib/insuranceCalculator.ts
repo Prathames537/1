@@ -6,6 +6,18 @@ export interface InsuranceResult {
   reason?: string;
 }
 
+export interface UserProfile {
+  uid?: string;
+  name: string;
+  age: number;
+  email?: string;
+  phone?: string;
+  weight: number;
+  height: number;
+  smoker: boolean;
+  chronicDiseases?: string[];
+}
+
 export function calculateInsurance(profile: UserProfile): InsuranceResult {
   // Example rules (customize as needed)
   if (!profile.age || !profile.weight || !profile.height) {
