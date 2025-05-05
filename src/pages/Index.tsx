@@ -6,7 +6,7 @@ import FamilyHealthSection from "@/components/FamilyHealthSection";
 import CitiesSection from "@/components/CitiesSection";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { Stethoscope, PillIcon, FileCheck, Home, Bot, FileText, AlertTriangle, Droplet, Heart, Bell } from "lucide-react";
+import { Bot, FileText, AlertTriangle, Droplet, Heart, Bell } from "lucide-react";
 
 const Index = () => {
   return (
