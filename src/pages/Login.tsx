@@ -193,7 +193,6 @@ const Login = () => {
                   <Button type="submit" className="w-full bg-welli-dark-green hover:bg-welli-green" disabled={loading}>
                     {loading ? (step === 1 ? "Sending..." : "Verifying...") : (step === 1 ? "Get OTP" : "Verify & Login")}
                   </Button>
-                  <div id="recaptcha-container" />
                 </form>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">

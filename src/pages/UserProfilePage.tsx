@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-// import { getAuth } from "firebase/auth";
 import { getUserProfile, updateUserProfile, UserProfile } from "@/features/user";
 
 const UserProfilePage = () => {
@@ -16,17 +15,11 @@ const UserProfilePage = () => {
       setLoading(true);
       setError(null);
       try {
-        // const auth = getAuth();
-        // const user = auth.currentUser;
-        // if (user) {
         const data = await getUserProfile();
         if (data) {
           setProfile(data);
           setForm(data);
         }
-        // } else {
-        //   setError('No user logged in');
-        // }
       } catch (err: any) {
         setError("Failed to load profile: " + (err?.message || 'Unknown error'));
       } finally {
@@ -44,15 +37,9 @@ const UserProfilePage = () => {
     setLoading(true);
     setError(null);
     try {
-      // const auth = getAuth();
-      // const user = auth.currentUser;
-      // if (user) {
       await updateUserProfile(form);
       setProfile((prev) => ({ ...prev, ...form } as UserProfile));
       setEdit(false);
-      // } else {
-      //   setError('No user logged in');
-      // }
     } catch (err: any) {
       setError("Failed to update profile: " + (err?.message || 'Unknown error'));
     } finally {

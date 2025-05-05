@@ -14,8 +14,6 @@ export function useAppointments() {
     setError(null);
     setSuccess(false);
     try {
-      // const auth = getAuth();
-      // const user = auth.currentUser;
       await createAppointment({
         userId: "guest",
         ...form,

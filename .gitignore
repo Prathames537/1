@@ -37,6 +37,9 @@ out/
 .cache/
 .temp/
 .vercel/
+# Firebase local cache
+.firebase/
+.firebaserc
 
 # Testing
 coverage/
