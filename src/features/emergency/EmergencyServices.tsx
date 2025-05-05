@@ -4,16 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { MapPin, Phone, Heart, Droplet, AlertTriangle } from 'lucide-react';
-
-interface EmergencyLocation {
-  latitude: number;
-  longitude: number;
-}
+import { Heart, Droplet, AlertTriangle } from 'lucide-react';
 
 export const EmergencyServices: React.FC = () => {
-  const [location, setLocation] = useState<EmergencyLocation | null>(null);
-  const [emergencyType, setEmergencyType] = useState<string>('');
   const [isEmergencyActive, setIsEmergencyActive] = useState(false);
 
   const handleEmergencyRequest = async () => {
@@ -25,7 +18,6 @@ export const EmergencyServices: React.FC = () => {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           };
-          setLocation(location);
           setIsEmergencyActive(true);
           // Here you would typically make an API call to alert emergency services
           alertEmergencyServices(location);

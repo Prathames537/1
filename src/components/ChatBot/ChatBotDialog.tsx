@@ -163,20 +163,6 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     }
   };
 
-  const createAlarm = (type: Alarm["type"], title: string, description: string, time: Date, repeat?: Alarm["repeat"]) => {
-    const newAlarm: Alarm = {
-      id: Date.now().toString(),
-      type,
-      title,
-      description,
-      time,
-      isActive: true,
-      repeat
-    };
-    setAlarms(prev => [...prev, newAlarm]);
-    return newAlarm;
-  };
-
   const deleteAlarm = (alarmId: string) => {
     setAlarms(prev => prev.filter(alarm => alarm.id !== alarmId));
   };

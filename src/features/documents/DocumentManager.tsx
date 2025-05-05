@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileUpload, FileText, Image, X } from 'lucide-react';
+import { FileText, Image, X } from 'lucide-react';
 
 interface Document {
   id: string;

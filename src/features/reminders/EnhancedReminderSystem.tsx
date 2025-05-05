@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Pill, StretchHorizontal, Dumbbell, Clock } from 'lucide-react';
+import { Bell, Pill, StretchHorizontal, Dumbbell } from 'lucide-react';
 
 interface Reminder {
   id: string;
