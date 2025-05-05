@@ -20,8 +20,10 @@ const UserProfilePage = () => {
         // const user = auth.currentUser;
         // if (user) {
         const data = await getUserProfile();
-        setProfile(data);
-        setForm(data || {});
+        if (data) {
+          setProfile(data);
+          setForm(data);
+        }
         // } else {
         //   setError('No user logged in');
         // }
@@ -46,7 +48,7 @@ const UserProfilePage = () => {
       // const user = auth.currentUser;
       // if (user) {
       await updateUserProfile(form);
-      setProfile({ ...profile, ...form } as UserProfile);
+      setProfile((prev) => ({ ...prev, ...form } as UserProfile));
       setEdit(false);
       // } else {
       //   setError('No user logged in');

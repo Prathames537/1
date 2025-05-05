@@ -62,21 +62,17 @@ const Login = () => {
       }
       setLoading(true);
       try {
-        // Setup invisible reCAPTCHA (only once)
-        if (!recaptchaRef.current) {
-          recaptchaRef.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            size: 'invisible',
-            callback: () => {},
+        // TODO: Implement OTP sending logic with your backend or a third-party service
+        // Placeholder: Simulate OTP sent
+        setTimeout(() => {
+          toast({
+            title: "OTP Sent",
+            description: "A 6-digit OTP has been sent to your phone number"
           });
-        }
-        const fullPhone = '+91' + phoneNumber;
-        const confirmation = await signInWithPhoneNumber(auth, fullPhone, recaptchaRef.current);
-        setConfirmationResult(confirmation);
-        toast({
-          title: "OTP Sent",
-          description: "A 6-digit OTP has been sent to your phone number"
-        });
-        setStep(2);
+          setStep(2);
+          setLoading(false);
+        }, 1000);
+        return;
       } catch (err: any) {
         toast({
           title: "Error sending OTP",

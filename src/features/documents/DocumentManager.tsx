@@ -23,7 +23,7 @@ export const DocumentManager: React.FC = () => {
   }, []);
 
   const fetchDocuments = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('documents')
       .select('*')
       .order('created_at', { ascending: false });
@@ -48,7 +48,7 @@ export const DocumentManager: React.FC = () => {
       const file = files[0];
       const filePath = `${Date.now()}-${file.name}`;
       // Upload to Supabase Storage
-      const { data: storageData, error: storageError } = await supabase.storage
+      const { error: storageError } = await supabase.storage
         .from('documents')
         .upload(filePath, file);
       if (storageError) throw storageError;
@@ -57,7 +57,7 @@ export const DocumentManager: React.FC = () => {
         .from('documents')
         .getPublicUrl(filePath);
       // Save metadata to table
-      const { data: docData, error: docError } = await supabase
+      const { error: docError } = await supabase
         .from('documents')
         .insert([
           {
