@@ -7,7 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-// We now proxy AI requests via our /api/chat endpoint, so we no longer need direct HF constants
+// Local dev: hit HF directly; production: proxy via our serverless function
+const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
   id: string;
@@ -119,11 +121,18 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
     try {
-      // Proxy via our serverless function to hide the API key and avoid CORS
-      const res = await fetch('/api/chat', {
+      // Choose endpoint: direct HF in dev, or our proxy in production
+      const apiEndpoint = import.meta.env.DEV ? HF_API_URL : '/api/chat';
+      const headers = import.meta.env.DEV
+        ? { 'Content-Type': 'application/json', Authorization: `Bearer ${HF_API_KEY}` }
+        : { 'Content-Type': 'application/json' };
+      const body = import.meta.env.DEV
+        ? JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } })
+        : JSON.stringify({ prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } });
+      const res = await fetch(apiEndpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } }),
+        headers,
+        body,
       });
       let reply = '';
       if (res.ok) {
