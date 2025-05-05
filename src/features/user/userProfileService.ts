@@ -3,4 +3,4 @@
 
 export function getUserProfile() { return { name: 'Demo User', email: 'demo@example.com', phone: '1234567890' }; }
 
-export function updateUserProfile() { /* TODO: Implement Supabase logic */ }
+export function updateUserProfile(_profile: any) { /* TODO: Implement Supabase logic */ }

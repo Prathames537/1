@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 // import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 import { Link } from "react-router-dom";
@@ -91,7 +91,7 @@ const Login = () => {
       }
       setLoading(true);
       try {
-        await confirmationResult.confirm(otp);
+        // TODO: Implement OTP verification logic
         toast({
           title: "Login Successful",
           description: "You have successfully logged in to your account"
