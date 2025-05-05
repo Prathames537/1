@@ -1,10 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Mic, MicOff, Volume2, VolumeX } from "lucide-react";
+import { Send, Mic, MicOff, Volume2, VolumeX, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
+
+// Import HF constants
+const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
   id: string;
@@ -107,59 +111,37 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     setUserInput("");
     setIsLoading(true);
 
-    // Send to Ollama
-    const OLLAMA_ENDPOINT = "http://localhost:11434/api/chat";
-    const newMessages = [...messages, userMessage];
+    // Call Hugging Face Inference API for a concise AI response with service recommendation
+    // Limit history to last 10 messages
+    const maxHistory = 10;
+    const historyMessages = [...messages, userMessage].slice(-maxHistory);
+    const systemPrompt =
+      "You are Welli's Health Assistant. Answer in 1–2 sentences and recommend one Welli service.";
+    const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
+    const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
     try {
-      const res = await fetch(OLLAMA_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "mistral",
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
-        }),
+      // Proxy via our serverless function to hide the API key and avoid CORS
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } }),
       });
-      let reply = "";
-      if (res.body) {
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        let done = false;
-        while (!done) {
-          const { value, done: doneReading } = await reader.read();
-          done = doneReading;
-          if (value) {
-            const lines = decoder.decode(value).split("\n").filter(Boolean);
-            for (const line of lines) {
-              try {
-                const data = JSON.parse(line);
-                reply += data.message?.content || "";
-              } catch (e) {
-                // Ignore malformed lines
-              }
-            }
-          }
-        }
+      let reply = '';
+      if (res.ok) {
+        const data = await res.json();
+        // HF returns an array of generated texts
+        reply = data[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
+      } else {
+        reply = 'Sorry, I could not get a response from the AI.';
       }
-      const botResponse: Message = {
-        id: Date.now().toString() + "-bot",
-        role: "assistant",
-        content: reply || "Sorry, I could not get a response from the AI.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botResponse]);
-      setIsLoading(false);
-      if (isSpeakerOn) {
-        speakText(botResponse.content);
-      }
+      const botResponse: Message = { id: Date.now().toString() + '-bot', role: 'assistant', content: reply, timestamp: new Date() };
+      setMessages(prev => [...prev, botResponse]);
     } catch (err) {
       setIsLoading(false);
-      const errorMsg: Message = {
-        id: Date.now().toString() + "-error",
-        role: "assistant",
-        content: "Error connecting to AI. Please try again later.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+      const errorMsg: Message = { id: Date.now().toString() + '-error', role: 'assistant', content: 'Error connecting to AI. Please try again later.', timestamp: new Date() };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -225,10 +207,23 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl h-[80vh] flex flex-col">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-lg font-medium">Welli Health Assistant</h2>
+          <Button variant="ghost" size="icon" onClick={() => { setMessages([INITIAL_MESSAGE]); toast.success("Conversation cleared"); }}>
+            <Trash className="h-5 w-5" />
+          </Button>
+        </div>
         <div className="flex-1 overflow-y-auto space-y-4 p-4">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
+          {isLoading && (
+            <div className="flex justify-start mb-4">
+              <div className="max-w-[80%] px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-400 italic">
+                Typing...
+              </div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
         <div className="flex items-center gap-2 p-4 border-t">
