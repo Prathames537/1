@@ -31,7 +31,7 @@ export const EmergencyServices: React.FC = () => {
     }
   };
 
-  const alertEmergencyServices = async (location: EmergencyLocation) => {
+  const alertEmergencyServices = async (location: any) => {
     // This would be connected to your backend service
     // to alert nearby hospitals, ambulances, and emergency responders
     console.log('Alerting emergency services at:', location);
