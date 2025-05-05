@@ -1,6 +1,6 @@
 // User Profile Types
 export interface UserProfile {
-  uid: string;
+  uid?: string;
   name: string;
   email?: string;
   phone?: string;

@@ -17,8 +17,6 @@ const Login = () => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState<any>(null);
-  const recaptchaRef = useRef<any>(null);
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
