@@ -61,7 +61,7 @@ const Index = () => {
                 <p className="text-welli-text-medium text-sm">Set medicine, yoga, and exercise reminders</p>
               </div>
             </Link>
-            <Link to="/chatbot" className="hover:scale-105 transition-transform duration-300">
+            <Link to="/ai-assistant" className="hover:scale-105 transition-transform duration-300">
               <div className="h-full rounded-xl shadow-lg border-2 bg-pink-100 border-pink-300 p-6 text-center flex flex-col items-center justify-center">
                 <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
                   <Bot className="w-8 h-8 text-pink-600" />

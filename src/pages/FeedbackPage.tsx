@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { supabase } from '@/lib/supabaseClient';
 
 const FeedbackPage = () => {
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Send feedback to Firestore or email
+    await supabase.from('feedback').insert([
+      { message: feedback }
+    ]);
     setSubmitted(true);
   };
 

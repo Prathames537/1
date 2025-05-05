@@ -1,9 +1,6 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getAuth } from "firebase/auth";
-import { db } from "@/lib/firebase";
-import { collection, addDoc, Timestamp } from "firebase/firestore";
 
 // Hugging Face Inference API endpoint and API key
 const HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1";
@@ -41,14 +38,7 @@ export default function Chatbot() {
 
   // Save chat history
   const saveHistory = async (chat: ChatMessage[]) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user) return;
-    await addDoc(collection(db, "chats"), {
-      userId: user.uid,
-      messages: chat,
-      createdAt: Timestamp.now(),
-    });
+    // TODO: Migrate chat history logic to Supabase if needed.
   };
 
   const sendMessage = async () => {

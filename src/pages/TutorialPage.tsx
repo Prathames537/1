@@ -5,44 +5,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-
-const defaultSteps = [
-  {
-    title: "Book a Visit",
-    description: "Select a convenient date and time for your home healthcare visit.",
-    image: "/tutorial-step1.svg",
-  },
-  {
-    title: "Assistant Arrives",
-    description: "Our healthcare assistant will arrive at your doorstep with all necessary equipment.",
-    image: "/tutorial-step2.svg",
-  },
-  {
-    title: "Initial Health Check",
-    description: "The assistant will check your vital signs like temperature, blood pressure, and oxygen levels.",
-    image: "/tutorial-step3.svg",
-  },
-  {
-    title: "Doctor Consultation",
-    description: "Connect with a specialist doctor through video call facilitated by the assistant.",
-    image: "/tutorial-step4.svg",
-  },
-  {
-    title: "Treatment Plan",
-    description: "Receive a personalized treatment plan based on your consultation.",
-    image: "/tutorial-step5.svg",
-  },
-  {
-    title: "Services at Home",
-    description: "Get medicines and other healthcare services delivered to your doorstep.",
-    image: "/tutorial-step6.svg",
-  },
-];
+import { supabase } from '@/lib/supabaseClient';
 
 const TutorialPage = () => {
-  const [steps, setSteps] = useState<any[]>(defaultSteps);
+  const [steps, setSteps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,11 +16,9 @@ const TutorialPage = () => {
     const fetchTutorials = async () => {
       setLoading(true);
       try {
-        const snap = await getDocs(collection(db, "tutorials"));
-        if (!snap.empty) {
-          const docs = snap.docs.map(doc => doc.data());
-          setSteps(docs);
-        }
+        const { data, error } = await supabase.from('tutorials').select('*').order('step_number', { ascending: true });
+        if (error) throw error;
+        setSteps(data || []);
       } catch (err: any) {
         setError("Failed to load tutorials");
       } finally {

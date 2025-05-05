@@ -2,23 +2,24 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Pill, Search, ShoppingCart, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { getAuth } from "firebase/auth";
-import { orderMedicine } from "@/lib/firestoreMedicines";
+import { useState, useEffect } from "react";
+import { supabase } from '@/lib/supabaseClient';
 
 const OrderMedicines = () => {
-  const popularMedicines = [
-    { name: "Paracetamol 500mg", price: "₹35", type: "Tablet" },
-    { name: "Cetrizine 10mg", price: "₹48", type: "Tablet" },
-    { name: "Azithromycin 500mg", price: "₹120", type: "Tablet" },
-    { name: "Multivitamin Complex", price: "₹250", type: "Capsule" },
-    { name: "Ibuprofen 400mg", price: "₹45", type: "Tablet" },
-    { name: "Calcium + Vitamin D3", price: "₹290", type: "Tablet" }
-  ];
+  const [medicines, setMedicines] = useState<any[]>([]);
   const [orderQty, setOrderQty] = useState<{ [key: string]: number }>({});
   const [loading, setLoading] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchMedicines();
+  }, []);
+
+  const fetchMedicines = async () => {
+    const { data } = await supabase.from('medicines').select('*');
+    setMedicines(data || []);
+  };
 
   const handleQtyChange = (name: string, val: number) => {
     setOrderQty(q => ({ ...q, [name]: val }));
@@ -27,14 +28,14 @@ const OrderMedicines = () => {
   const handleOrder = async (medicine: any) => {
     setLoading(medicine.name); setSuccess(null); setError(null);
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      await orderMedicine({
-        userId: user?.uid || "guest",
-        medicineName: medicine.name,
-        quantity: orderQty[medicine.name] || 1,
-        price: medicine.price,
-      });
+      await supabase.from('medicine_orders').insert([
+        {
+          medicine_id: medicine.id,
+          medicine_name: medicine.name,
+          quantity: orderQty[medicine.name] || 1,
+          price: medicine.price,
+        },
+      ]);
       setSuccess(`Order placed for ${medicine.name}`);
       setOrderQty(q => ({ ...q, [medicine.name]: 1 }));
     } catch (err: any) {
@@ -78,7 +79,7 @@ const OrderMedicines = () => {
             <h2 className="text-xl font-semibold mb-4 text-welli-text-dark">Popular Medicines</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {popularMedicines.map((medicine, index) => (
+              {medicines.map((medicine, index) => (
                 <div key={index} className="border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center mb-3">
                     <div className="bg-welli-pale-green p-2 rounded-full mr-3">

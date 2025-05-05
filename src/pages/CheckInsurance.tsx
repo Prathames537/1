@@ -5,7 +5,7 @@ import { Shield, Users, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 import { getUserProfile, createOrUpdateUserProfile } from "@/lib/firestoreUser";
 import { calculateInsurance } from "@/lib/insuranceCalculator";
 
@@ -24,15 +24,15 @@ const CheckInsurance = () => {
     e.preventDefault();
     setLoading(true); setError(null); setResult(null);
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
+      // const auth = getAuth();
+      // const user = auth.currentUser;
       let profile: any = null;
-      if (user) {
-        profile = await getUserProfile(user.uid);
-      }
+      // if (user) {
+      //   profile = await getUserProfile(user.uid);
+      // }
       // Prefer Firestore profile, else use form input
       const userProfile = profile || {
-        uid: user?.uid || "guest",
+        uid: "guest",
         name: form.name,
         age: Number(form.age),
         email: form.email,
@@ -44,9 +44,9 @@ const CheckInsurance = () => {
       };
       const insurance = calculateInsurance(userProfile);
       setResult(insurance);
-      if (user) {
-        await createOrUpdateUserProfile(userProfile);
-      }
+      // if (user) {
+      //   await createOrUpdateUserProfile(userProfile);
+      // }
     } catch (err: any) {
       setError(err.message || "Failed to check eligibility");
     } finally {

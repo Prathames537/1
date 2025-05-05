@@ -1,7 +1,5 @@
 import { useState, useRef } from "react";
-import { auth } from "@/lib/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-
+// import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";

@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,7 @@ import { Users, User, Calendar, HeartPulse, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { getAuth } from "firebase/auth";
-import { addFamilyMember, getFamilyForUser } from "@/lib/firestoreFamily";
+import { supabase } from '@/lib/supabaseClient';
 
 const defaultMember = { name: "", relation: "", dob: "", gender: "", medical: "", allergies: "" };
 
@@ -25,12 +23,8 @@ const FamilyAccountPage = () => {
 
   useEffect(() => {
     const fetchFamily = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (user) {
-        const fam = await getFamilyForUser(user.uid);
-        setFamilyList(fam);
-      }
+      const { data } = await supabase.from('family_members').select('*');
+      setFamilyList(data || []);
     };
     fetchFamily();
   }, [saved]);

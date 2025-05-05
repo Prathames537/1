@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, Image, X } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Document {
   id: string;
@@ -17,24 +18,57 @@ export const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
+
+  const fetchDocuments = async () => {
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (data) {
+      setDocuments(
+        data.map((doc: any) => ({
+          id: doc.id,
+          name: doc.name,
+          type: doc.type,
+          date: doc.created_at,
+          url: doc.url,
+        }))
+      );
+    }
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-
     setIsUploading(true);
     try {
-      // Here you would typically upload the file to your storage service
-      // and get back a URL
       const file = files[0];
-      const document: Document = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: file.name,
-        type: file.type,
-        date: new Date().toISOString(),
-        url: URL.createObjectURL(file), // This is temporary, replace with actual upload URL
-      };
-
-      setDocuments([...documents, document]);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${Date.now()}-${file.name}`;
+      // Upload to Supabase Storage
+      const { data: storageData, error: storageError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file);
+      if (storageError) throw storageError;
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath);
+      // Save metadata to table
+      const { data: docData, error: docError } = await supabase
+        .from('documents')
+        .insert([
+          {
+            name: file.name,
+            type: file.type,
+            url: publicUrlData.publicUrl,
+          },
+        ]);
+      if (docError) throw docError;
+      fetchDocuments();
     } catch (error) {
       console.error('Error uploading file:', error);
     } finally {
@@ -42,8 +76,15 @@ export const DocumentManager: React.FC = () => {
     }
   };
 
-  const deleteDocument = (id: string) => {
-    setDocuments(documents.filter(doc => doc.id !== id));
+  const deleteDocument = async (id: string, url: string) => {
+    // Remove from Supabase Storage
+    const fileName = url.split('/').pop()?.split('?')[0];
+    if (fileName) {
+      await supabase.storage.from('documents').remove([fileName]);
+    }
+    // Remove from table
+    await supabase.from('documents').delete().eq('id', id);
+    fetchDocuments();
   };
 
   return (
@@ -108,7 +149,7 @@ export const DocumentManager: React.FC = () => {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => deleteDocument(doc.id)}
+                  onClick={() => deleteDocument(doc.id, doc.url)}
                 >
                   <X className="h-4 w-4" />
                 </Button>

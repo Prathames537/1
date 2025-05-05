@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,6 +8,7 @@ import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { supabase } from '@/lib/supabaseClient';
 
 const FreeTrialBookingPage = () => {
   const [date, setDate] = useState<Date>();
@@ -27,10 +27,18 @@ const FreeTrialBookingPage = () => {
     "06:00 PM - 08:00 PM"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would send this data to a backend
-    console.log({ name, phone, address, date, timeSlot, symptoms });
+    await supabase.from('free_trial_bookings').insert([
+      {
+        name,
+        phone,
+        address,
+        date: date ? date.toISOString() : null,
+        time_slot: timeSlot,
+        symptoms,
+      }
+    ]);
     setIsSubmitted(true);
   };
 

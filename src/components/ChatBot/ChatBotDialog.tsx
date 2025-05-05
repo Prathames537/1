@@ -5,6 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
+import { supabase } from '@/lib/supabaseClient';
 
 type Message = {
   id: string;
@@ -36,7 +37,7 @@ type ChatBotDialogProps = {
 };
 
 const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -44,6 +45,10 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
   const [alarms, setAlarms] = useState<Alarm[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -93,6 +98,32 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     return () => clearInterval(interval);
   }, [alarms, isSpeakerOn]);
 
+  const fetchMessages = async () => {
+    const { data } = await supabase
+      .from('chat_messages')
+      .select('*')
+      .order('timestamp', { ascending: true });
+    if (data && data.length > 0) {
+      setMessages(data.map((m: any) => ({
+        id: m.id,
+        role: m.role,
+        content: m.content,
+        timestamp: new Date(m.timestamp),
+      })));
+    } else {
+      // Insert initial message if no chat history
+      await supabase.from('chat_messages').insert([
+        {
+          id: INITIAL_MESSAGE.id,
+          role: INITIAL_MESSAGE.role,
+          content: INITIAL_MESSAGE.content,
+          timestamp: INITIAL_MESSAGE.timestamp.toISOString(),
+        },
+      ]);
+      setMessages([INITIAL_MESSAGE]);
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
@@ -103,6 +134,16 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
       timestamp: new Date(),
     };
 
+    // Insert user message into Supabase
+    await supabase.from('chat_messages').insert([
+      {
+        id: userMessage.id,
+        role: userMessage.role,
+        content: userMessage.content,
+        timestamp: userMessage.timestamp.toISOString(),
+      },
+    ]);
+
     setMessages((prev) => [...prev, userMessage]);
     setUserInput("");
     setIsLoading(true);
@@ -110,7 +151,6 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     // Send to Ollama
     const OLLAMA_ENDPOINT = "http://localhost:11434/api/chat";
     const newMessages = [...messages, userMessage];
-    console.log("Sending message to Ollama", userMessage);
     try {
       const res = await fetch(OLLAMA_ENDPOINT, {
         method: "POST",
@@ -147,6 +187,15 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
         content: reply || "Sorry, I could not get a response from the AI.",
         timestamp: new Date(),
       };
+      // Insert bot response into Supabase
+      await supabase.from('chat_messages').insert([
+        {
+          id: botResponse.id,
+          role: botResponse.role,
+          content: botResponse.content,
+          timestamp: botResponse.timestamp.toISOString(),
+        },
+      ]);
       setMessages((prev) => [...prev, botResponse]);
       setIsLoading(false);
       if (isSpeakerOn) {
@@ -154,12 +203,21 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
       }
     } catch (err) {
       setIsLoading(false);
-      setMessages((prev) => [...prev, {
+      const errorMsg: Message = {
         id: Date.now().toString() + "-error",
         role: "assistant",
         content: "Error connecting to AI. Please try again later.",
         timestamp: new Date(),
-      }]);
+      };
+      await supabase.from('chat_messages').insert([
+        {
+          id: errorMsg.id,
+          role: errorMsg.role,
+          content: errorMsg.content,
+          timestamp: errorMsg.timestamp.toISOString(),
+        },
+      ]);
+      setMessages((prev) => [...prev, errorMsg]);
     }
   };
 

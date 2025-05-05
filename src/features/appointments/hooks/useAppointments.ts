@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createAppointment } from "../appointmentsService";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
 
 import type { AppointmentForm } from '../appointmentsTypes';
 
@@ -14,10 +14,10 @@ export function useAppointments() {
     setError(null);
     setSuccess(false);
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
+      // const auth = getAuth();
+      // const user = auth.currentUser;
       await createAppointment({
-        userId: user?.uid || "guest",
+        userId: "guest",
         ...form,
       });
       setSuccess(true);

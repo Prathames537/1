@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Pill, StretchHorizontal, Dumbbell } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Reminder {
   id: string;
@@ -13,6 +14,7 @@ interface Reminder {
   time: string;
   days: string[];
   isActive: boolean;
+  created_at?: string;
 }
 
 export const EnhancedReminderSystem: React.FC = () => {
@@ -22,35 +24,45 @@ export const EnhancedReminderSystem: React.FC = () => {
     days: [],
     isActive: true,
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleAddReminder = () => {
+  useEffect(() => {
+    fetchReminders();
+  }, []);
+
+  const fetchReminders = async () => {
+    const { data } = await supabase
+      .from('reminders')
+      .select('*')
+      .order('created_at', { ascending: false });
+    setReminders(data || []);
+  };
+
+  const handleAddReminder = async () => {
     if (!newReminder.title || !newReminder.time) return;
-
-    const reminder: Reminder = {
-      id: Math.random().toString(36).substr(2, 9),
-      title: newReminder.title,
-      type: newReminder.type as 'medication' | 'yoga' | 'exercise',
-      time: newReminder.time,
-      days: newReminder.days || [],
-      isActive: true,
-    };
-
-    setReminders([...reminders, reminder]);
+    setLoading(true);
+    await supabase.from('reminders').insert([
+      {
+        title: newReminder.title,
+        type: newReminder.type,
+        time: newReminder.time,
+        days: newReminder.days,
+        isActive: true,
+      },
+    ]);
     setNewReminder({ type: 'medication', days: [], isActive: true });
+    setLoading(false);
+    fetchReminders();
   };
 
-  const toggleReminder = (id: string) => {
-    setReminders(
-      reminders.map((reminder) =>
-        reminder.id === id
-          ? { ...reminder, isActive: !reminder.isActive }
-          : reminder
-      )
-    );
+  const toggleReminder = async (id: string, current: boolean) => {
+    await supabase.from('reminders').update({ isActive: !current }).eq('id', id);
+    fetchReminders();
   };
 
-  const deleteReminder = (id: string) => {
-    setReminders(reminders.filter((reminder) => reminder.id !== id));
+  const deleteReminder = async (id: string) => {
+    await supabase.from('reminders').delete().eq('id', id);
+    fetchReminders();
   };
 
   const getIcon = (type: string) => {
@@ -132,8 +144,8 @@ export const EnhancedReminderSystem: React.FC = () => {
               ))}
             </div>
           </div>
-          <Button className="w-full" onClick={handleAddReminder}>
-            Add Reminder
+          <Button className="w-full" onClick={handleAddReminder} disabled={loading}>
+            {loading ? 'Adding...' : 'Add Reminder'}
           </Button>
         </div>
       </Card>
@@ -159,7 +171,7 @@ export const EnhancedReminderSystem: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={reminder.isActive}
-                  onCheckedChange={() => toggleReminder(reminder.id)}
+                  onCheckedChange={() => toggleReminder(reminder.id, reminder.isActive)}
                 />
                 <Button
                   variant="destructive"
