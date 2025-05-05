@@ -2,9 +2,9 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-// Hugging Face Inference API endpoint and API key
-const HF_API_URL = "https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1";
-const HF_API_KEY = process.env.NEXT_PUBLIC_HF_API_KEY; // Read from environment variable
+// Using a stronger free model for concise, service-oriented replies
+const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY; // Read from Vite environment variable
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -44,12 +44,24 @@ export default function Chatbot() {
   const sendMessage = async () => {
     if (!input.trim()) return;
     setLoading(true); setError(null);
+
     const userMsg: ChatMessage = { role: "user", content: input };
+    // Build the new messages array locally for both UI and prompt history
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
+
+    // System prompt: answer very briefly (1–2 sentences) and then recommend a Welli service
+    const systemPrompt =
+      "You are Welli's Health Assistant. Respond in 1–2 short sentences, then recommend one Welli service (e.g., appointment booking at /book-appointment, medicine orders at /order-medicines, reminders at /reminders, emergency help at /emergency-help, blood bank at /blood-bank, organ repository at /organ-repository).";
+    // Use newMessages for history to include the current user input
+    const historyLines = newMessages.map(m => `${m.role}: ${m.content}`);
+    const prompt = [
+      `system: ${systemPrompt}`,
+      ...historyLines
+    ].join("\n") + "\nassistant:";
+
     try {
-      // Send message to Hugging Face Inference API
       const res = await fetch(HF_API_URL, {
         method: "POST",
         headers: {
@@ -57,21 +69,18 @@ export default function Chatbot() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          inputs: newMessages.map(m => `${m.role}: ${m.content}`).join("\n") + "\nassistant:",
-          parameters: { max_new_tokens: 256, return_full_text: false },
+          inputs: prompt,
+          parameters: {
+            max_new_tokens: 100,
+            temperature: 0.3,
+            return_full_text: false
+          }
         }),
       });
       let reply = "";
       if (res.ok) {
         const data = await res.json();
-        if (data && data[0] && data[0].generated_text) {
-          // Extract only the assistant's reply
-          reply = data[0].generated_text.split("assistant:").pop()?.trim() || "";
-        } else if (data.generated_text) {
-          reply = data.generated_text;
-        } else {
-          reply = "Sorry, I couldn't understand that.";
-        }
+        reply = data[0]?.generated_text?.trim() || "Sorry, I couldn't answer that.";
       } else {
         reply = "Sorry, I couldn't get a response from the AI.";
       }
