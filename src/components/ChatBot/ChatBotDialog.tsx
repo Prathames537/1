@@ -181,65 +181,6 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     setAlarms(prev => prev.filter(alarm => alarm.id !== alarmId));
   };
 
-
-      if (lowerInput.includes("medicine") || lowerInput.includes("pill") || lowerInput.includes("medication")) {
-        const timeMatch = lowerInput.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i);
-        if (timeMatch) {
-          const [_, hours, minutes = "00", period = "am"] = timeMatch;
-          const time = new Date();
-          time.setHours(period.toLowerCase() === "pm" ? parseInt(hours) + 12 : parseInt(hours));
-          time.setMinutes(parseInt(minutes));
-          
-          createAlarm(
-            "medication",
-            "Medication Reminder",
-            "Time to take your medicine",
-            time,
-            "daily"
-          );
-          
-          response = `I've set a daily medication reminder for ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`;
-        } else {
-          response = "Please specify a time for your medication reminder (e.g., 'Set alarm for medicine at 9:00 AM').";
-        }
-      } else if (lowerInput.includes("appointment")) {
-        const timeMatch = lowerInput.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i);
-        if (timeMatch) {
-          const [_, hours, minutes = "00", period = "am"] = timeMatch;
-          const time = new Date();
-          time.setHours(period.toLowerCase() === "pm" ? parseInt(hours) + 12 : parseInt(hours));
-          time.setMinutes(parseInt(minutes));
-          
-          createAlarm(
-            "appointment",
-            "Appointment Reminder",
-            "You have a doctor's appointment",
-            time
-          );
-          
-          response = `I've set an appointment reminder for ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`;
-        } else {
-          response = "Please specify a time for your appointment reminder (e.g., 'Set alarm for appointment at 2:30 PM').";
-        }
-      } else if (lowerInput.includes("checkup") || lowerInput.includes("health check")) {
-        const timeMatch = lowerInput.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i);
-        if (timeMatch) {
-          const [_, hours, minutes = "00", period = "am"] = timeMatch;
-          const time = new Date();
-          time.setHours(period.toLowerCase() === "pm" ? parseInt(hours) + 12 : parseInt(hours));
-          time.setMinutes(parseInt(minutes));
-          
-          createAlarm(
-            "checkup",
-            "Health Checkup Reminder",
-            "Time for your regular health checkup",
-            time,
-            "weekly"
-          );
-          
-          response = `I've set a weekly health checkup reminder for ${time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`;
-
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();

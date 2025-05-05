@@ -21,6 +21,9 @@ import UserProfilePage from "./pages/UserProfilePage";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import FeedbackPage from "./pages/FeedbackPage";
+import DocumentsPage from "./pages/DocumentsPage";
+import EmergencyServicesPage from "./pages/EmergencyServicesPage";
+import RemindersPage from "./pages/RemindersPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +58,9 @@ const App = () => (
           <Route path="/admin" element={<AdminPanelPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/documents" element={<DocumentsPage />} />
+          <Route path="/emergency" element={<EmergencyServicesPage />} />
+          <Route path="/reminders" element={<RemindersPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
