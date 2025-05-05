@@ -24,6 +24,16 @@ export default function Chatbot() {
     setInput("");
   }, []);
 
+  // Also clear chat when the window/tab is about to close
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      setMessages([]);
+      setInput("");
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
   // Load chat history for logged-in user
   // Removed unused fetchHistory function
 //   const auth = getAuth();
