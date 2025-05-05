@@ -46,7 +46,6 @@ export const DocumentManager: React.FC = () => {
     setIsUploading(true);
     try {
       const file = files[0];
-      const fileExt = file.name.split('.').pop();
       const filePath = `${Date.now()}-${file.name}`;
       // Upload to Supabase Storage
       const { data: storageData, error: storageError } = await supabase.storage

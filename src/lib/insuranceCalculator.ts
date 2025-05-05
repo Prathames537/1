@@ -1,5 +1,4 @@
 // Insurance calculator logic for eligibility and premium
-import { UserProfile } from "@/lib/firestoreUser";
 
 export interface InsuranceResult {
   eligible: boolean;

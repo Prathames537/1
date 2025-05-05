@@ -37,7 +37,7 @@ export default function Chatbot() {
 
 
   // Save chat history
-  const saveHistory = async (chat: ChatMessage[]) => {
+  const saveHistory = async () => {
     // TODO: Migrate chat history logic to Supabase if needed.
   };
 
@@ -77,7 +77,7 @@ export default function Chatbot() {
       }
       const aiMsg: ChatMessage = { role: "assistant", content: reply };
       setMessages(msgs => [...msgs, aiMsg]);
-      await saveHistory([...newMessages, aiMsg]);
+      await saveHistory();
     } catch (err: any) {
       setError("Failed to get response from AI. Please try again.");
     } finally {

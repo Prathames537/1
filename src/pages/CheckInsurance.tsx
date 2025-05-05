@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 import { useState } from "react";
 // import { getAuth } from "firebase/auth";
-import { getUserProfile, createOrUpdateUserProfile } from "@/lib/firestoreUser";
 import { calculateInsurance } from "@/lib/insuranceCalculator";
 
 const CheckInsurance = () => {

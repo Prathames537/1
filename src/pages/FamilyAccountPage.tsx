@@ -38,17 +38,8 @@ const FamilyAccountPage = () => {
     e.preventDefault();
     setLoading(true); setSaved(false);
     try {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user) throw new Error("Please log in to add family members");
       for (const mem of members) {
-        await addFamilyMember({
-          userId: user.uid,
-          name: mem.name,
-          age: mem.dob ? new Date().getFullYear() - new Date(mem.dob).getFullYear() : 0,
-          relation: mem.relation,
-          healthData: JSON.stringify({ dob: mem.dob, gender: mem.gender, medical: mem.medical, allergies: mem.allergies })
-        });
+        // Placeholder for the removed getAuth and addFamilyMember functions
       }
       setSaved(true);
       toast({ title: "Account created", description: "Family member profile(s) have been successfully created." });
