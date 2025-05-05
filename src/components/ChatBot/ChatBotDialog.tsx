@@ -129,6 +129,10 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
       const body = import.meta.env.DEV
         ? JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } })
         : JSON.stringify({ prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } });
+      // Debug logs to trace API call
+      console.log('🌐 Chatbot API Endpoint:', apiEndpoint);
+      console.log('📑 Chatbot Request Headers:', headers);
+      console.log('📝 Chatbot Request Body:', body);
       const res = await fetch(apiEndpoint, {
         method: 'POST',
         headers,
