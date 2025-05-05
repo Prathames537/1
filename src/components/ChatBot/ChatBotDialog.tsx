@@ -6,9 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-// Import HF constants
-const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
-const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
+// We now proxy AI requests via our /api/chat endpoint, so we no longer need direct HF constants
 
 type Message = {
   id: string;
