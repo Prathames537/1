@@ -74,3 +74,5 @@ The server will start at http://localhost:8000. The frontend will automatically 
 This project, its schema, and all features are the original intellectual property of Prathamesh. Any copying, reproduction, or use without explicit permission is strictly prohibited and may result in legal action.
 
 ---
+
+Deployment trigger: minor update.
