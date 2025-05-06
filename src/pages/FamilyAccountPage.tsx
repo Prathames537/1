@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/lib/supabaseClient';
 
-const defaultMember = { name: "", relation: "", dob: "", gender: "", medical: "", allergies: "" };
+const defaultMember = { name: "", relation: "", dob: "", gender: "", age: "", medical: "", allergies: "" };
 
 const FamilyAccountPage = () => {
   const { toast } = useToast();

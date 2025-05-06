@@ -11,6 +11,7 @@ const TreatmentPlanPage = () => {
   const treatmentPlan = {
     patientName: "Rajiv Sharma",
     diagnosis: "Upper Respiratory Tract Infection",
+    description: "Upper Respiratory Tract Infection",
     date: "14 April, 2025",
     doctor: "Dr. Ananya Patel",
     medications: [
