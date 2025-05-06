@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild": "cd src/doctors && npm install && npm run build && cd ../../src/assistants && npm install && npm run build && cd ../.. && mkdir -p dist/doctors && mkdir -p dist/assistants && xcopy /E /I /Y src\\doctors\\dist dist\\doctors && xcopy /E /I /Y src\\assistants\\dist dist\\assistants",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite preview"

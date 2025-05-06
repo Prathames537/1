@@ -97,6 +97,22 @@ src/
 
 The project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel and it will automatically deploy.
 
+## Sub-Apps Deployment (Doctors & Assistants)
+
+This monorepo contains three apps: Patients (main), Doctors, and Assistants.
+
+- The main app is built and served from `/dist`.
+- The doctors app is built and served from `/dist/doctors`.
+- The assistants app is built and served from `/dist/assistants`.
+
+**To ensure all sub-apps are deployed:**
+
+- Run `npm run build` (this builds the main app).
+- Run `npm run postbuild` (this builds the doctors and assistants apps and copies their outputs into the correct folders for deployment).
+- Deploy the contents of `/dist` to your static host (e.g., Vercel).
+
+The `vercel.json` is already configured to route `/doctors/*` and `/assistants/*` to their respective apps, so you will never see a 404 for those routes if you follow this process.
+
 ## Contributing
 
 1. Fork the repository
