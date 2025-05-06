@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { getUserProfile, updateUserProfile, UserProfile } from "@/features/user";
+import { getUserProfile, updateUserProfile } from "@/features/user";
+import { UserProfile } from "@/features/user/userTypes";
 
 const UserProfilePage = () => {
+  // TODO: Replace with real user ID from auth context
+  const userId = "demo-user-id";
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +18,7 @@ const UserProfilePage = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getUserProfile();
+        const data = await getUserProfile(userId);
         if (data) {
           setProfile(data);
           setForm(data);
@@ -27,7 +30,7 @@ const UserProfilePage = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [userId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -37,7 +40,7 @@ const UserProfilePage = () => {
     setLoading(true);
     setError(null);
     try {
-      await updateUserProfile(form);
+      await updateUserProfile(userId, form);
       setProfile((prev) => ({ ...prev, ...form } as UserProfile));
       setEdit(false);
     } catch (err: any) {

@@ -10,7 +10,6 @@ import { Shield, AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { RadioGroup } from "@/components/ui/radio-group";
 
 const Login = () => {
   const [aadhaarNumber, setAadhaarNumber] = useState("");
