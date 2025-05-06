@@ -88,10 +88,10 @@ const Login = () => {
                     <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => setShowPatientLogin(true)}>
                       Login as Patient
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/doctors'}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.open('https://wellifordoctors.vercel.app', '_blank')}>
                       Login as Doctor
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/assistants'}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.open('https://welliforassistants.vercel.app', '_blank')}>
                       Login as Assistant
                     </Button>
                   </div>
