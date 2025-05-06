@@ -10,6 +10,7 @@ import { Shield, AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { RadioGroup } from "@/components/ui/radio-group";
 
 const Login = () => {
   const [aadhaarNumber, setAadhaarNumber] = useState("");
@@ -17,6 +18,7 @@ const Login = () => {
   const [step, setStep] = useState(1);
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState("patient");
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -97,7 +99,13 @@ const Login = () => {
           description: "You have successfully logged in to your account"
         });
         setTimeout(() => {
-          window.location.href = "/";
+          if (role === "doctor") {
+            window.location.href = "/doctors";
+          } else if (role === "assistant") {
+            window.location.href = "/assistants";
+          } else {
+            window.location.href = "/";
+          }
         }, 1500);
       } catch (err: any) {
         toast({
@@ -132,6 +140,44 @@ const Login = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {step === 1 ? (
                     <>
+                      <div className="space-y-2">
+                        <Label htmlFor="role">Are you a:</Label>
+                        <div className="flex space-x-4">
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              name="role"
+                              value="patient"
+                              checked={role === "patient"}
+                              onChange={() => setRole("patient")}
+                              className="mr-2"
+                            />
+                            Patient
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              name="role"
+                              value="doctor"
+                              checked={role === "doctor"}
+                              onChange={() => setRole("doctor")}
+                              className="mr-2"
+                            />
+                            Doctor
+                          </label>
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              name="role"
+                              value="assistant"
+                              checked={role === "assistant"}
+                              onChange={() => setRole("assistant")}
+                              className="mr-2"
+                            />
+                            Assistant
+                          </label>
+                        </div>
+                      </div>
                       <div className="space-y-2">
                         <Label htmlFor="aadhaar">Aadhaar Number</Label>
                         <div className="relative">

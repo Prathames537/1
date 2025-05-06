@@ -1,4 +1,22 @@
 // Feedback Service: migrate to Supabase for feedback logic
 // TODO: Implement Supabase-based feedback functions here
 
-export function submitFeedback() { /* TODO: Implement Supabase logic */ }
+import { supabase } from '@/lib/supabaseClient';
+
+export async function submitFeedback(feedback: { message: string; user_id?: string }) {
+  const { data, error } = await supabase
+    .from('feedback')
+    .insert([feedback])
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+export async function getFeedback() {
+  const { data, error } = await supabase
+    .from('feedback')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
