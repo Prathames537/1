@@ -30,16 +30,23 @@ A modern healthcare platform built with React, TypeScript, and Vite.
 - **Carousel:** Embla Carousel
 - **Icons:** Lucide React
 
-## Code Style, Linting & Contributing
+## Code Quality, Structure & Maintainability
 
+- **No 'lovable-tagger' or similar meta-programming dependencies.**
+- **Business logic is separated by feature for maintainability.**
+- **UI components are presentational and reusable.**
+- **Pages are thin, focused on layout and rendering.**
+- **No unnecessary cross-feature coupling.**
+- **Type Safety:** All business logic and components use TypeScript interfaces.
+- **Error Handling:** Global error boundary and robust async error handling recommended (see `App.tsx`).
 - **Linting:** ESLint is set up with TypeScript and React best practices. Run `npx eslint --fix src` to auto-fix issues.
 - **Formatting:** Prettier is configured for consistent code style. Run `npx prettier --write src` to auto-format.
-- **Type Safety:** All business logic and components use TypeScript interfaces.
-- **Error Handling:** A global error boundary and robust async error handling is recommended (see `App.tsx`).
-- **Contributing:**
+- **Best Practices:**
   - Add new features in `src/features/<feature>`.
   - Keep UI components presentational, move logic to hooks/services.
   - Document non-obvious logic with concise comments.
+  - Avoid tight coupling between features; use hooks/services for shared logic.
+  - All code changes should be tested for build and type safety (`npm run build`, `npx tsc --noEmit`).
 
 ## Getting Started
 
@@ -76,7 +83,7 @@ src/
 │   └── feedback/        # Feedback logic, types, service
 ├── pages/               # Page components (thin, view-only)
 ├── hooks/               # Global custom hooks (if any)
-├── lib/                 # Low-level utilities (e.g., firebase config)
+├── lib/                 # Low-level utilities (e.g., supabase config)
 ├── App.tsx              # App root and routing
 ├── main.tsx             # Entry point
 ```
@@ -85,12 +92,6 @@ src/
 - **UI components are dumb/presentational and reusable.**
 - **Pages are thin, focused on layout and rendering.**
 - **No unnecessary cross-feature coupling.**
-
-├── hooks/         # Custom React hooks
-├── lib/          # Utility functions
-├── App.tsx       # Main application component
-└── main.tsx      # Application entry point
-```
 
 ## Deployment
 
