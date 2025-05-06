@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-import { Link, useNavigate } from "react-router-dom";
+// import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,12 +14,8 @@ import Footer from "@/components/Footer";
 const Login = () => {
   const [aadhaarNumber, setAadhaarNumber] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [step, setStep] = useState(1);
-  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState("patient");
   const [showPatientLogin, setShowPatientLogin] = useState(true);
-  const navigate = useNavigate();
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -35,88 +31,42 @@ const Login = () => {
     }
   };
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "");
-    if (value.length <= 6) {
-      setOtp(value);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step === 1) {
-      if (aadhaarNumber.length !== 12) {
+    if (aadhaarNumber.length !== 12) {
+      toast({
+        title: "Invalid Aadhaar Number",
+        description: "Please enter a valid 12-digit Aadhaar number",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (phoneNumber.length !== 10) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      setTimeout(() => {
         toast({
-          title: "Invalid Aadhaar Number",
-          description: "Please enter a valid 12-digit Aadhaar number",
-          variant: "destructive"
+          title: "OTP Sent",
+          description: "A 6-digit OTP has been sent to your phone number"
         });
-        return;
-      }
-      if (phoneNumber.length !== 10) {
-        toast({
-          title: "Invalid Phone Number",
-          description: "Please enter a valid 10-digit phone number",
-          variant: "destructive"
-        });
-        return;
-      }
-      setLoading(true);
-      try {
-        // TODO: Implement OTP sending logic with your backend or a third-party service
-        // Placeholder: Simulate OTP sent
-        setTimeout(() => {
-          toast({
-            title: "OTP Sent",
-            description: "A 6-digit OTP has been sent to your phone number"
-          });
-          setStep(2);
-          setLoading(false);
-        }, 1000);
-        return;
-      } catch (err: any) {
-        toast({
-          title: "Error sending OTP",
-          description: err.message || "Could not send OTP. Please try again.",
-          variant: "destructive"
-        });
-      } finally {
         setLoading(false);
-      }
-    } else {
-      if (otp.length !== 6) {
-        toast({
-          title: "Invalid OTP",
-          description: "Please enter the 6-digit OTP sent to your phone",
-          variant: "destructive"
-        });
-        return;
-      }
-      setLoading(true);
-      try {
-        // TODO: Implement OTP verification logic
-        toast({
-          title: "Login Successful",
-          description: "You have successfully logged in to your account"
-        });
-        setTimeout(() => {
-          if (role === "doctor") {
-            window.location.href = "/doctors";
-          } else if (role === "assistant") {
-            window.location.href = "/assistants";
-          } else {
-            window.location.href = "/";
-          }
-        }, 1500);
-      } catch (err: any) {
-        toast({
-          title: "Invalid OTP",
-          description: err.message || "The OTP entered is incorrect.",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
+      }, 1000);
+      return;
+    } catch (err: any) {
+      toast({
+        title: "Error sending OTP",
+        description: err.message || "Could not send OTP. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,10 +88,10 @@ const Login = () => {
                     <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => setShowPatientLogin(true)}>
                       Login as Patient
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/doctors/login')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/doctors'}>
                       Login as Doctor
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/assistants/login')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/assistants'}>
                       Login as Assistant
                     </Button>
                   </div>
@@ -188,19 +138,18 @@ const Login = () => {
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-welli-text-medium">+91</span>
                       </div>
                     </div>
+                    <Button type="submit" className="w-full bg-welli-dark-green hover:bg-welli-green" disabled={loading}>
+                      {loading ? "Sending..." : "Get OTP"}
+                    </Button>
                   </form>
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4">
                   <Button variant="ghost" className="w-full text-welli-text-medium" onClick={() => setShowPatientLogin(false)}>
                     Other Login Options
                   </Button>
-                  <Button type="submit" className="w-full bg-welli-dark-green hover:bg-welli-green" disabled={loading}>
-                    {loading ? "Sending..." : "Get OTP"}
-                  </Button>
                 </CardFooter>
               </Card>
             )}
-
             <div className="mt-8 bg-white p-6 rounded-lg border border-welli-light-green">
               <div className="flex items-start space-x-4">
                 <AlertCircle className="text-welli-dark-green flex-shrink-0 mt-1" />
