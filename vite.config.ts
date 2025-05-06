@@ -31,17 +31,6 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       strictPort: true,
       host: true,
-      proxy: {
-        // Proxy chat API in development to reduce CORS issues
-        '/api/chat': {
-          target: env.VITE_HF_API_URL || 'https://api-inference.huggingface.co/models/google/flan-t5-base',
-          changeOrigin: true,
-          rewrite: (path) => {
-            // Drop /api/chat prefix when forwarding
-            return path.replace(/^\/api\/chat/, '');
-          },
-        },
-      },
     },
     preview: {
       port: 3000,
