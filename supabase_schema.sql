@@ -14,9 +14,10 @@ drop table if exists reminders cascade;
 drop table if exists tutorials cascade;
 drop table if exists blood_bank_requests cascade;
 drop table if exists users cascade;
+drop table if exists user_profiles cascade;
 
 -- USERS TABLE
-create table users (
+create table if not exists users (
   id uuid primary key default uuid_generate_v4(),
   email text unique not null,
   name text,
@@ -24,8 +25,19 @@ create table users (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- USER PROFILES TABLE
+create table if not exists user_profiles (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references users(id) unique,
+  bio text,
+  avatar_url text,
+  phone text,
+  address text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- APPOINTMENTS TABLE
-create table appointments (
+create table if not exists appointments (
   id uuid primary key default uuid_generate_v4(),
   patient_id uuid references users(id),
   doctor_id uuid references users(id),
@@ -35,7 +47,7 @@ create table appointments (
 );
 
 -- CHAT MESSAGES TABLE
-create table chat_messages (
+create table if not exists chat_messages (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   message text not null,
@@ -43,7 +55,7 @@ create table chat_messages (
 );
 
 -- DOCUMENTS TABLE
-create table documents (
+create table if not exists documents (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   document_type text,
@@ -52,7 +64,7 @@ create table documents (
 );
 
 -- FAMILY MEMBERS TABLE
-create table family_members (
+create table if not exists family_members (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   name text,
@@ -62,7 +74,7 @@ create table family_members (
 );
 
 -- FEEDBACK TABLE
-create table feedback (
+create table if not exists feedback (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   doctor_id uuid references users(id),
@@ -72,7 +84,7 @@ create table feedback (
 );
 
 -- FREE TRIAL BOOKINGS TABLE
-create table free_trial_bookings (
+create table if not exists free_trial_bookings (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   trial_type text,
@@ -80,8 +92,17 @@ create table free_trial_bookings (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- MEDICINES TABLE
+create table if not exists medicines (
+  id uuid primary key default uuid_generate_v4(),
+  name text,
+  dosage text,
+  frequency text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- MEDICINE ORDERS TABLE
-create table medicine_orders (
+create table if not exists medicine_orders (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   medicine_id uuid references medicines(id),
@@ -90,17 +111,8 @@ create table medicine_orders (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
--- MEDICINES TABLE
-create table medicines (
-  id uuid primary key default uuid_generate_v4(),
-  name text,
-  dosage text,
-  frequency text,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-
 -- ORGAN REPOSITORY REQUESTS TABLE
-create table organ_repository_requests (
+create table if not exists organ_repository_requests (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   organ_type text,
@@ -109,7 +121,7 @@ create table organ_repository_requests (
 );
 
 -- REMINDERS TABLE
-create table reminders (
+create table if not exists reminders (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   reminder_text text,
@@ -118,8 +130,8 @@ create table reminders (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
--- TUTORIALS TABLE (publicly readable)
-create table tutorials (
+-- TUTORIALS TABLE
+create table if not exists tutorials (
   id uuid primary key default uuid_generate_v4(),
   title text,
   content text,
@@ -128,7 +140,7 @@ create table tutorials (
 );
 
 -- BLOOD BANK REQUESTS TABLE
-create table blood_bank_requests (
+create table if not exists blood_bank_requests (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   blood_group text,
@@ -140,7 +152,7 @@ create table blood_bank_requests (
 );
 
 -- NOTIFICATIONS TABLE
-create table notifications (
+create table if not exists notifications (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   message text not null,
@@ -149,7 +161,7 @@ create table notifications (
 );
 
 -- EMERGENCY HELP TABLE
-create table emergency_help (
+create table if not exists emergency_help (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   description text,
@@ -162,7 +174,7 @@ create table emergency_help (
 -- ENABLE RLS AND ADD POLICIES
 -- =========================
 
--- Enable RLS for all tables except tutorials (publicly readable)
+-- Enable RLS
 alter table users enable row level security;
 alter table appointments enable row level security;
 alter table chat_messages enable row level security;
@@ -178,8 +190,9 @@ alter table blood_bank_requests enable row level security;
 alter table notifications enable row level security;
 alter table emergency_help enable row level security;
 alter table tutorials enable row level security;
+alter table user_profiles enable row level security;
 
--- Allow users to access only their own rows (for all tables except tutorials and medicines)
+-- Policies: users can access their own rows
 create policy "Users can access own rows" on users
   using (id = auth.uid());
 create policy "Users can access own rows" on appointments
@@ -206,8 +219,10 @@ create policy "Users can access own rows" on notifications
   using (user_id = auth.uid());
 create policy "Users can access own rows" on emergency_help
   using (user_id = auth.uid());
+create policy "Users can access own rows" on user_profiles
+  using (user_id = auth.uid());
 
--- For tutorials and medicines, allow public read
+-- Public read for tutorials and medicines
 create policy "Public can read tutorials" on tutorials
   for select
   using (true);
