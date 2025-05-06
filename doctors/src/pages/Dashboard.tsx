@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import { Calendar, Users, FileText, Video, MessageCircle, Stethoscope, PenLine } from 'lucide-react';
-import StatsCard from '@/components/dashboard/StatsCard';
-import AppointmentCard from '@/components/dashboard/AppointmentCard';
-import AlertItem from '@/components/dashboard/AlertItem';
-import QuickActionCard from '@/components/dashboard/QuickActionCard';
+import StatsCard from '../components/dashboard/StatsCard';
+import AppointmentCard from '../components/dashboard/AppointmentCard';
+import AlertItem from '../components/dashboard/AlertItem';
+import QuickActionCard from '../components/dashboard/QuickActionCard';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {

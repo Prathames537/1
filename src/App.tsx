@@ -10,7 +10,7 @@ import BookAppointment from "./pages/BookAppointment";
 import OrderMedicines from "./pages/OrderMedicines";
 import CheckInsurance from "./pages/CheckInsurance";
 import HomeServices from "./pages/HomeServices";
-import Login, { AssistantDashboard, DoctorDashboard } from "./pages/Login";
+import Login from "./pages/Login";
 import TutorialPage from "./pages/TutorialPage";
 import AssistantDetailsPage from "./pages/AssistantDetailsPage";
 import DoctorConsultationPage from "./pages/DoctorConsultationPage";
