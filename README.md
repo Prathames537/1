@@ -1,126 +1,115 @@
-# Welli Home Care
+# Welli Unified Healthcare Platform
 
-A modern healthcare platform built with React, TypeScript, and Vite.
+A modern, AI-powered healthcare platform for patients, doctors, and assistants, built as a monorepo with React, TypeScript, Vite, and Supabase.
+
+[GitHub Repository](https://github.com/byprathamesh/welli.git)
+
+---
+
+## Overview
+
+Welli is an innovative healthcare platform that connects patients, doctors, and assistants in a single, unified application. The platform features:
+- Role-based login and redirection (Patients, Doctors, Assistants)
+- Unified color scheme and design system across all apps
+- Dynamic, real-time features powered by Supabase
+- Proprietary AI-powered assistant (patent pending)
+- Modern, responsive UI with Tailwind CSS and shadcn/ui
 
 ## Features
-
-- Modern UI with Tailwind CSS
-- Responsive design
-- Type-safe with TypeScript
-- Fast development with Vite
-- Accessible components with Shadcn UI
-- Efficient state management with React Query
-- Form handling with React Hook Form
-- Date handling with date-fns
-- Charts with Recharts
-- Carousel with Embla Carousel
+- Role-based login with redirection to the appropriate app
+- AI-powered chatbot for instant support (all roles)
+- Real-time healthcare provider matching
+- Secure patient-provider communication
+- Smart appointment scheduling
+- Digital health records management
+- Feedback, notifications, and reminders
+- Dynamic Supabase CRUD for all features (no static data)
+- Unified color palette and design system
 
 ## Tech Stack
-
-- **Frontend Framework:** React 18
-- **Language:** TypeScript
-- **Build Tool:** Vite
-- **Styling:** Tailwind CSS
-- **UI Components:** Shadcn UI
+- **Frontend:** React 18, TypeScript, Vite
+- **Styling:** Tailwind CSS (unified palette), shadcn/ui
 - **State Management:** React Query
-- **Form Handling:** React Hook Form
+- **Forms:** React Hook Form
+- **Backend:** Supabase (auth, database, real-time)
 - **Routing:** React Router
-- **Date Handling:** date-fns
 - **Charts:** Recharts
-- **Carousel:** Embla Carousel
-- **Icons:** Lucide React
+- **Other:** date-fns, Embla Carousel, Lucide React
 
-## Code Quality, Structure & Maintainability
+## Monorepo Structure
 
-- **No 'lovable-tagger' or similar meta-programming dependencies.**
-- **Business logic is separated by feature for maintainability.**
-- **UI components are presentational and reusable.**
-- **Pages are thin, focused on layout and rendering.**
-- **No unnecessary cross-feature coupling.**
-- **Type Safety:** All business logic and components use TypeScript interfaces.
-- **Error Handling:** Global error boundary and robust async error handling recommended (see `App.tsx`).
-- **Linting:** ESLint is set up with TypeScript and React best practices. Run `npx eslint --fix src` to auto-fix issues.
-- **Formatting:** Prettier is configured for consistent code style. Run `npx prettier --write src` to auto-format.
-- **Best Practices:**
-  - Add new features in `src/features/<feature>`.
-  - Keep UI components presentational, move logic to hooks/services.
-  - Document non-obvious logic with concise comments.
-  - Avoid tight coupling between features; use hooks/services for shared logic.
-  - All code changes should be tested for build and type safety (`npm run build`, `npx tsc --noEmit`).
+```
+welli/
+├── src/
+│   ├── components/        # Shared UI components
+│   ├── features/          # Feature-based modules (patients app)
+│   ├── hooks/             # Shared hooks
+│   ├── lib/               # Utilities (e.g., Supabase config)
+│   ├── pages/             # Main app pages (patients)
+│   ├── doctors/           # Doctors app (standalone, with its own build)
+│   └── assistants/        # Assistants app (standalone, with its own build)
+├── dist/                  # Build output (main, doctors, assistants)
+├── api/                   # API routes (if any)
+├── public/                # Static assets
+├── welli-mobile/          # Mobile app (if present)
+├── ...                    # Config, scripts, etc.
+```
+
+- Each sub-app (patients, doctors, assistants) is a full-featured React app with its own build, config, and dependencies.
+- All apps share the same color palette and design system.
+
+## Role-Based Login & Redirection
+- The login page allows users to select their role (Patient, Doctor, Assistant).
+- After login, users are redirected to the appropriate app:
+  - `/` for Patients
+  - `/doctors` for Doctors
+  - `/assistants` for Assistants
+- Routing is handled via `vercel.json` and React Router.
+
+## Supabase Integration
+- All features (profiles, appointments, feedback, notifications, etc.) use Supabase for real-time CRUD operations.
+- No static data: all user and app data is dynamic and synced with Supabase.
+- See `src/lib/supabase.ts` for configuration.
+
+## Unified Color Scheme
+- The color palette from the patients app is used everywhere (see `tailwind.config.ts`).
+- All UI components and pages in doctors and assistants apps have been updated for visual consistency.
 
 ## Getting Started
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/welli-home-care.git
-cd welli-home-care
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Build for production:
-```bash
-npm run build
-```
-
-## Project Structure
-
-```
-src/
-├── components/          # Shared, presentational UI components
-├── features/            # Feature-based modules (business logic, hooks, types)
-│   ├── user/            # User profile logic, types, service
-│   ├── appointments/    # Appointments logic, hooks, types, service
-│   ├── notifications/   # Notifications logic, types, service
-│   └── feedback/        # Feedback logic, types, service
-├── pages/               # Page components (thin, view-only)
-├── hooks/               # Global custom hooks (if any)
-├── lib/                 # Low-level utilities (e.g., supabase config)
-├── App.tsx              # App root and routing
-├── main.tsx             # Entry point
-```
-
-- **Business logic is separated by feature for maintainability.**
-- **UI components are dumb/presentational and reusable.**
-- **Pages are thin, focused on layout and rendering.**
-- **No unnecessary cross-feature coupling.**
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/byprathamesh/welli.git
+   cd welli
+   ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+3. **Start the main (patients) app:**
+   ```bash
+   npm run dev
+   ```
+4. **Build all apps for production:**
+   ```bash
+   npm run build
+   npm run postbuild
+   ```
+   - This builds the main app and then the doctors and assistants apps, copying their outputs to `/dist/doctors` and `/dist/assistants`.
 
 ## Deployment
-
-The project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel and it will automatically deploy.
-
-## Sub-Apps Deployment (Doctors & Assistants)
-
-This monorepo contains three apps: Patients (main), Doctors, and Assistants.
-
-- The main app is built and served from `/dist`.
-- The doctors app is built and served from `/dist/doctors`.
-- The assistants app is built and served from `/dist/assistants`.
-
-**To ensure all sub-apps are deployed:**
-
-- Run `npm run build` (this builds the main app).
-- Run `npm run postbuild` (this builds the doctors and assistants apps and copies their outputs into the correct folders for deployment).
 - Deploy the contents of `/dist` to your static host (e.g., Vercel).
-
-The `vercel.json` is already configured to route `/doctors/*` and `/assistants/*` to their respective apps, so you will never see a 404 for those routes if you follow this process.
+- The `vercel.json` routes `/doctors/*` and `/assistants/*` to their respective apps.
+- All apps are served from a single domain with clean URLs.
 
 ## Contributing
-
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
-
-This project is proprietary software. All rights reserved. See the LICENSE.md file for details.
+## Legal & License
+- This project is proprietary and confidential. All rights reserved. See LICENSE.md for details.
+- Unauthorized use, reproduction, or distribution is strictly prohibited. Patent pending on AI assistant and platform features.
+- For licensing or collaboration, contact the author via GitHub.
