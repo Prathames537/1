@@ -174,18 +174,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// Add placeholder pages for assistants and doctors
-export const AssistantDashboard = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-welli-pale-green">
-    <h1 className="text-3xl font-bold mb-4">Assistant Dashboard</h1>
-    <p className="text-lg text-welli-text-medium">Welcome, Assistant! This is your dashboard. More features coming soon.</p>
-  </div>
-);
-
-export const DoctorDashboard = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-welli-pale-green">
-    <h1 className="text-3xl font-bold mb-4">Doctor Dashboard</h1>
-    <p className="text-lg text-welli-text-medium">Welcome, Doctor! This is your dashboard. More features coming soon.</p>
-  </div>
-);
