@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
 // Local dev: hit HF directly; production: proxy via our serverless function
-const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
-const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
+const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = "REMOVED";
 
 type Message = {
   id: string;
@@ -122,13 +122,9 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
     try {
       // Choose endpoint: direct HF in dev, or our proxy in production
-      const apiEndpoint = import.meta.env.DEV ? HF_API_URL : '/api/chat';
-      const headers = import.meta.env.DEV
-        ? { 'Content-Type': 'application/json', Authorization: `Bearer ${HF_API_KEY}` }
-        : { 'Content-Type': 'application/json' };
-      const body = import.meta.env.DEV
-        ? JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } })
-        : JSON.stringify({ prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } });
+      const apiEndpoint = HF_API_URL;
+      const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${HF_API_KEY}` };
+      const body = JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } });
       // Debug logs to trace API call
       console.log('🌐 Chatbot API Endpoint:', apiEndpoint);
       console.log('📑 Chatbot Request Headers:', headers);
