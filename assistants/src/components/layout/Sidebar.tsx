@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, BadgeDollarSign, BookOpen, Settings, MessageSquare, Menu, X, Navigation, CheckCircle, MapPin, Bot } from 'lucide-react';
+import { Home, Calendar, BadgeDollarSign, BookOpen, Settings, MessageSquare, Menu, X, Navigation, CheckCircle, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
