@@ -21,6 +21,9 @@ const FamilyAccountPage = () => {
   const [saved, setSaved] = useState(false);
   const [familyList, setFamilyList] = useState<any[]>([]);
 
+  const LOCAL_AI_URL = "http://localhost:8000/family-ai";
+  const [aiTips, setAiTips] = useState<{ [idx: number]: { tips: string; risk: string } }>({});
+
   useEffect(() => {
     const fetchFamily = async () => {
       const { data } = await supabase.from('family_members').select('*');
@@ -28,6 +31,24 @@ const FamilyAccountPage = () => {
     };
     fetchFamily();
   }, [saved]);
+
+  useEffect(() => {
+    members.forEach((mem, idx) => {
+      fetch(LOCAL_AI_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: mem.name,
+          age: Number(mem.age),
+          medical: mem.medical,
+          allergies: mem.allergies,
+        }),
+      })
+        .then(res => res.json())
+        .then(ai => setAiTips(t => ({ ...t, [idx]: ai })))
+        .catch(() => {});
+    });
+  }, [members]);
 
   const handleChange = (idx: number, e: any) => {
     const { name, value } = e.target;
@@ -128,6 +149,13 @@ const FamilyAccountPage = () => {
         <Label htmlFor={`allergies-${idx}`}>Allergies (if any)</Label>
         <Input id={`allergies-${idx}`} name="allergies" value={mem.allergies} onChange={e => handleChange(idx, e)} placeholder="e.g. Penicillin, Nuts, None" />
       </div>
+      {aiTips[idx] && (
+        <div className="bg-welli-pale-green rounded-lg p-3 mt-2">
+          <div className="text-sm text-welli-dark-green font-semibold">AI Health Tips:</div>
+          <div className="text-sm">{aiTips[idx].tips}</div>
+          <div className="text-xs text-welli-text-medium mt-1">Risk: {aiTips[idx].risk}</div>
+        </div>
+      )}
     </div>
   ))}
   <Button type="submit" className="w-full bg-welli-dark-green hover:bg-welli-green" disabled={loading}>

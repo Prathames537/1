@@ -3,6 +3,9 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, FileText, Pill, Calendar, Activity, ThumbsUp, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+const LOCAL_AI_URL = "http://localhost:8000/treatment-ai";
 
 const TreatmentPlanPage = () => {
   const treatmentPlan = {
@@ -24,6 +27,22 @@ const TreatmentPlanPage = () => {
     ],
     followUp: "After 5 days if symptoms persist"
   };
+
+  const [aiAdvice, setAiAdvice] = useState("");
+
+  useEffect(() => {
+    fetch(LOCAL_AI_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        plan: treatmentPlan.description,
+        meds: treatmentPlan.medications.join(', '),
+      }),
+    })
+      .then(res => res.json())
+      .then(ai => setAiAdvice(ai.advice))
+      .catch(() => setAiAdvice(""));
+  }, [treatmentPlan]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -142,6 +161,13 @@ const TreatmentPlanPage = () => {
                 </Link>
               </div>
             </div>
+
+            {aiAdvice && (
+              <div className="bg-welli-pale-green rounded-lg p-3 mt-4">
+                <div className="text-sm text-welli-dark-green font-semibold">Welli AI Advice:</div>
+                <div className="text-sm">{aiAdvice}</div>
+              </div>
+            )}
           </div>
         </div>
       </main>

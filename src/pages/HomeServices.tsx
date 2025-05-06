@@ -1,9 +1,11 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { TestTube, Activity, HeartPulse, Microscope, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
+const LOCAL_AI_URL = "http://localhost:8000/diagnostics-ai";
 
 const HomeServices = () => {
   const services = [
@@ -33,6 +35,30 @@ const HomeServices = () => {
     }
   ];
 
+  const [selectedService, setSelectedService] = useState<any>(null);
+  const [aiRec, setAiRec] = useState<string>("");
+  const [userAge, setUserAge] = useState("");
+  const [userGender, setUserGender] = useState("");
+
+  const handleSelectService = (service: any) => {
+    setSelectedService(service);
+    if (userAge) {
+      fetch(LOCAL_AI_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          age: Number(userAge),
+          gender: userGender,
+          selected: service.title,
+          history: "",
+        }),
+      })
+        .then(res => res.json())
+        .then(ai => setAiRec(ai.recommendations))
+        .catch(() => setAiRec(""));
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -49,24 +75,25 @@ const HomeServices = () => {
             Our trained healthcare professionals visit your home to collect samples, perform tests, and provide results digitally. All services include home visit fees and digital reports within 24 hours.
           </p>
           
+          <div className="mb-4 flex gap-4">
+            <input type="number" placeholder="Your Age" value={userAge} onChange={e => setUserAge(e.target.value)} className="p-2 border rounded" />
+            <select value={userGender} onChange={e => setUserGender(e.target.value)} className="p-2 border rounded">
+              <option value="">Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            {services.map((service, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="bg-welli-pale-green p-3 rounded-full mr-4">
-                      {service.icon}
-                    </div>
-                    <h2 className="text-xl font-semibold text-welli-text-dark">{service.title}</h2>
-                  </div>
-                  <p className="text-welli-text-medium mb-4">{service.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-welli-dark-green">{service.price}</span>
-                    <Button className="bg-welli-dark-green hover:bg-welli-green text-white">
-                      Book Now
-                    </Button>
-                  </div>
-                </div>
+            {services.map((service, idx) => (
+              <div key={idx} onClick={() => handleSelectService(service)} className={`bg-white rounded-lg p-6 border-2 ${selectedService === service ? 'border-welli-green' : 'border-welli-dark-green'} cursor-pointer mb-4`}>
+                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">{service.title}</h3>
+                <p className="text-welli-text-medium mb-3">{service.description}</p>
+                <span className="text-xl font-bold text-welli-dark-green">{service.price}</span>
+                {selectedService === service && aiRec && (
+                  <div className="mt-3 bg-welli-pale-green rounded p-3 text-sm text-welli-dark-green">AI Suggestion: {aiRec}</div>
+                )}
               </div>
             ))}
           </div>

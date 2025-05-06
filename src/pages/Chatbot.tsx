@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
 const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
+const LOCAL_AI_URL = "http://localhost:8000/chat";
+
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
@@ -78,12 +80,9 @@ export default function Chatbot() {
     ].join("\n") + "\nassistant:";
 
     try {
-      const res = await fetch(HF_API_URL, {
+      const res = await fetch(LOCAL_AI_URL, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${HF_API_KEY}`,
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           inputs: prompt,
           parameters: {

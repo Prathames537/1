@@ -5,7 +5,8 @@ import { Shield, Users, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
-import { calculateInsurance } from "@/lib/insuranceCalculator";
+
+const LOCAL_AI_URL = "http://localhost:8000/insurance-ai";
 
 const CheckInsurance = () => {
   const [form, setForm] = useState({ name: "", age: "", email: "", phone: "", members: "1", coverage: "", weight: "", height: "", smoker: false, chronic: "" });
@@ -24,18 +25,21 @@ const CheckInsurance = () => {
     try {
       let profile: any = null;
       const userProfile = profile || {
-        uid: "guest",
         name: form.name,
         age: Number(form.age),
-        email: form.email,
-        phone: form.phone,
         weight: Number(form.weight),
         height: Number(form.height),
         smoker: form.smoker,
-        chronicDiseases: form.chronic ? [form.chronic] : [],
+        chronicDiseases: form.chronic ? form.chronic.split(',').map((d: string) => d.trim()) : [],
       };
-      const insurance = calculateInsurance(userProfile);
-      setResult(insurance);
+      const res = await fetch(LOCAL_AI_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userProfile),
+      });
+      if (!res.ok) throw new Error("AI backend error");
+      const ai = await res.json();
+      setResult(ai);
     } catch (err: any) {
       setError(err.message || "Failed to check eligibility");
     } finally {
@@ -130,11 +134,13 @@ const CheckInsurance = () => {
                         <>
                           <div className="text-lg font-semibold text-welli-dark-green">You are eligible!</div>
                           <div className="text-welli-text-dark">Your premium: <span className="font-bold">₹{result.premium}</span></div>
+                          <div className="text-welli-text-medium mt-2">{result.ai_explanation}</div>
                         </>
                       ) : (
                         <>
                           <div className="text-lg font-semibold text-red-600">Not eligible</div>
                           <div className="text-welli-text-dark">Reason: {result.reason}</div>
+                          <div className="text-welli-text-medium mt-2">{result.ai_explanation}</div>
                         </>
                       )}
                     </div>
