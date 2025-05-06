@@ -25,37 +25,6 @@ import { useEffect, useState } from "react";
 const HeroSection = () => {
   const [activeSlide, setActiveSlide] = useState(0);
   
-  const serviceCards = [
-    {
-      title: "Book Appointment",
-      icon: <Stethoscope className="w-8 h-8" />,
-      description: "Get a doctor consultation at your home",
-      path: "/book-appointment",
-      color: "bg-blue-100 border-blue-300"
-    },
-    {
-      title: "Order Medicines",
-      icon: <PillIcon className="w-8 h-8" />,
-      description: "Get medicines delivered to your doorstep",
-      path: "/order-medicines",
-      color: "bg-green-100 border-green-300"
-    },
-    {
-      title: "Check Insurance",
-      icon: <FileCheck className="w-8 h-8" />,
-      description: "Verify your health insurance coverage",
-      path: "/check-insurance",
-      color: "bg-purple-100 border-purple-300"
-    },
-    {
-      title: "At-Home Services",
-      icon: <Home className="w-8 h-8" />,
-      description: "Book diagnostics and health services",
-      path: "/home-services",
-      color: "bg-orange-100 border-orange-300"
-    }
-  ];
-
   const careSteps = [
     {
       icon: <Home className="w-16 h-16 text-welli-dark-green" />,
