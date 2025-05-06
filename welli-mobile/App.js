@@ -5,9 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 
-// TODO: Replace with your actual Supabase URL and anon key
-const SUPABASE_URL = 'https://zzunapuexayikwppocuo.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6dW5hcHVleGF5aWt3cHBvY3VvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0MzM3ODYsImV4cCI6MjA2MjAwOTc4Nn0.O159n1DC-lpgX6TqgPmPmFs1LG5_cRKNcVy8Z4hEw9c';
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const Stack = createNativeStackNavigator();

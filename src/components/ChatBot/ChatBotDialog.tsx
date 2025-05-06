@@ -8,8 +8,8 @@ import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
 // Local dev: hit HF directly; production: proxy via our serverless function
-const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
-const HF_API_KEY = "REMOVED";
+const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
   id: string;

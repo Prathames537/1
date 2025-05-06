@@ -3,8 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 // Using a stronger free model for concise, service-oriented replies
-const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
-const HF_API_KEY = "REMOVED";
+const HF_API_URL = import.meta.env.VITE_HF_API_URL || "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 interface ChatMessage {
   role: "user" | "assistant";

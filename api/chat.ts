@@ -13,11 +13,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const hfRes = await fetch(
-      'https://api-inference.huggingface.co/models/google/flan-t5-base',
+      process.env.VITE_HF_API_URL || 'https://api-inference.huggingface.co/models/google/flan-t5-base',
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer REMOVED`,
+          Authorization: `Bearer ${process.env.VITE_HF_API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ inputs: prompt, parameters }),
