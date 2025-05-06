@@ -10,7 +10,7 @@ import BookAppointment from "./pages/BookAppointment";
 import OrderMedicines from "./pages/OrderMedicines";
 import CheckInsurance from "./pages/CheckInsurance";
 import HomeServices from "./pages/HomeServices";
-import Login from "./pages/Login";
+import Login, { AssistantDashboard, DoctorDashboard } from "./pages/Login";
 import TutorialPage from "./pages/TutorialPage";
 import AssistantDetailsPage from "./pages/AssistantDetailsPage";
 import DoctorConsultationPage from "./pages/DoctorConsultationPage";
@@ -69,6 +69,8 @@ const App = () => (
           <Route path="/blood-bank" element={<BloodBankPage />} />
           <Route path="/organ-repository" element={<OrganRepositoryPage />} />
           <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/assistants" element={<AssistantDashboard />} />
+          <Route path="/doctors" element={<DoctorDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
