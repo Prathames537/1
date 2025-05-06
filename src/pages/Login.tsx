@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-// import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +16,8 @@ const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPatientLogin, setShowPatientLogin] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -88,10 +90,10 @@ const Login = () => {
                     <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => setShowPatientLogin(true)}>
                       Login as Patient
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.open('https://wellifordoctors.vercel.app', '_blank')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/doctors')}>
                       Login as Doctor
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.open('https://welliforassistants.vercel.app', '_blank')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/assistants')}>
                       Login as Assistant
                     </Button>
                   </div>
