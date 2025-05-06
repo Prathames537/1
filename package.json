@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cd src/doctors && npm install && npm run build && cd ../../src/assistants && npm install && npm run build && cd ../.. && mkdir -p dist/doctors dist/assistants && cp -r src/doctors/dist/* dist/doctors/ && cp -r src/assistants/dist/* dist/assistants/",
+    "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start": "vite preview"
