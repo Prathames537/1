@@ -30,6 +30,8 @@ import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 import Chatbot from "./pages/Chatbot";
 import DoctorsDashboard from "../doctors/src/pages/Dashboard";
 import AssistantsDashboard from "../assistants/src/pages/Dashboard";
+import AssistantsLayout from "../assistants/src/components/layout/Layout";
+import DoctorsMainLayout from "../doctors/src/components/layout/MainLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,8 +73,8 @@ const App = () => (
           <Route path="/blood-bank" element={<BloodBankPage />} />
           <Route path="/organ-repository" element={<OrganRepositoryPage />} />
           <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/assistants" element={<AssistantsDashboard />} />
-          <Route path="/doctors" element={<DoctorsDashboard />} />
+          <Route path="/assistants" element={<AssistantsLayout><AssistantsDashboard /></AssistantsLayout>} />
+          <Route path="/doctors" element={<DoctorsMainLayout><DoctorsDashboard /></DoctorsMainLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
