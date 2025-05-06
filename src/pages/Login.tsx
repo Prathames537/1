@@ -1,7 +1,7 @@
 import { useState } from "react";
 // import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,8 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("patient");
+  const [showPatientLogin, setShowPatientLogin] = useState(true);
+  const navigate = useNavigate();
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
@@ -124,146 +126,80 @@ const Login = () => {
       <main className="flex-1 pt-32 pb-16 bg-welli-pale-green">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="max-w-md mx-auto">
-            <Card className="border-welli-light-green shadow-lg">
-              <CardHeader className="space-y-1">
-                <CardTitle className="text-2xl font-bold text-center text-welli-text-dark">
-                  {step === 1 ? "Login to Welli" : "Verify OTP"}
-                </CardTitle>
-                <CardDescription className="text-center">
-                  {step === 1 
-                    ? "Enter your Aadhaar and phone number to continue" 
-                    : "Enter the 6-digit OTP sent to your phone"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {step === 1 ? (
-                    <>
-                      <div className="space-y-2">
-                        <Label htmlFor="role">Are you a:</Label>
-                        <div className="flex space-x-4">
-                          <label className="flex items-center">
-                            <input
-                              type="radio"
-                              name="role"
-                              value="patient"
-                              checked={role === "patient"}
-                              onChange={() => setRole("patient")}
-                              className="mr-2"
-                            />
-                            Patient
-                          </label>
-                          <label className="flex items-center">
-                            <input
-                              type="radio"
-                              name="role"
-                              value="doctor"
-                              checked={role === "doctor"}
-                              onChange={() => setRole("doctor")}
-                              className="mr-2"
-                            />
-                            Doctor
-                          </label>
-                          <label className="flex items-center">
-                            <input
-                              type="radio"
-                              name="role"
-                              value="assistant"
-                              checked={role === "assistant"}
-                              onChange={() => setRole("assistant")}
-                              className="mr-2"
-                            />
-                            Assistant
-                          </label>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="aadhaar">Aadhaar Number</Label>
-                        <div className="relative">
-                          <Input
-                            id="aadhaar"
-                            placeholder="Enter 12-digit Aadhaar number"
-                            className="pl-10"
-                            value={aadhaarNumber}
-                            onChange={handleAadhaarChange}
-                            required
-                          />
-                          <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-welli-text-medium w-4 h-4" />
-                        </div>
-                        <p className="text-xs text-welli-text-medium">Your Aadhaar details are secure and encrypted</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone Number</Label>
-                        <div className="relative">
-                          <Input
-                            id="phone"
-                            placeholder="Enter 10-digit mobile number"
-                            className="pl-10"
-                            value={phoneNumber}
-                            onChange={handlePhoneChange}
-                            required
-                          />
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-welli-text-medium">+91</span>
-                        </div>
-                      </div>
-                    </>
-                  ) : (
+            {!showPatientLogin ? (
+              <Card className="border-welli-light-green shadow-lg">
+                <CardHeader className="space-y-1">
+                  <CardTitle className="text-2xl font-bold text-center text-welli-text-dark">
+                    Select Login Type
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => setShowPatientLogin(true)}>
+                      Login as Patient
+                    </Button>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/doctors/login')}>
+                      Login as Doctor
+                    </Button>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/assistants/login')}>
+                      Login as Assistant
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-welli-light-green shadow-lg">
+                <CardHeader className="space-y-1">
+                  <CardTitle className="text-2xl font-bold text-center text-welli-text-dark">
+                    Login to Welli (Patient)
+                  </CardTitle>
+                  <CardDescription className="text-center">
+                    Enter your Aadhaar and phone number to continue
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="otp">Enter OTP</Label>
-                      <Input
-                        id="otp"
-                        placeholder="Enter 6-digit OTP"
-                        value={otp}
-                        onChange={handleOtpChange}
-                        required
-                        className="text-center text-lg tracking-wider"
-                      />
-                      <div className="flex items-center justify-between">
-                        <button 
-                          type="button" 
-                          className="text-sm text-welli-dark-green hover:underline"
-                          onClick={() => {
-                            toast({
-                              title: "OTP Resent",
-                              description: "A new OTP has been sent to your phone"
-                            });
-                          }}
-                        >
-                          Resend OTP
-                        </button>
-                        <span className="text-sm text-welli-text-medium">Valid for 10 minutes</span>
+                      <Label htmlFor="aadhaar">Aadhaar Number</Label>
+                      <div className="relative">
+                        <Input
+                          id="aadhaar"
+                          placeholder="Enter 12-digit Aadhaar number"
+                          className="pl-10"
+                          value={aadhaarNumber}
+                          onChange={handleAadhaarChange}
+                          required
+                        />
+                        <Shield className="absolute left-3 top-1/2 -translate-y-1/2 text-welli-text-medium w-4 h-4" />
+                      </div>
+                      <p className="text-xs text-welli-text-medium">Your Aadhaar details are secure and encrypted</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <div className="relative">
+                        <Input
+                          id="phone"
+                          placeholder="Enter 10-digit mobile number"
+                          className="pl-10"
+                          value={phoneNumber}
+                          onChange={handlePhoneChange}
+                          required
+                        />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-welli-text-medium">+91</span>
                       </div>
                     </div>
-                  )}
+                  </form>
+                </CardContent>
+                <CardFooter className="flex flex-col space-y-4">
+                  <Button variant="ghost" className="w-full text-welli-text-medium" onClick={() => setShowPatientLogin(false)}>
+                    Other Login Options
+                  </Button>
                   <Button type="submit" className="w-full bg-welli-dark-green hover:bg-welli-green" disabled={loading}>
-                    {loading ? (step === 1 ? "Sending..." : "Verifying...") : (step === 1 ? "Get OTP" : "Verify & Login")}
+                    {loading ? "Sending..." : "Get OTP"}
                   </Button>
-                </form>
-              </CardContent>
-              <CardFooter className="flex flex-col space-y-4">
-                <div className="text-center w-full">
-                  <p className="text-sm text-welli-text-medium">
-                    By continuing, you agree to Welli's{" "}
-                    <Link to="/terms" className="text-welli-dark-green hover:underline">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link to="/privacy" className="text-welli-dark-green hover:underline">
-                      Privacy Policy
-                    </Link>
-                  </p>
-                </div>
-                {step === 2 && (
-                  <Button 
-                    variant="ghost" 
-                    className="w-full text-welli-text-medium"
-                    onClick={() => setStep(1)}
-                  >
-                    Go back
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
+                </CardFooter>
+              </Card>
+            )}
 
             <div className="mt-8 bg-white p-6 rounded-lg border border-welli-light-green">
               <div className="flex items-start space-x-4">
