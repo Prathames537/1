@@ -15,7 +15,7 @@ const Index = () => {
       <main>
         <HeroSection />
         <section className="container mx-auto px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Link to="/documents" className="hover:scale-105 transition-transform duration-300">
               <div className="h-full rounded-xl shadow-lg border-2 bg-green-100 border-green-300 p-6 text-center flex flex-col items-center justify-center">
                 <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
@@ -36,38 +36,30 @@ const Index = () => {
             </Link>
             <Link to="/blood-bank" className="hover:scale-105 transition-transform duration-300">
               <div className="h-full rounded-xl shadow-lg border-2 bg-blue-100 border-blue-300 p-6 text-center flex flex-col items-center justify-center">
-                <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
-                  <Droplet className="w-8 h-8 text-blue-600" />
+                <div className="flex gap-2 mb-4">
+                  <div className="bg-white p-4 rounded-full inline-block shadow-md">
+                    <Droplet className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <div className="bg-white p-4 rounded-full inline-block shadow-md">
+                    <Heart className="w-8 h-8 text-purple-600" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">Blood Bank</h3>
-                <p className="text-welli-text-medium text-sm">Find and request blood for all blood groups</p>
-              </div>
-            </Link>
-            <Link to="/organ-repository" className="hover:scale-105 transition-transform duration-300">
-              <div className="h-full rounded-xl shadow-lg border-2 bg-purple-100 border-purple-300 p-6 text-center flex flex-col items-center justify-center">
-                <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
-                  <Heart className="w-8 h-8 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">Organ Repository</h3>
-                <p className="text-welli-text-medium text-sm">Search and request organs for emergencies</p>
+                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">Blood & Organ Bank</h3>
+                <p className="text-welli-text-medium text-sm">Find/request blood and organs for emergencies</p>
               </div>
             </Link>
             <Link to="/reminders" className="hover:scale-105 transition-transform duration-300">
               <div className="h-full rounded-xl shadow-lg border-2 bg-yellow-100 border-yellow-300 p-6 text-center flex flex-col items-center justify-center">
-                <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
-                  <Bell className="w-8 h-8 text-yellow-600" />
+                <div className="flex gap-2 mb-4">
+                  <div className="bg-white p-4 rounded-full inline-block shadow-md">
+                    <Bell className="w-8 h-8 text-yellow-600" />
+                  </div>
+                  <div className="bg-white p-4 rounded-full inline-block shadow-md">
+                    <Bot className="w-8 h-8 text-pink-600" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">Reminders & Wellness</h3>
-                <p className="text-welli-text-medium text-sm">Set medicine, yoga, and exercise reminders</p>
-              </div>
-            </Link>
-            <Link to="/ai-assistant" className="hover:scale-105 transition-transform duration-300">
-              <div className="h-full rounded-xl shadow-lg border-2 bg-pink-100 border-pink-300 p-6 text-center flex flex-col items-center justify-center">
-                <div className="bg-white p-4 rounded-full mb-4 inline-block shadow-md">
-                  <Bot className="w-8 h-8 text-pink-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">AI Health Assistant</h3>
-                <p className="text-welli-text-medium text-sm">Chat with our AI for health advice and support</p>
+                <h3 className="text-xl font-semibold mb-2 text-welli-text-dark">Reminders, Wellness & AI Assistant</h3>
+                <p className="text-welli-text-medium text-sm">Set reminders, wellness, and chat with our AI for health advice</p>
               </div>
             </Link>
           </div>
