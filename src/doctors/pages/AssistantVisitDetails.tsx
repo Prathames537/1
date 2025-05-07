@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, MapPin, Phone, Mail, FileText, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { visits } from '../lib/mockData';
 
 interface VisitDetails {
   id: string;
@@ -31,46 +32,6 @@ interface VisitDetails {
     frequency: string;
   }[];
 }
-
-// Replace the static visitDetails with an array of visits
-const visits = [
-  {
-    id: '1',
-    patientName: 'Sarah Johnson',
-    patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
-    address: '123 Main St, Apt 4B, New York, NY 10001',
-    date: '2024-03-15',
-    time: '10:30 AM',
-    status: 'scheduled' as 'scheduled',
-    type: 'follow-up',
-    assistant: 'Dr. Emily Chen',
-    assistantImage: 'https://randomuser.me/api/portraits/women/68.jpg',
-    patientContact: {
-      phone: '+1 (555) 123-4567',
-      email: 'sarah.johnson@example.com',
-    },
-    notes: 'Patient requires follow-up visit to monitor blood pressure medication effectiveness. Previous readings were slightly elevated.',
-    vitals: {
-      bloodPressure: '130/85 mmHg',
-      heartRate: '72 bpm',
-      temperature: '98.6°F',
-      oxygenLevel: '98%',
-    },
-    medications: [
-      {
-        name: 'Lisinopril',
-        dosage: '10mg',
-        frequency: 'Once daily',
-      },
-      {
-        name: 'Metoprolol',
-        dosage: '25mg',
-        frequency: 'Twice daily',
-      },
-    ],
-  },
-  // Add more mock visits as needed
-];
 
 const AssistantVisitDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -112,7 +73,7 @@ const AssistantVisitDetails = () => {
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-welli-gray-800">{visitDetails.patientName}</h2>
-                  <Badge className={getStatusColor(visitDetails.status)}>{visitDetails.status}</Badge>
+                  <Badge className={getStatusColor(visitDetails.status as VisitDetails['status'])}>{visitDetails.status}</Badge>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-welli-gray-600 mt-1">
                   <div className="flex items-center gap-1">

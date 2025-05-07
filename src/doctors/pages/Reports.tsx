@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { reports } from '../lib/mockData';
 
 interface Report {
   id: string;
@@ -24,56 +25,6 @@ interface Report {
   notes: string;
   fileUrl?: string;
 }
-
-const reports: Report[] = [
-  {
-    id: "1",
-    patientName: "John Doe",
-    patientImage: "https://github.com/shadcn.png",
-    date: "2024-03-20",
-    type: "blood_test",
-    status: "completed",
-    results: [
-      {
-        name: "Hemoglobin",
-        value: "14.2",
-        unit: "g/dL",
-        normalRange: "13.5 - 17.5"
-      },
-      {
-        name: "WBC Count",
-        value: "7.5",
-        unit: "x10^9/L",
-        normalRange: "4.5 - 11.0"
-      },
-      {
-        name: "Platelet Count",
-        value: "250",
-        unit: "x10^9/L",
-        normalRange: "150 - 450"
-      }
-    ],
-    notes: "All parameters are within normal range. No abnormalities detected.",
-    fileUrl: "/reports/blood_test_1.pdf"
-  },
-  {
-    id: "2",
-    patientName: "Jane Smith",
-    date: "2024-03-21",
-    type: "xray",
-    status: "completed",
-    results: [
-      {
-        name: "Chest X-ray",
-        value: "Normal",
-        unit: "",
-        normalRange: "Normal"
-      }
-    ],
-    notes: "No signs of pneumonia or other abnormalities. Clear lung fields.",
-    fileUrl: "/reports/xray_1.pdf"
-  }
-];
 
 export default function Reports() {
   const [searchQuery, setSearchQuery] = useState("");

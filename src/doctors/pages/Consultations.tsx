@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { consultations } from '../lib/mockData';
 
 interface Consultation {
   id: string;
@@ -28,47 +29,6 @@ interface Consultation {
   };
   notes: string;
 }
-
-const consultations: Consultation[] = [
-  {
-    id: "1",
-    patientName: "John Doe",
-    patientImage: "https://github.com/shadcn.png",
-    date: "2024-03-20",
-    time: "10:00 AM",
-    status: "completed",
-    type: "follow-up",
-    symptoms: ["Fever", "Cough", "Headache"],
-    diagnosis: "Viral Fever",
-    prescription: {
-      medicines: [
-        {
-          name: "Paracetamol",
-          dosage: "500mg",
-          duration: "3 days"
-        },
-        {
-          name: "Vitamin C",
-          dosage: "1000mg",
-          duration: "7 days"
-        }
-      ],
-      notes: "Take medicines after meals. Drink plenty of water."
-    },
-    notes: "Patient recovering well. Follow up in 3 days if symptoms persist."
-  },
-  {
-    id: "2",
-    patientName: "Jane Smith",
-    date: "2024-03-21",
-    time: "11:30 AM",
-    status: "scheduled",
-    type: "new",
-    symptoms: ["Back pain", "Fatigue"],
-    diagnosis: "Muscle Strain",
-    notes: "Patient needs rest and physiotherapy."
-  }
-];
 
 export default function Consultations() {
   const [searchQuery, setSearchQuery] = useState("");

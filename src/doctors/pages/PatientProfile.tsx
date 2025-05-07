@@ -5,124 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import AIAssistant from '../components/patient/AIAssistant';
-
-// Mock patients data - in a real app, this would come from an API
-const patients = [
-  {
-    id: '1',
-    name: 'Sarah Johnson',
-    image: 'https://randomuser.me/api/portraits/women/44.jpg',
-    age: 42,
-    gender: 'Female',
-    birthdate: '1982-05-15',
-    phone: '+1 (555) 123-4567',
-    email: 'sarah.johnson@example.com',
-    address: '123 Oak St, Springfield, IL',
-    insuranceProvider: 'Welli Health', 
-    insuranceNumber: 'WH123456789',
-    lifeInsurance: true,
-    emergencyContact: 'Michael Johnson (Husband) - +1 (555) 987-6543',
-    medicalRecords: [
-      {
-        id: 'mr1',
-        date: 'March 15, 2025',
-        title: 'Regular check-up',
-        description: 'Blood pressure slightly elevated at 140/90. Patient reports occasional headaches. Recommended lifestyle modifications and follow-up in 1 month.',
-        type: 'visit'
-      },
-      {
-        id: 'mr2',
-        date: 'February 28, 2025',
-        title: 'Blood Test Results',
-        description: 'Cholesterol: 210 mg/dL (slightly elevated), Blood glucose: 95 mg/dL (normal), Complete blood count within normal ranges.',
-        type: 'test'
-      },
-      {
-        id: 'mr3',
-        date: 'January 10, 2025',
-        title: 'Seasonal Allergies',
-        description: 'Patient experiencing nasal congestion, sneezing, and itchy eyes. Prescribed antihistamine and nasal spray.',
-        type: 'visit'
-      }
-    ],
-    prescriptions: [
-      {
-        id: 'p1',
-        name: 'Lisinopril',
-        dosage: '10mg',
-        frequency: 'Once daily',
-        startDate: 'March 15, 2025',
-        endDate: 'Ongoing',
-        notes: 'Take in the morning with food',
-        active: true
-      },
-      {
-        id: 'p2',
-        name: 'Loratadine',
-        dosage: '10mg',
-        frequency: 'Once daily as needed',
-        startDate: 'January 10, 2025',
-        endDate: 'Ongoing',
-        notes: 'For seasonal allergy relief',
-        active: true
-      }
-    ],
-    vitals: [
-      {
-        date: 'March 15, 2025',
-        type: 'Blood Pressure',
-        value: '140/90',
-        unit: 'mmHg',
-        status: 'elevated'
-      },
-      {
-        date: 'March 15, 2025',
-        type: 'Heart Rate',
-        value: '72',
-        unit: 'bpm',
-        status: 'normal'
-      },
-      {
-        date: 'February 28, 2025',
-        type: 'Blood Pressure',
-        value: '138/88',
-        unit: 'mmHg',
-        status: 'elevated'
-      },
-      {
-        date: 'January 10, 2025',
-        type: 'Blood Pressure',
-        value: '130/85',
-        unit: 'mmHg',
-        status: 'normal'
-      }
-    ],
-    familyHistory: [
-      {
-        relationship: 'Father',
-        healthConditions: ['Hypertension', 'Type 2 Diabetes'],
-        age: 68
-      },
-      {
-        relationship: 'Mother',
-        healthConditions: ['Breast Cancer (survivor)'],
-        age: 65
-      },
-      {
-        relationship: 'Sister',
-        healthConditions: ['Asthma'],
-        age: 38
-      },
-      {
-        relationship: 'Paternal Grandfather',
-        healthConditions: ['Coronary Artery Disease', 'Stroke'],
-        deceased: true
-      }
-    ],
-    condition: 'Hypertension',
-  },
-  // Add more mock patients here...
-];
+import { patients } from '../lib/mockData';
 
 const PatientProfile = () => {
   const { patientId } = useParams<{ patientId: string }>();
@@ -239,7 +122,7 @@ const PatientProfile = () => {
             <h3 className="font-medium text-lg mb-4">Latest Vitals</h3>
             
             <div className="space-y-3">
-              {patient.vitals.slice(0, 3).map((vital, index) => (
+              {patient.vitals?.slice(0, 3).map((vital, index) => (
                 <div 
                   key={index} 
                   className={`flex items-center justify-between p-3 rounded-md ${
@@ -297,8 +180,8 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.medicalRecords.map(record => (
-                    <div key={record.id} className="border border-welli-gray-200 rounded-md p-4">
+                  {patient.medicalRecords?.map((record, idx) => (
+                    <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <div className="flex items-center gap-2 mb-2">
                         {record.type === 'visit' ? (
                           <Calendar size={18} className="text-welli-accent-green" />
@@ -326,8 +209,8 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.prescriptions.map(prescription => (
-                    <div key={prescription.id} className="border border-welli-gray-200 rounded-md p-4">
+                  {patient.prescriptions?.map((prescription, idx) => (
+                    <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="flex items-center gap-2">
@@ -366,8 +249,8 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.familyHistory.map((member, index) => (
-                    <div key={index} className="border border-welli-gray-200 rounded-md p-4">
+                  {patient.familyHistory?.map((member, idx) => (
+                    <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <h4 className="font-medium flex items-center gap-2">
                         <User size={16} />
                         {member.relationship}

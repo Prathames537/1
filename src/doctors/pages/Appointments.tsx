@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
+import { appointments } from '../lib/mockData';
 
 interface Appointment {
   id: string;
@@ -14,36 +15,6 @@ interface Appointment {
   status: 'upcoming' | 'completed' | 'cancelled';
   reason: string;
 }
-
-const appointments: Appointment[] = [
-  {
-    id: '1',
-    patientName: 'Sarah Johnson',
-    patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
-    time: '10:30 AM',
-    type: 'video',
-    status: 'upcoming',
-    reason: 'Follow-up on blood pressure medication',
-  },
-  {
-    id: '2',
-    patientName: 'Robert Chen',
-    patientImage: 'https://randomuser.me/api/portraits/men/76.jpg',
-    time: '11:15 AM',
-    type: 'chat',
-    status: 'upcoming',
-    reason: 'Medication refill request',
-  },
-  {
-    id: '3',
-    patientName: 'Emma Garcia',
-    patientImage: 'https://randomuser.me/api/portraits/women/63.jpg',
-    time: '2:00 PM',
-    type: 'video',
-    status: 'upcoming',
-    reason: 'Chronic headache consultation',
-  },
-];
 
 const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
   const navigate = useNavigate();

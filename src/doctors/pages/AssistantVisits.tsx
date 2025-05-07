@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
+import { visits } from '../lib/mockData';
 
 interface Visit {
   id: string;
@@ -16,42 +17,6 @@ interface Visit {
   type: 'initial' | 'follow-up' | 'emergency';
   assistant: string;
 }
-
-const visits: Visit[] = [
-  {
-    id: '1',
-    patientName: 'Sarah Johnson',
-    patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
-    address: '123 Main St, Apt 4B, New York, NY 10001',
-    date: '2024-03-15',
-    time: '10:30 AM',
-    status: 'scheduled',
-    type: 'follow-up',
-    assistant: 'Dr. Emily Chen',
-  },
-  {
-    id: '2',
-    patientName: 'Robert Chen',
-    patientImage: 'https://randomuser.me/api/portraits/men/76.jpg',
-    address: '456 Park Ave, Suite 2, New York, NY 10022',
-    date: '2024-03-15',
-    time: '2:00 PM',
-    status: 'in-progress',
-    type: 'initial',
-    assistant: 'Dr. Michael Brown',
-  },
-  {
-    id: '3',
-    patientName: 'Emma Garcia',
-    patientImage: 'https://randomuser.me/api/portraits/women/63.jpg',
-    address: '789 Broadway, New York, NY 10003',
-    date: '2024-03-16',
-    time: '11:00 AM',
-    status: 'scheduled',
-    type: 'emergency',
-    assistant: 'Dr. Sarah Wilson',
-  },
-];
 
 const VisitCard = ({ visit }: { visit: Visit }) => {
   const navigate = useNavigate();

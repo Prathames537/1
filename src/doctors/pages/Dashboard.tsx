@@ -4,61 +4,46 @@ import AppointmentCard from '../components/dashboard/AppointmentCard';
 import AlertItem from '../components/dashboard/AlertItem';
 import QuickActionCard from '../components/dashboard/QuickActionCard';
 import { useNavigate } from 'react-router-dom';
+import { patients, appointments, visits, notifications } from '../lib/mockData';
 
 const Dashboard = () => {
-  // Sample data with prescription visibility
-  const upcomingAppointments = [
-    {
-      patientName: 'Sarah Johnson',
-      time: 'Today, 10:30 AM',
-      type: 'video' as const,
-      reason: 'Follow-up on blood pressure medication',
-      imageUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-      patientId: '1',
-      hasPrescription: true,
-    },
-    {
-      patientName: 'Robert Chen',
-      time: 'Today, 11:15 AM',
-      type: 'chat' as const,
-      reason: 'Medication refill request',
-      imageUrl: 'https://randomuser.me/api/portraits/men/76.jpg',
-      patientId: '2',
-      hasPrescription: false,
-    },
-    {
-      patientName: 'Emma Garcia',
-      time: 'Today, 2:00 PM',
-      type: 'video' as const,
-      reason: 'Chronic headache consultation',
-      imageUrl: 'https://randomuser.me/api/portraits/women/63.jpg',
-      patientId: '3',
-      hasPrescription: true,
-    },
-  ];
+  const navigate = useNavigate();
 
+  // Dashboard preview appointments (first 3, mapped to required fields)
+  const previewAppointments = appointments.slice(0, 3).map((appt) => {
+    const patient = patients.find(p => p.name === appt.patientName);
+    return {
+      patientName: appt.patientName,
+      time: appt.time,
+      type: appt.type,
+      reason: appt.reason,
+      imageUrl: patient?.image || '',
+      onClick: () => navigate(`/patients/${patient?.id}`),
+      hasPrescription: !!patient?.prescriptions?.length,
+    };
+  });
+
+  // Dashboard alerts (static for now, can be made dynamic later)
   const alerts = [
     {
       title: 'Blood test results: Maria Lopez',
       message: 'Abnormal hemoglobin levels detected. Review required.',
       time: '15 minutes ago',
-      priority: 'urgent' as const,
+      priority: 'urgent' as 'urgent',
     },
     {
       title: 'Follow-up needed: James Wilson',
       message: 'Patient has not confirmed medication adherence in 5 days',
       time: '2 hours ago',
-      priority: 'warning' as const,
+      priority: 'warning' as 'warning',
     },
     {
       title: 'New patient records uploaded',
       message: '3 new patient records have been added to your list',
       time: 'Yesterday, 4:30 PM',
-      priority: 'normal' as const,
+      priority: 'normal' as 'normal',
     },
   ];
-
-  const navigate = useNavigate();
 
   return (
     <div className="space-y-6">
@@ -107,13 +92,8 @@ const Dashboard = () => {
               </button>
             </div>
             <div className="space-y-3">
-              {upcomingAppointments.map((appointment, i) => (
-                <AppointmentCard
-                  key={i}
-                  {...appointment}
-                  onClick={() => navigate(`/patients/${appointment.patientId}`)}
-                  hasPrescription={appointment.hasPrescription}
-                />
+              {previewAppointments.map((appointment, i) => (
+                <AppointmentCard key={i} {...appointment} />
               ))}
             </div>
           </div>

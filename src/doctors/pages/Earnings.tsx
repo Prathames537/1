@@ -5,70 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-interface Earning {
-  id: string;
-  date: string;
-  patientName: string;
-  consultationType: string;
-  amount: number;
-  status: "paid" | "pending" | "cancelled";
-}
-
-interface MonthlySummary {
-  month: string;
-  totalEarnings: number;
-  totalConsultations: number;
-  averageEarning: number;
-}
-
-const earnings: Earning[] = [
-  {
-    id: "1",
-    date: "2024-03-20",
-    patientName: "John Doe",
-    consultationType: "Follow-up",
-    amount: 1500,
-    status: "paid"
-  },
-  {
-    id: "2",
-    date: "2024-03-21",
-    patientName: "Jane Smith",
-    consultationType: "New Patient",
-    amount: 2000,
-    status: "paid"
-  },
-  {
-    id: "3",
-    date: "2024-03-22",
-    patientName: "Mike Johnson",
-    consultationType: "Emergency",
-    amount: 3000,
-    status: "pending"
-  }
-];
-
-const monthlySummaries: MonthlySummary[] = [
-  {
-    month: "March 2024",
-    totalEarnings: 6500,
-    totalConsultations: 3,
-    averageEarning: 2166.67
-  },
-  {
-    month: "February 2024",
-    totalEarnings: 12000,
-    totalConsultations: 8,
-    averageEarning: 1500
-  },
-  {
-    month: "January 2024",
-    totalEarnings: 9000,
-    totalConsultations: 6,
-    averageEarning: 1500
-  }
-];
+import { earnings, monthlySummaries } from '../lib/mockData';
 
 export default function Earnings() {
   const [selectedMonth, setSelectedMonth] = useState(monthlySummaries[0].month);
