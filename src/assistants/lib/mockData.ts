@@ -73,4 +73,13 @@ export const availableVisits = [
   { id: '6', patientName: 'Anita Desai', patientAge: 58, address: '56 Banjara Hills, Hyderabad, 500034', time: '10:45 AM', visitType: 'Blood Pressure Check', status: 'upcoming' },
   { id: '7', patientName: 'Suresh Patel', patientAge: 82, address: '25 Salt Lake, Kolkata, 700091', time: '1:30 PM', visitType: 'Diabetes Screening', status: 'upcoming', isUrgent: true },
   { id: '8', patientName: 'Meera Reddy', patientAge: 69, address: '15 Adyar, Chennai, 600020', time: '3:00 PM', visitType: 'Medication Review', status: 'upcoming' },
+];
+
+// Locations for ViewAllLocations
+export const locations = [
+  { id: '1', patientName: 'Rajesh Kumar', address: '42 Shyam Nagar', city: 'Delhi NCR', visitType: 'Blood Test', time: '9:00 AM', isUrgent: true, distance: '3.2 km' },
+  { id: '2', patientName: 'Priya Sharma', address: '105 Andheri West', city: 'Mumbai', visitType: 'X-Ray', time: '11:30 AM', isUrgent: false, distance: '5.6 km' },
+  { id: '3', patientName: 'Vikram Mehta', address: '78 Indiranagar', city: 'Bangalore', visitType: 'Vitals Check', time: '2:15 PM', isUrgent: false, distance: '4.8 km' },
+  { id: '4', patientName: 'Sanjay Patel', address: '25 Salt Lake', city: 'Kolkata', visitType: 'Blood Test', time: '4:00 PM', isUrgent: true, distance: '7.1 km' },
+  { id: '5', patientName: 'Anita Desai', address: '56 Banjara Hills', city: 'Hyderabad', visitType: 'Medication Delivery', time: '5:30 PM', isUrgent: false, distance: '8.3 km' },
 ]; 

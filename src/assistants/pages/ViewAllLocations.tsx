@@ -26,6 +26,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { locations } from '../lib/mockData';
 
 interface Location {
   id: string;
@@ -37,60 +38,6 @@ interface Location {
   isUrgent: boolean;
   distance: string;
 }
-
-// Mock data with Indian locations
-const locations: Location[] = [
-  {
-    id: '1',
-    patientName: 'Rajesh Kumar',
-    address: '42 Shyam Nagar',
-    city: 'Delhi NCR',
-    visitType: 'Blood Test',
-    time: '9:00 AM',
-    isUrgent: true,
-    distance: '3.2 km'
-  },
-  {
-    id: '2',
-    patientName: 'Priya Sharma',
-    address: '105 Andheri West',
-    city: 'Mumbai',
-    visitType: 'X-Ray',
-    time: '11:30 AM',
-    isUrgent: false,
-    distance: '5.6 km'
-  },
-  {
-    id: '3',
-    patientName: 'Vikram Mehta',
-    address: '78 Indiranagar',
-    city: 'Bangalore',
-    visitType: 'Vitals Check',
-    time: '2:15 PM',
-    isUrgent: false,
-    distance: '4.8 km'
-  },
-  {
-    id: '4',
-    patientName: 'Sanjay Patel',
-    address: '25 Salt Lake',
-    city: 'Kolkata',
-    visitType: 'Blood Test',
-    time: '4:00 PM',
-    isUrgent: true,
-    distance: '7.1 km'
-  },
-  {
-    id: '5',
-    patientName: 'Anita Desai',
-    address: '56 Banjara Hills',
-    city: 'Hyderabad',
-    visitType: 'Medication Delivery',
-    time: '5:30 PM',
-    isUrgent: false,
-    distance: '8.3 km'
-  }
-];
 
 const ViewAllLocations = () => {
   const navigate = useNavigate();
