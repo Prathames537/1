@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Calendar, ChevronLeft, ChevronRight, Search, Filter, CheckSquare, Clock, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,7 +20,6 @@ export interface VisitsPageProps {
 
 const VisitsPage = ({
   visits,
-  userType,
   navPrefix,
   showImage = false,
   showAge = true,
@@ -149,9 +146,9 @@ const VisitsPage = ({
               {filteredVisits.length > 0 ? (
                 filteredVisits.map((visit) => (
                   <VisitCard
-                    key={visit.id}
+                    key={visit.onClickPath}
                     {...visit}
-                    onClickPath={`/${navPrefix}/visits/${visit.id}`}
+                    onClickPath={`/${navPrefix}/visits/${visit.onClickPath.split('/').pop()}`}
                     showImage={showImage}
                     showAge={showAge}
                     showAssistant={showAssistant}
@@ -165,7 +162,6 @@ const VisitsPage = ({
               )}
             </div>
           </TabsContent>
-          {/* Add more TabsContent for upcoming/completed if needed */}
         </Tabs>
       </Card>
     </div>

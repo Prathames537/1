@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, MapPin, User, BadgeAlert, FileText, CheckCircle, AlertTriangle, Heart } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, User, AlertTriangle, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,7 +13,7 @@ export interface VisitDetailsPageProps {
   backPath: string;
 }
 
-const VisitDetailsPage = ({ visit, userType, backPath }: VisitDetailsPageProps) => {
+const VisitDetailsPage = ({ visit, backPath }: VisitDetailsPageProps) => {
   const navigate = useNavigate();
   if (!visit) {
     return <div className="p-8 text-center text-red-500">Visit not found.</div>;
@@ -24,9 +24,6 @@ const VisitDetailsPage = ({ visit, userType, backPath }: VisitDetailsPageProps) 
   const visitData = visit.visitData || visit;
   const vitalSigns = visit.vitalSigns || visit.vitals || [];
   const pastVisits = visit.pastVisits || [];
-  const medications = visit.medications || [];
-  const assistant = visit.assistant || (visitData && visitData.assistant);
-  const assistantImage = visit.assistantImage;
   const status = visitData.status || visit.status;
   const isUrgent = visitData.isUrgent || visit.isUrgent;
 

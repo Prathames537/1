@@ -151,7 +151,7 @@ const EarningsPage = ({ earnings, currency, routePrefix, fieldLabel, title = 'Ea
                     <TableRow key={entry.id} onClick={() => navigate(`${routePrefix}/earnings/${entry.id}`)} className="cursor-pointer hover:bg-welli-light-green/20">
                       <TableCell>{entry.date}</TableCell>
                       <TableCell>{entry.patientName}</TableCell>
-                      <TableCell>{entry[fieldLabel]}</TableCell>
+                      <TableCell>{entry[fieldLabel as keyof Earning]}</TableCell>
                       <TableCell>{currency}{entry.amount}</TableCell>
                       <TableCell>
                         <Badge className={entry.status === 'Paid' || entry.status === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
