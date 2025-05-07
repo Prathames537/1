@@ -261,6 +261,36 @@ export const visits = [
       },
     ],
   },
+  {
+    id: '4',
+    patientName: 'Michael Wilson',
+    patientImage: 'https://randomuser.me/api/portraits/men/32.jpg',
+    address: '321 Elm St, New York, NY 10004',
+    date: '2024-03-17',
+    time: '3:00 PM',
+    status: 'completed' as 'completed',
+    type: 'follow-up' as 'follow-up',
+    assistant: 'Dr. Alex Smith',
+    assistantImage: 'https://randomuser.me/api/portraits/men/45.jpg',
+    patientContact: {
+      phone: '+1 (555) 444-5555',
+      email: 'michael.wilson@example.com',
+    },
+    notes: 'Follow-up visit for arthritis management. Patient reports improvement with new medication.',
+    vitals: {
+      bloodPressure: '135/85 mmHg',
+      heartRate: '70 bpm',
+      temperature: '98.4°F',
+      oxygenLevel: '97%',
+    },
+    medications: [
+      {
+        name: 'Ibuprofen',
+        dosage: '200mg',
+        frequency: 'As needed',
+      },
+    ],
+  },
   // ...add other visits from AssistantVisits.tsx and AssistantVisitDetails.tsx
 ];
 
