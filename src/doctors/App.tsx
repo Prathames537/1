@@ -19,42 +19,12 @@ import ReportDetails from "./pages/ReportDetails";
 import ConsultationDetails from "./pages/ConsultationDetails";
 import VisitsPage from '../shared/pages/VisitsPage';
 import VisitDetailsPage from '../shared/pages/VisitDetailsPage';
-import { visits as visitsData } from './lib/mockData';
+import EarningsPage from '../shared/pages/EarningsPage';
+import EarningDetailsPage from '../shared/pages/EarningDetailsPage';
+import DashboardPage from '../shared/pages/DashboardPage';
+import { visits, earnings } from './lib/mockData';
 
 const queryClient = new QueryClient();
-
-function SharedVisitsWrapper() {
-  return (
-    <VisitsPage
-      visits={visitsData.map(v => ({
-        id: v.id,
-        patientName: v.patientName,
-        patientAge: undefined,
-        patientImage: v.patientImage,
-        address: v.address,
-        time: v.time,
-        visitType: v.type,
-        isUrgent: false,
-        status: v.status,
-        onClickPath: `/doctors/assistant-visits/${v.id}`,
-        assistantName: v.assistant,
-        showImage: true,
-        showAssistant: true,
-      }))}
-      userType="doctor"
-      navPrefix="doctors"
-      showImage
-      showAssistant
-      title="Assistant Visits"
-    />
-  );
-}
-
-function SharedVisitDetailsWrapper() {
-  const { id } = useParams();
-  const visit = visitsData.find(v => v.id === id);
-  return <VisitDetailsPage visit={visit} userType="doctor" backPath="/doctors/assistant-visits" />;
-}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -75,6 +45,9 @@ const App = () => (
           <Route path="/doctors/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
           <Route path="/doctors/reports/:id" element={<MainLayout><ReportDetails /></MainLayout>} />
           <Route path="/doctors/consultations/:id" element={<MainLayout><ConsultationDetails /></MainLayout>} />
+          <Route path="/earnings" element={<MainLayout><EarningsPage earnings={earnings} currency="₹" routePrefix="/doctors" fieldLabel="consultationType" title="Earnings" /></MainLayout>} />
+          <Route path="/earnings/:id" element={<MainLayout><EarningDetailsPage earnings={earnings} currency="₹" fieldLabel="consultationType" routePrefix="/doctors" /></MainLayout>} />
+          <Route path="/dashboard" element={<MainLayout><DashboardPage title="Doctor Dashboard" summaryCards={<div>Summary Cards</div>} mainList={<div>Main List</div>} /></MainLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

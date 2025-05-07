@@ -28,8 +28,6 @@ import EmergencyHelpPage from "./pages/EmergencyHelpPage";
 import BloodBankPage from "./pages/BloodBankPage";
 import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 import Chatbot from "./pages/Chatbot";
-import AssistantsLayout from "./assistants/components/layout/Layout";
-import DoctorsMainLayout from "./doctors/components/layout/MainLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {

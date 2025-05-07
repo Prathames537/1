@@ -14,6 +14,10 @@ import MarkVisitComplete from "./pages/MarkVisitComplete";
 import ViewAllLocations from "./pages/ViewAllLocations";
 import FloatingChat from "./components/support/FloatingChat";
 import { visits as visitsData } from './lib/mockData';
+import EarningsPage from '../shared/pages/EarningsPage';
+import EarningDetailsPage from '../shared/pages/EarningDetailsPage';
+import DashboardPage from '../shared/pages/DashboardPage';
+import { earningsHistory } from './lib/mockData';
 
 const queryClient = new QueryClient();
 
@@ -60,6 +64,9 @@ const App = () => (
           <Route path="/start-navigation" element={<StartNavigation />} />
           <Route path="/mark-visit-complete" element={<MarkVisitComplete />} />
           <Route path="/view-all-locations" element={<ViewAllLocations />} />
+          <Route path="/earnings" element={<EarningsPage earnings={earningsHistory} currency="₹" routePrefix="/assistants" fieldLabel="visitType" title="Earnings" />} />
+          <Route path="/earnings/:id" element={<EarningDetailsPage earnings={earningsHistory} currency="₹" fieldLabel="visitType" routePrefix="/assistants" />} />
+          <Route path="/dashboard" element={<DashboardPage userType="assistant" />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
