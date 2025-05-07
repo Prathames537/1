@@ -6,50 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Award, TrendingUp, BookOpen } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ModuleCard, { Module } from '../components/learning/ModuleCard';
-
-// Mock data
-const modules: Module[] = [
-  {
-    id: '1',
-    title: 'How to professionally behave during home visits',
-    description: 'Learn the essentials of professional conduct when visiting patients at their homes.',
-    duration: '45 mins',
-    progress: 100,
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: '2',
-    title: 'Medical equipment handling basics',
-    description: 'Master the proper handling techniques for common medical equipment used during home visits.',
-    duration: '1 hour',
-    progress: 75,
-    image: 'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: '3',
-    title: 'Patient sensitivity and privacy',
-    description: 'Understand the importance of patient privacy and how to maintain confidentiality.',
-    duration: '30 mins',
-    progress: 25,
-    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: '4',
-    title: 'Emergency situations',
-    description: 'Learn how to identify and respond to medical emergencies during home visits.',
-    duration: '1.5 hours',
-    progress: 0,
-    image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: '5',
-    title: 'How to upsell Welli services ethically',
-    description: 'Discover ethical approaches to recommending additional Welli services to patients.',
-    duration: '45 mins',
-    progress: 0,
-    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=300'
-  }
-];
+import { modules } from '../lib/mockData';
 
 const LearningHub = () => {
   const [searchTerm, setSearchTerm] = useState('');

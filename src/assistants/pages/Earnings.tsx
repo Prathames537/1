@@ -21,75 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useNavigate } from 'react-router-dom';
-
-// Mock earnings history
-const earningsHistory = [
-  {
-    id: '1',
-    date: 'May 15, 2025',
-    patientName: 'John Doe',
-    visitType: 'Blood Test',
-    amount: 120,
-    status: 'Paid'
-  },
-  {
-    id: '2',
-    date: 'May 15, 2025',
-    patientName: 'Jane Smith',
-    visitType: 'X-Ray',
-    amount: 180,
-    status: 'Paid'
-  },
-  {
-    id: '3',
-    date: 'May 14, 2025',
-    patientName: 'Robert Johnson',
-    visitType: 'Vitals Check',
-    amount: 85,
-    status: 'Paid'
-  },
-  {
-    id: '4',
-    date: 'May 13, 2025',
-    patientName: 'Mary Williams',
-    visitType: 'Blood Test',
-    amount: 120,
-    status: 'Paid'
-  },
-  {
-    id: '5',
-    date: 'May 12, 2025',
-    patientName: 'David Brown',
-    visitType: 'Vitals Check',
-    amount: 85,
-    status: 'Paid'
-  }
-];
-
-// Mock withdrawals
-const withdrawalHistory = [
-  {
-    id: 'w1',
-    date: 'May 10, 2025',
-    amount: 500,
-    method: 'Bank Transfer',
-    status: 'Completed'
-  },
-  {
-    id: 'w2',
-    date: 'April 25, 2025',
-    amount: 750,
-    method: 'UPI',
-    status: 'Completed'
-  },
-  {
-    id: 'w3',
-    date: 'April 10, 2025',
-    amount: 600,
-    method: 'Bank Transfer',
-    status: 'Completed'
-  }
-];
+import { earningsHistory, withdrawalHistory } from '../lib/mockData';
 
 const Earnings = () => {
   const { toast } = useToast();

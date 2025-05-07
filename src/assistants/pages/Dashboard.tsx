@@ -11,69 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import VisitCard, { Visit } from "../components/dashboard/VisitCard";
 import EarningsSummary from "../components/dashboard/EarningsSummary";
 import MapView from "../components/dashboard/MapView";
-
-// Mock data with Indian names and locations
-const visitsData: Visit[] = [
-  {
-    id: '1',
-    patientName: 'Rajesh Kumar',
-    patientAge: 65,
-    address: '42 Shyam Nagar, Delhi NCR, 110001',
-    time: '9:00 AM',
-    visitType: 'Blood Test',
-    isUrgent: true,
-    status: 'upcoming'
-  },
-  {
-    id: '2',
-    patientName: 'Priya Sharma',
-    patientAge: 78,
-    address: '105 Andheri West, Mumbai, 400053',
-    time: '11:30 AM',
-    visitType: 'X-Ray',
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    patientName: 'Vikram Mehta',
-    patientAge: 72,
-    address: '78 Indiranagar, Bangalore, 560038',
-    time: '2:15 PM',
-    visitType: 'Vitals Check',
-    status: 'upcoming'
-  }
-];
-
-const availableVisits: Visit[] = [
-  {
-    id: '6',
-    patientName: 'Anita Desai',
-    patientAge: 58,
-    address: '56 Banjara Hills, Hyderabad, 500034',
-    time: '10:45 AM',
-    visitType: 'Blood Pressure Check',
-    status: 'upcoming'
-  },
-  {
-    id: '7',
-    patientName: 'Suresh Patel',
-    patientAge: 82,
-    address: '25 Salt Lake, Kolkata, 700091',
-    time: '1:30 PM',
-    visitType: 'Diabetes Screening',
-    status: 'upcoming',
-    isUrgent: true
-  },
-  {
-    id: '8',
-    patientName: 'Meera Reddy',
-    patientAge: 69,
-    address: '15 Adyar, Chennai, 600020',
-    time: '3:00 PM',
-    visitType: 'Medication Review',
-    status: 'upcoming'
-  }
-];
+import { visitsData, availableVisits } from '../lib/mockData';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("today");
@@ -176,7 +114,7 @@ const Dashboard = () => {
             </div>
             
             <TabsContent value="today" className="space-y-4 mt-0">
-              {visitsData.map(visit => (
+              {visitsData.map((visit: Visit) => (
                 <VisitCard key={visit.id} visit={visit} />
               ))}
 
@@ -197,7 +135,7 @@ const Dashboard = () => {
             
             <TabsContent value="available" className="mt-0">
               <div className="space-y-4">
-                {availableVisits.map(visit => (
+                {availableVisits.map((visit: Visit) => (
                   <Card key={visit.id} className="overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">

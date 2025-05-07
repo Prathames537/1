@@ -1,14 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-
-// Copy the mock earningsHistory from Earnings.tsx
-const earningsHistory = [
-  { id: '1', date: 'May 15, 2025', patientName: 'John Doe', visitType: 'Blood Test', amount: 120, status: 'Paid' },
-  { id: '2', date: 'May 15, 2025', patientName: 'Jane Smith', visitType: 'X-Ray', amount: 180, status: 'Paid' },
-  { id: '3', date: 'May 14, 2025', patientName: 'Robert Johnson', visitType: 'Vitals Check', amount: 85, status: 'Paid' },
-  { id: '4', date: 'May 13, 2025', patientName: 'Mary Williams', visitType: 'Blood Test', amount: 120, status: 'Paid' },
-  { id: '5', date: 'May 12, 2025', patientName: 'David Brown', visitType: 'Vitals Check', amount: 85, status: 'Paid' },
-];
+import { earningsHistory } from '../lib/mockData';
 
 const EarningDetails = () => {
   const { id } = useParams<{ id: string }>();

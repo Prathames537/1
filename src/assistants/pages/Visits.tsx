@@ -16,59 +16,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from '@/components/ui/select';
 import { Visit } from '../components/dashboard/VisitCard';
-
-// Mock data
-const upcomingVisits: Visit[] = [
-  {
-    id: '1',
-    patientName: 'John Doe',
-    patientAge: 65,
-    address: '123 Main Street, Apt 4B, New York, NY 10001',
-    time: '9:00 AM',
-    visitType: 'Blood Test',
-    isUrgent: true,
-    status: 'upcoming'
-  },
-  {
-    id: '2',
-    patientName: 'Jane Smith',
-    patientAge: 78,
-    address: '456 Park Avenue, New York, NY 10022',
-    time: '11:30 AM',
-    visitType: 'X-Ray',
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    patientName: 'Robert Johnson',
-    patientAge: 72,
-    address: '789 Broadway, New York, NY 10003',
-    time: '2:15 PM',
-    visitType: 'Vitals Check',
-    status: 'upcoming'
-  }
-];
-
-const completedVisits: Visit[] = [
-  {
-    id: '4',
-    patientName: 'Mary Williams',
-    patientAge: 60,
-    address: '101 East Village, New York, NY 10009',
-    time: '10:00 AM',
-    visitType: 'Blood Test',
-    status: 'completed'
-  },
-  {
-    id: '5',
-    patientName: 'David Brown',
-    patientAge: 75,
-    address: '222 West End Avenue, New York, NY 10023',
-    time: '2:00 PM',
-    visitType: 'Vitals Check',
-    status: 'completed'
-  }
-];
+import { upcomingVisits, completedVisits } from '../lib/mockData';
 
 const Visits = () => {
   const [searchTerm, setSearchTerm] = useState('');

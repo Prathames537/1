@@ -14,28 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Module } from '../components/learning/ModuleCard';
 import LessonContent, { Lesson } from '../components/learning/LessonContent';
 import { patientPrivacyLessons } from '../components/learning/LessonData';
-
-const modules = [
-  {
-    id: '1',
-    title: 'Patient Privacy',
-    description: 'Learn about patient privacy best practices and HIPAA compliance.',
-    content: 'Full content for Module 1: Patient Privacy...',
-    duration: '45 mins',
-    progress: 100,
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: '2',
-    title: 'Infection Control',
-    description: 'Understand infection control protocols and PPE usage.',
-    content: 'Full content for Module 2: Infection Control...',
-    duration: '1 hour',
-    progress: 75,
-    image: 'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?auto=format&fit=crop&q=80&w=300'
-  },
-  // Add more modules as needed
-];
+import { modules } from '../lib/mockData';
 
 const moduleLessons: Record<string, Lesson[]> = {
   '3': patientPrivacyLessons

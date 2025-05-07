@@ -16,49 +16,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-
-// Replace the static patientData and visitData with an array of visits
-const visits = [
-  {
-    id: '1',
-    patientData: {
-      id: '1',
-      name: 'John Doe',
-      age: 65,
-      gender: 'Male',
-      contact: '+1 (555) 123-4567',
-      address: '123 Main Street, Apt 4B, New York, NY 10001',
-      insuranceProvider: 'Medicare',
-      insuranceId: 'MED12345678',
-      allergies: ['Penicillin', 'Latex'],
-      medicalHistory: ['Hypertension', 'Type 2 Diabetes', 'COPD'],
-    },
-    visitData: {
-      id: '1',
-      time: '9:00 AM - 9:45 AM',
-      date: 'May 15, 2025',
-      type: 'Blood Test',
-      requiredEquipment: ['Blood collection kit', 'Gloves', 'Alcohol swabs'],
-      notes: 'Patient has difficulty with blood draws. Please use butterfly needle and draw from left arm only.',
-      isUrgent: true,
-      status: 'upcoming',
-      paymentAmount: 85,
-    },
-    vitalSigns: [
-      { name: 'Blood Pressure', value: '130/85 mmHg' },
-      { name: 'Heart Rate', value: '78 bpm' },
-      { name: 'Respiratory Rate', value: '16 breaths/min' },
-      { name: 'Temperature', value: '98.6°F' },
-      { name: 'Oxygen Saturation', value: '96%' },
-    ],
-    pastVisits: [
-      { date: 'April 30, 2025', type: 'Vital Signs Check', notes: 'Patient reported feeling well. All vitals within normal range.' },
-      { date: 'March 15, 2025', type: 'Blood Test', notes: 'Difficult blood draw, used butterfly needle. Results sent to Dr. Smith.' },
-      { date: 'February 5, 2025', type: 'X-Ray (Chest)', notes: 'Patient reported some discomfort while breathing deeply. Images clear.' },
-    ],
-  },
-  // Add more mock visits here as needed
-];
+import { visits } from '../lib/mockData';
 
 const VisitDetails = () => {
   const { id } = useParams<{ id: string }>();
