@@ -173,8 +173,8 @@ export const visits = [
     address: '123 Main St, Apt 4B, New York, NY 10001',
     date: '2024-03-15',
     time: '10:30 AM',
-    status: 'scheduled',
-    type: 'follow-up',
+    status: 'scheduled' as 'scheduled',
+    type: 'follow-up' as 'follow-up',
     assistant: 'Dr. Emily Chen',
     assistantImage: 'https://randomuser.me/api/portraits/women/68.jpg',
     patientContact: {
@@ -208,8 +208,8 @@ export const visits = [
     address: '456 Park Ave, Suite 2, New York, NY 10022',
     date: '2024-03-15',
     time: '2:00 PM',
-    status: 'in-progress',
-    type: 'initial',
+    status: 'in-progress' as 'in-progress',
+    type: 'initial' as 'initial',
     assistant: 'Dr. Michael Brown',
     assistantImage: 'https://randomuser.me/api/portraits/men/32.jpg',
     patientContact: {
@@ -238,8 +238,8 @@ export const visits = [
     address: '789 Broadway, New York, NY 10003',
     date: '2024-03-16',
     time: '11:00 AM',
-    status: 'scheduled',
-    type: 'emergency',
+    status: 'scheduled' as 'scheduled',
+    type: 'emergency' as 'emergency',
     assistant: 'Dr. Sarah Wilson',
     assistantImage: 'https://randomuser.me/api/portraits/women/28.jpg',
     patientContact: {

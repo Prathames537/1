@@ -4,7 +4,7 @@ import AppointmentCard from '../components/dashboard/AppointmentCard';
 import AlertItem from '../components/dashboard/AlertItem';
 import QuickActionCard from '../components/dashboard/QuickActionCard';
 import { useNavigate } from 'react-router-dom';
-import { patients, appointments, visits, notifications } from '../lib/mockData';
+import { patients, appointments } from '../lib/mockData';
 
 const Dashboard = () => {
   const navigate = useNavigate();

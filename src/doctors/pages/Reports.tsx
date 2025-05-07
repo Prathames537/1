@@ -9,23 +9,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { reports } from '../lib/mockData';
 
-interface Report {
-  id: string;
-  patientName: string;
-  patientImage?: string;
-  date: string;
-  type: "blood_test" | "xray" | "mri" | "ultrasound" | "ecg";
-  status: "completed" | "pending" | "cancelled";
-  results: {
-    name: string;
-    value: string;
-    unit: string;
-    normalRange: string;
-  }[];
-  notes: string;
-  fileUrl?: string;
-}
-
 export default function Reports() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");

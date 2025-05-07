@@ -9,27 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { consultations } from '../lib/mockData';
 
-interface Consultation {
-  id: string;
-  patientName: string;
-  patientImage?: string;
-  date: string;
-  time: string;
-  status: "completed" | "scheduled" | "cancelled";
-  type: "follow-up" | "new" | "emergency";
-  symptoms: string[];
-  diagnosis: string;
-  prescription?: {
-    medicines: {
-      name: string;
-      dosage: string;
-      duration: string;
-    }[];
-    notes: string;
-  };
-  notes: string;
-}
-
 export default function Consultations() {
   const [searchQuery, setSearchQuery] = useState("");
 
