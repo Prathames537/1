@@ -15,34 +15,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-
-// FAQ data
-const faqs = [
-  {
-    question: "How do I get assigned to home visits?",
-    answer: "Visits are assigned based on your location, availability, and qualifications. Make sure your profile is complete with all certifications and that you've set your availability in the calendar. You can also pick up additional visits from the 'Available Visits' section."
-  },
-  {
-    question: "What equipment do I need to bring to visits?",
-    answer: "Each visit will specify the required equipment in the visit details. Welli provides most specialized equipment, but you should always have basic items like gloves, hand sanitizer, a stethoscope, and a blood pressure monitor. Review the visit details carefully before heading out."
-  },
-  {
-    question: "How is my pay calculated?",
-    answer: "Pay is calculated based on the type of visit, with additional factors like travel distance, urgency, and special skills required. You'll see the payment amount for each visit before accepting it. Bonuses may apply for high-demand times or exceptional service."
-  },
-  {
-    question: "What do I do if a patient isn't home for a scheduled visit?",
-    answer: "If a patient isn't home, wait for at least 10 minutes and try calling them. If they don't answer, mark the visit as 'Patient No-Show' in the app, take a photo of the location as documentation, and contact support. You'll receive partial compensation for no-show visits."
-  },
-  {
-    question: "How do I handle a medical emergency during a visit?",
-    answer: "In case of a medical emergency, call 911 immediately. Stay with the patient until emergency services arrive, providing any appropriate first aid within your scope of practice. After the situation is stable, file an incident report through the app and contact your supervisor."
-  },
-  {
-    question: "When are payments processed?",
-    answer: "Payments are processed weekly, with earnings from the previous week deposited every Monday. You can view your pending and processed payments in the Earnings section. Instant withdrawals are available for a small fee if you need funds sooner."
-  }
-];
+import { faqs } from '../lib/mockData';
 
 const Support = () => {
   const { toast } = useToast();
