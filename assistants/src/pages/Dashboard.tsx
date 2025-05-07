@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
-import { AlertTriangle, ArrowRight, Navigation, MapPin, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Navigation, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
 
@@ -252,7 +252,14 @@ const Dashboard = () => {
         </div>
         {/* Earnings summary and map view */}
         <div className="space-y-4">
-          <EarningsSummary />
+          // When rendering EarningsSummary, pass the required props
+          // Example values are provided, replace them with your actual data as needed
+          <EarningsSummary 
+            today={1500}
+            thisWeek={9000}
+            thisMonth={35000}
+            changePercentage={5.2}
+          />
           <MapView />
         </div>
       </div>
