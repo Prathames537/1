@@ -8,10 +8,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { reports } from '../lib/mockData';
+import { useNavigate } from 'react-router-dom';
 
 export default function Reports() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const navigate = useNavigate();
 
   const filteredReports = reports.filter(report => {
     const matchesSearch = report.patientName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -59,7 +61,7 @@ export default function Reports() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredReports.map((report) => (
-          <Card key={report.id}>
+          <Card key={report.id} onClick={() => navigate(`/doctors/reports/${report.id}`)} className="cursor-pointer hover:bg-welli-light-green/20">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">

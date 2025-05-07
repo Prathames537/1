@@ -6,9 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { earnings, monthlySummaries } from '../lib/mockData';
+import { useNavigate } from 'react-router-dom';
 
 export default function Earnings() {
   const [selectedMonth, setSelectedMonth] = useState(monthlySummaries[0].month);
+  const navigate = useNavigate();
 
   const currentMonthSummary = monthlySummaries.find(
     summary => summary.month === selectedMonth
@@ -106,7 +108,8 @@ export default function Earnings() {
                   {earnings.map((earning) => (
                     <div
                       key={earning.id}
-                      className="flex items-center justify-between rounded-lg border p-4"
+                      className="flex items-center justify-between rounded-lg border p-4 cursor-pointer hover:bg-welli-light-green/20"
+                      onClick={() => navigate(`/doctors/earnings/${earning.id}`)}
                     >
                       <div className="space-y-1">
                         <p className="font-medium">{earning.patientName}</p>

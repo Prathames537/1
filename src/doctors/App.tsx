@@ -19,6 +19,9 @@ import Notifications from "./pages/Notifications";
 import AIBot from "./pages/AIBot";
 import NotFound from "./pages/NotFound";
 import AppointmentDetails from "./pages/AppointmentDetails";
+import EarningDetails from "./pages/EarningDetails";
+import ReportDetails from "./pages/ReportDetails";
+import ConsultationDetails from "./pages/ConsultationDetails";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +45,9 @@ const App = () => (
           <Route path="/notifications" element={<MainLayout><Notifications /></MainLayout>} />
           <Route path="/ai-assistant" element={<MainLayout><AIBot /></MainLayout>} />
           <Route path="/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
+          <Route path="/doctors/earnings/:id" element={<MainLayout><EarningDetails /></MainLayout>} />
+          <Route path="/doctors/reports/:id" element={<MainLayout><ReportDetails /></MainLayout>} />
+          <Route path="/doctors/consultations/:id" element={<MainLayout><ConsultationDetails /></MainLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

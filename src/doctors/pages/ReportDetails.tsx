@@ -1,0 +1,49 @@
+import { useParams, useNavigate } from 'react-router-dom';
+import { reports } from '../lib/mockData';
+import { Button } from '@/components/ui/button';
+
+const ReportDetails = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const report = reports.find(r => r.id === id);
+  if (!report) {
+    return <div className="p-8 text-center text-red-500">Report not found.</div>;
+  }
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <Button variant="ghost" size="icon" onClick={() => navigate('/doctors/reports')}>
+        Back to Reports
+      </Button>
+      <h1 className="text-2xl font-bold">Report Details</h1>
+      <div className="bg-white rounded-xl shadow-card p-6">
+        <div className="flex items-center gap-4">
+          <img src={report.patientImage} alt={report.patientName} className="w-16 h-16 rounded-full" />
+          <div>
+            <h2 className="text-xl font-semibold">{report.patientName}</h2>
+            <p className="text-welli-textSecondary">{report.type.replace('_', ' ').toUpperCase()} • {report.date}</p>
+            <p className="text-welli-textSecondary">Status: {report.status}</p>
+          </div>
+        </div>
+        <div className="mt-4">
+          <h3 className="font-medium">Results</h3>
+          <ul className="list-disc ml-6">
+            {report.results.map((result, i) => (
+              <li key={i}>{result.name}: {result.value} {result.unit} (Normal: {result.normalRange})</li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-4">
+          <h3 className="font-medium">Notes</h3>
+          <p>{report.notes}</p>
+        </div>
+        {report.fileUrl && (
+          <div className="mt-4">
+            <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="text-welli-green underline">Download Report</a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ReportDetails; 

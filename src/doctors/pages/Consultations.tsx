@@ -8,9 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { consultations } from '../lib/mockData';
+import { useNavigate } from 'react-router-dom';
 
 export default function Consultations() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const filteredConsultations = consultations.filter(consultation =>
     consultation.patientName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -52,7 +54,7 @@ export default function Consultations() {
         <TabsContent value="all" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredConsultations.map((consultation) => (
-              <Card key={consultation.id}>
+              <Card key={consultation.id} onClick={() => navigate(`/doctors/consultations/${consultation.id}`)} className="cursor-pointer hover:bg-welli-light-green/20">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
