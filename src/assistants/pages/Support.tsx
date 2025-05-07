@@ -10,7 +10,7 @@ import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger 
 } from "@/components/ui/accordion";
 import { 
-  MessageSquare, Send, Search, HelpCircle, Phone,
+  MessageSquare, Search, HelpCircle, Phone,
   FileText, Clock, CheckCircle, Mail
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';

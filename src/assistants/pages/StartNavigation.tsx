@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -6,7 +5,6 @@ import {
   CardContent, 
   CardHeader, 
   CardTitle, 
-  CardDescription 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,7 +12,6 @@ import {
   ArrowLeft, 
   MapPin, 
   Clock, 
-  User,
   ChevronRight,
   Plus,
   Minus
@@ -31,7 +28,7 @@ const StartNavigation = () => {
     toast({
       title: "Navigation Started",
       description: "Turn-by-turn directions to Shyam Nagar have begun",
-      variant: "success",
+      variant: "default",
     });
   };
 

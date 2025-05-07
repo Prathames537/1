@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -15,8 +14,7 @@ import {
   Search, 
   Filter,
   Navigation,
-  Clock,
-  ChevronRight
+  Clock
 } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
