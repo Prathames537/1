@@ -28,10 +28,8 @@ import EmergencyHelpPage from "./pages/EmergencyHelpPage";
 import BloodBankPage from "./pages/BloodBankPage";
 import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 import Chatbot from "./pages/Chatbot";
-import AssistantsIndex from "./assistants/pages/Index";
 import AssistantsDashboard from "./assistants/pages/Dashboard";
 import AssistantsLayout from "./assistants/components/layout/Layout";
-import DoctorsIndex from "./doctors/pages/Index";
 import DoctorsDashboard from "./doctors/pages/Dashboard";
 import DoctorsMainLayout from "./doctors/components/layout/MainLayout";
 

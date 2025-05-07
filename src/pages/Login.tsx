@@ -1,7 +1,6 @@
 import { useState } from "react";
 // import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,8 +15,6 @@ const Login = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPatientLogin, setShowPatientLogin] = useState(true);
-
-  const navigate = useNavigate();
 
   const handleAadhaarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "");
