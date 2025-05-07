@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
-  
   useEffect(() => {
-    // Redirect to the dashboard
-    navigate("/dashboard");
+    // Always redirect to the dashboard for assistants
+    navigate("/dashboard", { replace: true });
   }, [navigate]);
-
-  return null; // No need to render anything as we're redirecting
+  return null;
 };
 
 export default Index;
