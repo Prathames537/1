@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +20,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useNavigate } from 'react-router-dom';
 
 // Mock earnings history
 const earningsHistory = [
@@ -95,6 +95,7 @@ const Earnings = () => {
   const { toast } = useToast();
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [withdrawMethod, setWithdrawMethod] = useState('bank');
+  const navigate = useNavigate();
   
   const handleWithdraw = () => {
     toast({
@@ -289,7 +290,7 @@ const Earnings = () => {
                 </TableHeader>
                 <TableBody>
                   {earningsHistory.map((entry) => (
-                    <TableRow key={entry.id}>
+                    <TableRow key={entry.id} onClick={() => navigate(`/assistants/earnings/${entry.id}`)} className="cursor-pointer hover:bg-welli-light-green/20">
                       <TableCell>{entry.date}</TableCell>
                       <TableCell>{entry.patientName}</TableCell>
                       <TableCell>{entry.visitType}</TableCell>

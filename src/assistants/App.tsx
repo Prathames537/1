@@ -15,6 +15,7 @@ import StartNavigation from "./pages/StartNavigation";
 import MarkVisitComplete from "./pages/MarkVisitComplete";
 import ViewAllLocations from "./pages/ViewAllLocations";
 import FloatingChat from "./components/support/FloatingChat";
+import EarningDetails from "./pages/EarningDetails";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/visits" element={<Visits />} />
           <Route path="/visits/:id" element={<VisitDetails />} />
           <Route path="/earnings" element={<Earnings />} />
+          <Route path="/earnings/:id" element={<EarningDetails />} />
           <Route path="/learning" element={<LearningHub />} />
           <Route path="/learning/:id" element={<ModuleDetails />} />
           <Route path="/settings" element={<Settings />} />
