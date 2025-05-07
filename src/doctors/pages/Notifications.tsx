@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Bell, Calendar, MessageCircle, FileText } from 'lucide-react';
+import { notifications } from '../lib/mockData';
 
 interface Notification {
   id: string;
@@ -9,41 +10,6 @@ interface Notification {
   time: string;
   isRead: boolean;
 }
-
-const notifications: Notification[] = [
-  {
-    id: '1',
-    type: 'appointment',
-    title: 'Upcoming Appointment',
-    description: 'Video consultation with Sarah Johnson in 30 minutes',
-    time: '30 minutes ago',
-    isRead: false,
-  },
-  {
-    id: '2',
-    type: 'message',
-    title: 'New Message',
-    description: 'Robert Chen sent you a message about medication refill',
-    time: '1 hour ago',
-    isRead: false,
-  },
-  {
-    id: '3',
-    type: 'report',
-    title: 'Lab Results Ready',
-    description: 'Blood test results for Emma Garcia are now available',
-    time: '2 hours ago',
-    isRead: true,
-  },
-  {
-    id: '4',
-    type: 'system',
-    title: 'System Update',
-    description: 'New features have been added to your dashboard',
-    time: '1 day ago',
-    isRead: true,
-  },
-];
 
 const NotificationItem = ({ notification }: { notification: Notification }) => {
   const icons = {
