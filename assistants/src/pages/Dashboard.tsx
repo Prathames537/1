@@ -7,9 +7,9 @@ import { BadgeDollarSign, AlertTriangle, ArrowRight, Navigation, MapPin, CheckCi
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-import VisitCard, { Visit } from "../components/dashboard/VisitCard";
-import EarningsSummary from "../components/dashboard/EarningsSummary";
-import MapView from "../components/dashboard/MapView";
+import VisitCard, { Visit } from "@/components/dashboard/VisitCard";
+import EarningsSummary from "@/components/dashboard/EarningsSummary";
+import MapView from "@/components/dashboard/MapView";
 
 // Mock data with Indian names and locations
 const visitsData: Visit[] = [
@@ -79,11 +79,11 @@ const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleAcceptVisit = () => {
+  const handleAcceptVisit = (visitId: string) => {
     toast({
       title: "Visit Accepted",
       description: "The visit has been added to your schedule.",
-      variant: "default",
+      variant: "success",
     });
   };
 
@@ -238,7 +238,7 @@ const Dashboard = () => {
                         </Button>
                         <Button 
                           className="w-full gradient-cta"
-                          onClick={() => handleAcceptVisit()}
+                          onClick={() => handleAcceptVisit(visit.id)}
                         >
                           Accept Visit
                         </Button>
@@ -250,63 +250,12 @@ const Dashboard = () => {
             </TabsContent>
           </Tabs>
         </div>
-
-        {/* Earnings widget */}
-        <div>
-          <EarningsSummary 
-            today={5250} 
-            thisWeek={32500} 
-            thisMonth={147500} 
-            changePercentage={12.5} 
-          />
-          
-          {/* Quick stats */}
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Visits Today</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">3</div>
-                <p className="text-xs text-welli-textSecondary mt-1">
-                  2 completed, 1 remaining
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Avg. Rating</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">4.8</div>
-                <p className="text-xs text-welli-textSecondary mt-1">
-                  from 27 patient reviews
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Withdrawal shortcut */}
-          <Card className="mt-4 bg-gradient-to-r from-welli-main to-welli-accent text-white">
-            <CardContent className="flex items-center justify-between p-4">
-              <div>
-                <h3 className="font-semibold">Available for Withdrawal</h3>
-                <p className="text-2xl font-bold mt-1">$72,500</p>
-              </div>
-              <Button variant="secondary" size="sm" className="whitespace-nowrap" asChild>
-                <Link to="/earnings#withdraw">
-                  <BadgeDollarSign className="h-4 w-4 mr-1" />
-                  Withdraw
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Earnings summary and map view */}
+        <div className="space-y-4">
+          <EarningsSummary />
+          <MapView />
         </div>
       </div>
-
-      {/* Map */}
-      <MapView />
     </div>
   );
 };
