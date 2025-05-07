@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -6,78 +6,60 @@ import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
 import { AlertTriangle, Navigation, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../hooks/use-toast';
+import { supabase } from '../../src/lib/supabaseClient';
 
 import VisitCard, { Visit } from "../components/dashboard/VisitCard";
 import EarningsSummary from "../components/dashboard/EarningsSummary";
 import MapView from "../components/dashboard/MapView";
 
-// Mock data with Indian names and locations
-const visitsData: Visit[] = [
-  {
-    id: '1',
-    patientName: 'Rajesh Kumar',
-    patientAge: 65,
-    address: '42 Shyam Nagar, Delhi NCR, 110001',
-    time: '9:00 AM',
-    visitType: 'Blood Test',
-    isUrgent: true,
-    status: 'upcoming'
-  },
-  {
-    id: '2',
-    patientName: 'Priya Sharma',
-    patientAge: 78,
-    address: '105 Andheri West, Mumbai, 400053',
-    time: '11:30 AM',
-    visitType: 'X-Ray',
-    status: 'upcoming'
-  },
-  {
-    id: '3',
-    patientName: 'Vikram Mehta',
-    patientAge: 72,
-    address: '78 Indiranagar, Bangalore, 560038',
-    time: '2:15 PM',
-    visitType: 'Vitals Check',
-    status: 'upcoming'
-  }
-];
-
-const availableVisits: Visit[] = [
-  {
-    id: '6',
-    patientName: 'Anita Desai',
-    patientAge: 58,
-    address: '56 Banjara Hills, Hyderabad, 500034',
-    time: '10:45 AM',
-    visitType: 'Blood Pressure Check',
-    status: 'upcoming'
-  },
-  {
-    id: '7',
-    patientName: 'Suresh Patel',
-    patientAge: 82,
-    address: '25 Salt Lake, Kolkata, 700091',
-    time: '1:30 PM',
-    visitType: 'Diabetes Screening',
-    status: 'upcoming',
-    isUrgent: true
-  },
-  {
-    id: '8',
-    patientName: 'Meera Reddy',
-    patientAge: 69,
-    address: '15 Adyar, Chennai, 600020',
-    time: '3:00 PM',
-    visitType: 'Medication Review',
-    status: 'upcoming'
-  }
-];
-
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("today");
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [visitsData, setVisitsData] = useState<Visit[]>([]);
+  const [availableVisits, setAvailableVisits] = useState<Visit[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      setError(null);
+      // Fetch today's and available visits from Supabase
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('id, appointment_date, status, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)');
+      if (error) {
+        setError('Failed to fetch dashboard data');
+        setLoading(false);
+        return;
+      }
+      // Map data to Visit type
+      const today = (data || []).filter((appt: any) => appt.status === 'scheduled').map((appt: any) => ({
+        id: appt.id,
+        patientName: appt.patient?.name || '',
+        patientAge: 0, // TODO: Add age if available
+        address: '', // TODO: Add address if available
+        time: new Date(appt.appointment_date).toLocaleTimeString(),
+        visitType: '', // TODO: Add type if available
+        isUrgent: false, // TODO: Add if available
+        status: appt.status
+      }));
+      const available = (data || []).filter((appt: any) => appt.status === 'available').map((appt: any) => ({
+        id: appt.id,
+        patientName: appt.patient?.name || '',
+        patientAge: 0,
+        address: '',
+        time: new Date(appt.appointment_date).toLocaleTimeString(),
+        visitType: '',
+        status: appt.status
+      }));
+      setVisitsData(today);
+      setAvailableVisits(available);
+      setLoading(false);
+    };
+    fetchDashboardData();
+  }, []);
 
   const handleAcceptVisit = () => {
     toast({
@@ -86,6 +68,9 @@ const Dashboard = () => {
       variant: "default",
     });
   };
+
+  if (loading) return <div>Loading dashboard...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6 animate-fade-in">

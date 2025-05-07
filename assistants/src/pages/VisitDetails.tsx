@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calendar, Clock, MapPin, ClipboardList, 
@@ -18,65 +17,37 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-
-// Mock data - would normally come from an API
-const patientData = {
-  id: '1',
-  name: 'John Doe',
-  age: 65,
-  gender: 'Male',
-  contact: '+1 (555) 123-4567',
-  address: '123 Main Street, Apt 4B, New York, NY 10001',
-  insuranceProvider: 'Medicare',
-  insuranceId: 'MED12345678',
-  allergies: ['Penicillin', 'Latex'],
-  medicalHistory: ['Hypertension', 'Type 2 Diabetes', 'COPD'],
-};
-
-const visitData = {
-  id: '1',
-  time: '9:00 AM - 9:45 AM',
-  date: 'May 15, 2025',
-  type: 'Blood Test',
-  requiredEquipment: ['Blood collection kit', 'Gloves', 'Alcohol swabs'],
-  notes: 'Patient has difficulty with blood draws. Please use butterfly needle and draw from left arm only.',
-  isUrgent: true,
-  status: 'upcoming',
-  paymentAmount: 85,
-};
-
-const vitalSigns = [
-  { name: 'Blood Pressure', value: '130/85 mmHg' },
-  { name: 'Heart Rate', value: '78 bpm' },
-  { name: 'Respiratory Rate', value: '16 breaths/min' },
-  { name: 'Temperature', value: '98.6°F' },
-  { name: 'Oxygen Saturation', value: '96%' },
-];
-
-const pastVisits = [
-  { 
-    date: 'April 30, 2025', 
-    type: 'Vital Signs Check',
-    notes: 'Patient reported feeling well. All vitals within normal range.'  
-  },
-  { 
-    date: 'March 15, 2025', 
-    type: 'Blood Test',
-    notes: 'Difficult blood draw, used butterfly needle. Results sent to Dr. Smith.'  
-  },
-  { 
-    date: 'February 5, 2025', 
-    type: 'X-Ray (Chest)',
-    notes: 'Patient reported some discomfort while breathing deeply. Images clear.'  
-  },
-];
+import { supabase } from '../../src/lib/supabaseClient';
 
 const VisitDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [visit, setVisit] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [visitStatus, setVisitStatus] = useState<'upcoming' | 'in-progress' | 'completed'>('upcoming');
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const fetchVisit = async () => {
+      setLoading(true);
+      setError(null);
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('*, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)')
+        .eq('id', id)
+        .single();
+      if (error) {
+        setError('Failed to fetch visit details');
+        setLoading(false);
+        return;
+      }
+      setVisit(data);
+      setLoading(false);
+    };
+    if (id) fetchVisit();
+  }, [id]);
 
   const handleStartVisit = () => {
     setVisitStatus('in-progress');
@@ -105,6 +76,9 @@ const VisitDetails = () => {
     }, 2000);
   };
 
+  if (loading) return <div>Loading visit details...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
@@ -115,12 +89,12 @@ const VisitDetails = () => {
         
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">{patientData.name}</h1>
+            <h1 className="text-2xl font-bold">{visit.patient.name}</h1>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-welli-textSecondary">Visit #{visitData.id}</span>
+              <span className="text-welli-textSecondary">Visit #{visit.id}</span>
               <span>•</span>
-              <Badge variant={visitData.isUrgent ? "destructive" : "outline"}>
-                {visitData.isUrgent ? 'Urgent' : visitData.type}
+              <Badge variant={visit.isUrgent ? "destructive" : "outline"}>
+                {visit.isUrgent ? 'Urgent' : visit.type}
               </Badge>
               <Badge 
                 className={
@@ -207,21 +181,21 @@ const VisitDetails = () => {
                   <Calendar className="h-5 w-5 text-welli-textSecondary mt-0.5" />
                   <div>
                     <p className="text-sm text-welli-textSecondary">Date</p>
-                    <p className="font-medium">{visitData.date}</p>
+                    <p className="font-medium">{visit.date}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Clock className="h-5 w-5 text-welli-textSecondary mt-0.5" />
                   <div>
                     <p className="text-sm text-welli-textSecondary">Time</p>
-                    <p className="font-medium">{visitData.time}</p>
+                    <p className="font-medium">{visit.time}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <MapPin className="h-5 w-5 text-welli-textSecondary mt-0.5" />
                   <div>
                     <p className="text-sm text-welli-textSecondary">Location</p>
-                    <p className="font-medium">{patientData.address}</p>
+                    <p className="font-medium">{visit.patient.address}</p>
                   </div>
                 </div>
               </div>
@@ -229,14 +203,14 @@ const VisitDetails = () => {
               <div>
                 <h3 className="font-medium mb-2">Required Equipment</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  {visitData.requiredEquipment.map((item, index) => (
+                  {visit.requiredEquipment.map((item, index) => (
                     <li key={index} className="text-sm">{item}</li>
                   ))}
                 </ul>
                 
                 <h3 className="font-medium mt-4 mb-2">Special Notes</h3>
                 <p className="text-sm bg-welli-background p-3 rounded-md">
-                  {visitData.notes}
+                  {visit.notes}
                 </p>
               </div>
             </div>
@@ -281,15 +255,15 @@ const VisitDetails = () => {
               <div className="mt-2 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm">Age:</span>
-                  <span className="text-sm font-medium">{patientData.age}</span>
+                  <span className="text-sm font-medium">{visit.patient.age}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Gender:</span>
-                  <span className="text-sm font-medium">{patientData.gender}</span>
+                  <span className="text-sm font-medium">{visit.patient.gender}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Contact:</span>
-                  <span className="text-sm font-medium">{patientData.contact}</span>
+                  <span className="text-sm font-medium">{visit.patient.contact}</span>
                 </div>
               </div>
             </div>
@@ -301,11 +275,11 @@ const VisitDetails = () => {
               <div className="mt-2 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm">Provider:</span>
-                  <span className="text-sm font-medium">{patientData.insuranceProvider}</span>
+                  <span className="text-sm font-medium">{visit.patient.insuranceProvider}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">ID:</span>
-                  <span className="text-sm font-medium">{patientData.insuranceId}</span>
+                  <span className="text-sm font-medium">{visit.patient.insuranceId}</span>
                 </div>
               </div>
             </div>
@@ -315,12 +289,12 @@ const VisitDetails = () => {
             <div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-welli-textSecondary">Allergies</p>
-                {patientData.allergies.length > 0 && (
+                {visit.patient.allergies.length > 0 && (
                   <AlertTriangle className="h-4 w-4 text-amber-500" />
                 )}
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
-                {patientData.allergies.map((allergy, index) => (
+                {visit.patient.allergies.map((allergy, index) => (
                   <Badge key={index} variant="outline" className="bg-red-50">
                     {allergy}
                   </Badge>
@@ -334,7 +308,7 @@ const VisitDetails = () => {
                 <p className="text-sm text-welli-textSecondary">Medical History</p>
               </div>
               <div className="mt-2 space-y-1">
-                {patientData.medicalHistory.map((condition, index) => (
+                {visit.patient.medicalHistory.map((condition, index) => (
                   <div key={index} className="text-sm">{condition}</div>
                 ))}
               </div>
@@ -358,7 +332,7 @@ const VisitDetails = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {vitalSigns.map((vital, index) => (
+                {visit.vitalSigns.map((vital, index) => (
                   <Card key={index}>
                     <CardContent className="p-4">
                       <p className="text-sm text-welli-textSecondary">{vital.name}</p>
@@ -409,7 +383,7 @@ const VisitDetails = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pastVisits.map((visit, index) => (
+                  {visit.pastVisits.map((visit, index) => (
                     <TableRow key={index}>
                       <TableCell>{visit.date}</TableCell>
                       <TableCell>{visit.type}</TableCell>
@@ -438,7 +412,7 @@ const VisitDetails = () => {
                     <CardContent className="p-4">
                       <div className="flex justify-between items-center mb-2">
                         <span>Base pay (Blood Test)</span>
-                        <span className="font-medium">${visitData.paymentAmount}</span>
+                        <span className="font-medium">${visit.paymentAmount}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm text-welli-textSecondary mb-2">
                         <span>Travel allowance</span>
@@ -451,7 +425,7 @@ const VisitDetails = () => {
                       <Separator className="my-2" />
                       <div className="flex justify-between items-center mt-2 font-semibold">
                         <span>Total</span>
-                        <span>${visitData.paymentAmount + 35}</span>
+                        <span>${visit.paymentAmount + 35}</span>
                       </div>
                     </CardContent>
                   </Card>
@@ -464,11 +438,11 @@ const VisitDetails = () => {
                       <div className="flex flex-col space-y-2">
                         <div className="flex justify-between">
                           <span>Provider</span>
-                          <span className="font-medium">{patientData.insuranceProvider}</span>
+                          <span className="font-medium">{visit.patient.insuranceProvider}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Policy Number</span>
-                          <span className="font-medium">{patientData.insuranceId}</span>
+                          <span className="font-medium">{visit.patient.insuranceId}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Coverage Type</span>

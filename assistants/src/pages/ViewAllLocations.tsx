@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
@@ -28,6 +27,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { supabase } from '../../src/lib/supabaseClient';
 
 interface Location {
   id: string;
@@ -40,66 +40,45 @@ interface Location {
   distance: string;
 }
 
-// Mock data with Indian locations
-const locations: Location[] = [
-  {
-    id: '1',
-    patientName: 'Rajesh Kumar',
-    address: '42 Shyam Nagar',
-    city: 'Delhi NCR',
-    visitType: 'Blood Test',
-    time: '9:00 AM',
-    isUrgent: true,
-    distance: '3.2 km'
-  },
-  {
-    id: '2',
-    patientName: 'Priya Sharma',
-    address: '105 Andheri West',
-    city: 'Mumbai',
-    visitType: 'X-Ray',
-    time: '11:30 AM',
-    isUrgent: false,
-    distance: '5.6 km'
-  },
-  {
-    id: '3',
-    patientName: 'Vikram Mehta',
-    address: '78 Indiranagar',
-    city: 'Bangalore',
-    visitType: 'Vitals Check',
-    time: '2:15 PM',
-    isUrgent: false,
-    distance: '4.8 km'
-  },
-  {
-    id: '4',
-    patientName: 'Sanjay Patel',
-    address: '25 Salt Lake',
-    city: 'Kolkata',
-    visitType: 'Blood Test',
-    time: '4:00 PM',
-    isUrgent: true,
-    distance: '7.1 km'
-  },
-  {
-    id: '5',
-    patientName: 'Anita Desai',
-    address: '56 Banjara Hills',
-    city: 'Hyderabad',
-    visitType: 'Medication Delivery',
-    time: '5:30 PM',
-    isUrgent: false,
-    distance: '8.3 km'
-  }
-];
-
 const ViewAllLocations = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [city, setCity] = useState('all');
   const [visitType, setVisitType] = useState('all');
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
+  useEffect(() => {
+    const fetchLocations = async () => {
+      setLoading(true);
+      setError(null);
+      // Fetch appointments and join with patient info
+      const { data, error } = await supabase
+        .from('appointments')
+        .select('id, appointment_date, patient:patient_id(id, name, user_profiles(address)), status');
+      if (error) {
+        setError('Failed to fetch locations');
+        setLoading(false);
+        return;
+      }
+      // Map data to Location type
+      const mapped = (data || []).map((appt: any) => ({
+        id: appt.id,
+        patientName: appt.patient?.name || '',
+        address: appt.patient?.user_profiles?.address || '',
+        city: '', // TODO: Parse city from address if available
+        visitType: '', // TODO: Add type if available
+        time: new Date(appt.appointment_date).toLocaleTimeString(),
+        isUrgent: false, // TODO: Add if available
+        distance: '', // TODO: Calculate if available
+      }));
+      setLocations(mapped);
+      setLoading(false);
+    };
+    fetchLocations();
+  }, []);
+
   const filteredLocations = locations.filter(location => {
     const matchesSearch = 
       location.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -115,6 +94,9 @@ const ViewAllLocations = () => {
   const handleStartNavigation = (locationId: string) => {
     navigate('/start-navigation');
   };
+
+  if (loading) return <div>Loading locations...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6 animate-fade-in">
