@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { CalendarDays, Users, FileText, Video, MessageCircle, BarChart3, PiggyBank, Settings, Circle } from 'lucide-react';
 

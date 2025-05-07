@@ -70,7 +70,7 @@ const pastVisits = [
 ];
 
 const VisitDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [visitStatus, setVisitStatus] = useState<'upcoming' | 'in-progress' | 'completed'>('upcoming');

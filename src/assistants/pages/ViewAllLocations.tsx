@@ -110,7 +110,7 @@ const ViewAllLocations = () => {
     return matchesSearch && matchesCity && matchesVisitType;
   });
   
-  const handleStartNavigation = (locationId: string) => {
+  const handleStartNavigation = () => {
     navigate('/start-navigation');
   };
 
@@ -228,7 +228,7 @@ const ViewAllLocations = () => {
                       </Button>
                       <Button 
                         size="sm" 
-                        onClick={() => handleStartNavigation(location.id)}
+                        onClick={() => handleStartNavigation()}
                         className="bg-welli-accent hover:bg-welli-accent/90"
                       >
                         <Navigation className="h-3.5 w-3.5 mr-1" />

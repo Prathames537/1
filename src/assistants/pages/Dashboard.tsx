@@ -80,7 +80,7 @@ const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleAcceptVisit = (visitId: string) => {
+  const handleAcceptVisit = () => {
     toast({
       title: "Visit Accepted",
       description: "The visit has been added to your schedule.",
@@ -239,7 +239,7 @@ const Dashboard = () => {
                         </Button>
                         <Button 
                           className="w-full gradient-cta"
-                          onClick={() => handleAcceptVisit(visit.id)}
+                          onClick={() => handleAcceptVisit()}
                         >
                           Accept Visit
                         </Button>

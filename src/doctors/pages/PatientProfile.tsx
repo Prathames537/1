@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, MessageCircle, Video, Pill, FileText, User, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';

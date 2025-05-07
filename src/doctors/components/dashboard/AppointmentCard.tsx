@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { Video, MessageCircle, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
