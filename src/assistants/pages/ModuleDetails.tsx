@@ -15,48 +15,27 @@ import { Module } from '../components/learning/ModuleCard';
 import LessonContent, { Lesson } from '../components/learning/LessonContent';
 import { patientPrivacyLessons } from '../components/learning/LessonData';
 
-const modules: Record<string, Module> = {
-  '1': {
+const modules = [
+  {
     id: '1',
-    title: 'How to professionally behave during home visits',
-    description: 'Learn the essentials of professional conduct when visiting patients at their homes.',
+    title: 'Patient Privacy',
+    description: 'Learn about patient privacy best practices and HIPAA compliance.',
+    content: 'Full content for Module 1: Patient Privacy...',
     duration: '45 mins',
     progress: 100,
     image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=300'
   },
-  '2': {
+  {
     id: '2',
-    title: 'Medical equipment handling basics',
-    description: 'Master the proper handling techniques for common medical equipment used during home visits.',
+    title: 'Infection Control',
+    description: 'Understand infection control protocols and PPE usage.',
+    content: 'Full content for Module 2: Infection Control...',
     duration: '1 hour',
     progress: 75,
     image: 'https://images.unsplash.com/photo-1473091534298-04dcbce3278c?auto=format&fit=crop&q=80&w=300'
   },
-  '3': {
-    id: '3',
-    title: 'Patient sensitivity and privacy',
-    description: 'Understand the importance of patient privacy and how to maintain confidentiality.',
-    duration: '30 mins',
-    progress: 25,
-    image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&q=80&w=300'
-  },
-  '4': {
-    id: '4',
-    title: 'Emergency situations',
-    description: 'Learn how to identify and respond to medical emergencies during home visits.',
-    duration: '1.5 hours',
-    progress: 0,
-    image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?auto=format&fit=crop&q=80&w=300'
-  },
-  '5': {
-    id: '5',
-    title: 'How to upsell Welli services ethically',
-    description: 'Discover ethical approaches to recommending additional Welli services to patients.',
-    duration: '45 mins',
-    progress: 0,
-    image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=300'
-  }
-};
+  // Add more modules as needed
+];
 
 const moduleLessons: Record<string, Lesson[]> = {
   '3': patientPrivacyLessons
@@ -74,7 +53,7 @@ const ModuleDetails = () => {
 
   useEffect(() => {
     if (id) {
-      const moduleData = modules[id];
+      const moduleData = modules.find(m => m.id === id);
       if (moduleData) {
         setModule(moduleData);
         
@@ -119,11 +98,7 @@ const ModuleDetails = () => {
     : 0;
 
   if (!module) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-welli-textSecondary">Loading module...</p>
-      </div>
-    );
+    return <div className="p-8 text-center text-red-500">Module not found.</div>;
   }
 
   return (

@@ -50,7 +50,7 @@ const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
 
   return (
     <div className="welli-card flex items-center gap-4 hover:shadow-lg transition cursor-pointer"
-         onClick={() => navigate(`/patients/${appointment.id}`)}>
+         onClick={() => navigate(`/appointments/${appointment.id}`)}>
       <div className="w-12 h-12 rounded-full overflow-hidden">
         <img src={appointment.patientImage} alt={appointment.patientName} className="w-full h-full object-cover" />
       </div>

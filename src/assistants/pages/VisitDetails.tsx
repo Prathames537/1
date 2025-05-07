@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calendar, Clock, MapPin, Upload, Check, AlertTriangle, User, Heart, FileText 
 } from 'lucide-react';
@@ -17,64 +17,61 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock data - would normally come from an API
-const patientData = {
-  id: '1',
-  name: 'John Doe',
-  age: 65,
-  gender: 'Male',
-  contact: '+1 (555) 123-4567',
-  address: '123 Main Street, Apt 4B, New York, NY 10001',
-  insuranceProvider: 'Medicare',
-  insuranceId: 'MED12345678',
-  allergies: ['Penicillin', 'Latex'],
-  medicalHistory: ['Hypertension', 'Type 2 Diabetes', 'COPD'],
-};
-
-const visitData = {
-  id: '1',
-  time: '9:00 AM - 9:45 AM',
-  date: 'May 15, 2025',
-  type: 'Blood Test',
-  requiredEquipment: ['Blood collection kit', 'Gloves', 'Alcohol swabs'],
-  notes: 'Patient has difficulty with blood draws. Please use butterfly needle and draw from left arm only.',
-  isUrgent: true,
-  status: 'upcoming',
-  paymentAmount: 85,
-};
-
-const vitalSigns = [
-  { name: 'Blood Pressure', value: '130/85 mmHg' },
-  { name: 'Heart Rate', value: '78 bpm' },
-  { name: 'Respiratory Rate', value: '16 breaths/min' },
-  { name: 'Temperature', value: '98.6°F' },
-  { name: 'Oxygen Saturation', value: '96%' },
-];
-
-const pastVisits = [
-  { 
-    date: 'April 30, 2025', 
-    type: 'Vital Signs Check',
-    notes: 'Patient reported feeling well. All vitals within normal range.'  
+// Replace the static patientData and visitData with an array of visits
+const visits = [
+  {
+    id: '1',
+    patientData: {
+      id: '1',
+      name: 'John Doe',
+      age: 65,
+      gender: 'Male',
+      contact: '+1 (555) 123-4567',
+      address: '123 Main Street, Apt 4B, New York, NY 10001',
+      insuranceProvider: 'Medicare',
+      insuranceId: 'MED12345678',
+      allergies: ['Penicillin', 'Latex'],
+      medicalHistory: ['Hypertension', 'Type 2 Diabetes', 'COPD'],
+    },
+    visitData: {
+      id: '1',
+      time: '9:00 AM - 9:45 AM',
+      date: 'May 15, 2025',
+      type: 'Blood Test',
+      requiredEquipment: ['Blood collection kit', 'Gloves', 'Alcohol swabs'],
+      notes: 'Patient has difficulty with blood draws. Please use butterfly needle and draw from left arm only.',
+      isUrgent: true,
+      status: 'upcoming',
+      paymentAmount: 85,
+    },
+    vitalSigns: [
+      { name: 'Blood Pressure', value: '130/85 mmHg' },
+      { name: 'Heart Rate', value: '78 bpm' },
+      { name: 'Respiratory Rate', value: '16 breaths/min' },
+      { name: 'Temperature', value: '98.6°F' },
+      { name: 'Oxygen Saturation', value: '96%' },
+    ],
+    pastVisits: [
+      { date: 'April 30, 2025', type: 'Vital Signs Check', notes: 'Patient reported feeling well. All vitals within normal range.' },
+      { date: 'March 15, 2025', type: 'Blood Test', notes: 'Difficult blood draw, used butterfly needle. Results sent to Dr. Smith.' },
+      { date: 'February 5, 2025', type: 'X-Ray (Chest)', notes: 'Patient reported some discomfort while breathing deeply. Images clear.' },
+    ],
   },
-  { 
-    date: 'March 15, 2025', 
-    type: 'Blood Test',
-    notes: 'Difficult blood draw, used butterfly needle. Results sent to Dr. Smith.'  
-  },
-  { 
-    date: 'February 5, 2025', 
-    type: 'X-Ray (Chest)',
-    notes: 'Patient reported some discomfort while breathing deeply. Images clear.'  
-  },
+  // Add more mock visits here as needed
 ];
 
 const VisitDetails = () => {
-  // const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [visitStatus, setVisitStatus] = useState<'upcoming' | 'in-progress' | 'completed'>('upcoming');
   const [uploading, setUploading] = useState(false);
+
+  const visit = visits.find(v => v.id === id);
+  if (!visit) {
+    return <div className="p-8 text-center text-red-500">Visit not found.</div>;
+  }
+  const { patientData, visitData, vitalSigns, pastVisits } = visit;
 
   const handleStartVisit = () => {
     setVisitStatus('in-progress');

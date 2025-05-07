@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, MapPin, Phone, Mail, FileText, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -32,46 +32,53 @@ interface VisitDetails {
   }[];
 }
 
-// Mock data - in a real app, this would come from an API
-const visitDetails: VisitDetails = {
-  id: '1',
-  patientName: 'Sarah Johnson',
-  patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
-  address: '123 Main St, Apt 4B, New York, NY 10001',
-  date: '2024-03-15',
-  time: '10:30 AM',
-  status: 'scheduled',
-  type: 'follow-up',
-  assistant: 'Dr. Emily Chen',
-  assistantImage: 'https://randomuser.me/api/portraits/women/68.jpg',
-  patientContact: {
-    phone: '+1 (555) 123-4567',
-    email: 'sarah.johnson@example.com',
-  },
-  notes: 'Patient requires follow-up visit to monitor blood pressure medication effectiveness. Previous readings were slightly elevated.',
-  vitals: {
-    bloodPressure: '130/85 mmHg',
-    heartRate: '72 bpm',
-    temperature: '98.6°F',
-    oxygenLevel: '98%',
-  },
-  medications: [
-    {
-      name: 'Lisinopril',
-      dosage: '10mg',
-      frequency: 'Once daily',
+// Replace the static visitDetails with an array of visits
+const visits = [
+  {
+    id: '1',
+    patientName: 'Sarah Johnson',
+    patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
+    address: '123 Main St, Apt 4B, New York, NY 10001',
+    date: '2024-03-15',
+    time: '10:30 AM',
+    status: 'scheduled' as 'scheduled',
+    type: 'follow-up',
+    assistant: 'Dr. Emily Chen',
+    assistantImage: 'https://randomuser.me/api/portraits/women/68.jpg',
+    patientContact: {
+      phone: '+1 (555) 123-4567',
+      email: 'sarah.johnson@example.com',
     },
-    {
-      name: 'Metoprolol',
-      dosage: '25mg',
-      frequency: 'Twice daily',
+    notes: 'Patient requires follow-up visit to monitor blood pressure medication effectiveness. Previous readings were slightly elevated.',
+    vitals: {
+      bloodPressure: '130/85 mmHg',
+      heartRate: '72 bpm',
+      temperature: '98.6°F',
+      oxygenLevel: '98%',
     },
-  ],
-};
+    medications: [
+      {
+        name: 'Lisinopril',
+        dosage: '10mg',
+        frequency: 'Once daily',
+      },
+      {
+        name: 'Metoprolol',
+        dosage: '25mg',
+        frequency: 'Twice daily',
+      },
+    ],
+  },
+  // Add more mock visits as needed
+];
 
 const AssistantVisitDetails = () => {
-  // const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const visitDetails = visits.find(v => v.id === id);
+  if (!visitDetails) {
+    return <div className="p-8 text-center text-red-500">Visit not found.</div>;
+  }
 
   const getStatusColor = (status: VisitDetails['status']) => {
     switch (status) {
