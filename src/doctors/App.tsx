@@ -44,10 +44,11 @@ const App = () => (
           <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
           <Route path="/notifications" element={<MainLayout><Notifications /></MainLayout>} />
           <Route path="/ai-assistant" element={<MainLayout><AIBot /></MainLayout>} />
-          <Route path="/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
+          <Route path="/doctors/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
           <Route path="/doctors/earnings/:id" element={<MainLayout><EarningDetails /></MainLayout>} />
           <Route path="/doctors/reports/:id" element={<MainLayout><ReportDetails /></MainLayout>} />
           <Route path="/doctors/consultations/:id" element={<MainLayout><ConsultationDetails /></MainLayout>} />
+          <Route path="/doctors/assistant-visits/:id" element={<MainLayout><AssistantVisitDetails /></MainLayout>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
