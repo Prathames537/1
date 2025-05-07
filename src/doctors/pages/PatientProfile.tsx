@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, MessageCircle, Video, Pill, FileText, User, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
+import { ArrowLeft, Calendar, MessageCircle, Pill, FileText, User, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
