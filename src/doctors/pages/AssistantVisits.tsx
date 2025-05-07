@@ -36,7 +36,7 @@ const VisitCard = ({ visit }: { visit: Visit }) => {
 
   return (
     <div className="welli-card hover:shadow-lg transition cursor-pointer"
-         onClick={() => navigate(`/assistant-visits/${visit.id}`)}>
+         onClick={() => navigate(`/doctors/assistant-visits/${visit.id}`)}>
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <img src={visit.patientImage} alt={visit.patientName} className="w-full h-full object-cover" />

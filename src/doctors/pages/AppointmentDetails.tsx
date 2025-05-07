@@ -11,7 +11,7 @@ const AppointmentDetails = () => {
   }
   return (
     <div className="space-y-6 animate-fade-in">
-      <Button variant="ghost" size="icon" onClick={() => navigate('/appointments')}>
+      <Button variant="ghost" size="icon" onClick={() => navigate('/doctors/appointments')}>
         Back to Appointments
       </Button>
       <h1 className="text-2xl font-bold">Appointment Details</h1>

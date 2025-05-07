@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
@@ -16,7 +15,7 @@ const NotFound = () => {
     
     // Redirect to dashboard after a short delay
     const redirectTimer = setTimeout(() => {
-      navigate("/");
+      navigate('/doctors');
     }, 1500);
     
     return () => clearTimeout(redirectTimer);

@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { patients } from '../lib/mockData';
 
 interface Patient {
@@ -23,7 +24,7 @@ const PatientCard: React.FC<{ patient: Patient }> = ({ patient }) => {
   
   return (
     <div className="welli-card hover:shadow-lg border-2 border-transparent hover:border-welli-green transition-shadow cursor-pointer group"
-      onClick={() => navigate(`/patients/${patient.id}`)}>
+      onClick={() => navigate(`/doctors/patients/${patient.id}`)}>
       <div className="flex items-center gap-4">
         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-welli-green bg-white group-hover:scale-105 transition">
           <img src={patient.image} alt={patient.name} className="w-full h-full object-cover" />
@@ -86,7 +87,7 @@ const PatientDetail: React.FC<{ patient: Patient }> = ({ patient }) => {
       <div className="flex gap-3 mb-4">
         <Button 
           className="bg-welli-green hover:bg-welli-dark-green text-welli-gray-800"
-          onClick={() => navigate(`/patients/${patient.id}`)}
+          onClick={() => navigate(`/doctors/patients/${patient.id}`)}
         >
           View Full Profile
         </Button>
@@ -231,7 +232,7 @@ const Patients = () => {
           
           <div className="space-y-4">
             {filteredPatients.map(patient => (
-              <div key={patient.id} onClick={() => navigate(`/patients/${patient.id}`)} className="cursor-pointer">
+              <div key={patient.id} onClick={() => navigate(`/doctors/patients/${patient.id}`)} className="cursor-pointer">
                 <PatientCard patient={patient} />
               </div>
             ))}

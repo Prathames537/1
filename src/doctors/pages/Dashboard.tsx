@@ -84,7 +84,7 @@ const Dashboard = () => {
               <h3 className="text-lg font-medium text-welli-green">Upcoming Appointments</h3>
               <button
                 className="text-sm text-welli-green font-semibold hover:underline hover:text-welli-accent-green transition"
-                onClick={() => navigate('/appointments')}
+                onClick={() => navigate('/doctors/appointments')}
                 tabIndex={0}
                 aria-label="View all appointments"
               >
@@ -101,22 +101,22 @@ const Dashboard = () => {
             <QuickActionCard 
               title="Start Video Consult" 
               icon={<Video size={20} className="text-welli-green" />} 
-              onClick={() => navigate('/appointments')}
+              onClick={() => navigate('/doctors/appointments')}
             />
             <QuickActionCard 
               title="Open Chat" 
               icon={<MessageCircle size={20} className="text-welli-accent-green" />} 
-              onClick={() => navigate('/appointments')}
+              onClick={() => navigate('/doctors/appointments')}
             />
             <QuickActionCard 
               title="Create Prescription" 
               icon={<FileText size={20} className="text-welli-accent-green" />} 
-              onClick={() => navigate('/reports')}
+              onClick={() => navigate('/doctors/reports')}
             />
             <QuickActionCard 
               title="Add Medical Note" 
               icon={<PenLine size={20} className="text-welli-green" />} 
-              onClick={() => navigate('/reports')}
+              onClick={() => navigate('/doctors/reports')}
             />
           </div>
         </div>
@@ -125,7 +125,7 @@ const Dashboard = () => {
             <h3 className="text-lg font-medium text-welli-green">Alerts & Notifications</h3>
             <button
               className="text-sm text-welli-green hover:underline"
-              onClick={() => navigate('/notifications')}
+              onClick={() => navigate('/doctors/notifications')}
             >
               View all
             </button>

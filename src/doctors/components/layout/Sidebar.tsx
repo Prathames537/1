@@ -3,14 +3,14 @@ import { CalendarDays, Users, FileText, Video, MessageCircle, BarChart3, PiggyBa
 
 // Sidebar menu items config
 const menuItems = [
-  { name: 'Dashboard', icon: <BarChart3 size={20} />, path: '/' },
-  { name: 'Appointments', icon: <CalendarDays size={20} />, path: '/appointments' },
-  { name: 'Patients', icon: <Users size={20} />, path: '/patients' },
-  { name: 'Assistant Visits', icon: <Video size={20} />, path: '/assistant-visits' },
-  { name: 'Consultations', icon: <MessageCircle size={20} />, path: '/consultations' },
-  { name: 'Reports', icon: <FileText size={20} />, path: '/reports' },
-  { name: 'Earnings', icon: <PiggyBank size={20} />, path: '/earnings' },
-  { name: 'Settings', icon: <Settings size={20} />, path: '/settings' },
+  { name: 'Dashboard', icon: <BarChart3 size={20} />, path: '/doctors' },
+  { name: 'Appointments', icon: <CalendarDays size={20} />, path: '/doctors/appointments' },
+  { name: 'Patients', icon: <Users size={20} />, path: '/doctors/patients' },
+  { name: 'Assistant Visits', icon: <Video size={20} />, path: '/doctors/assistant-visits' },
+  { name: 'Consultations', icon: <MessageCircle size={20} />, path: '/doctors/consultations' },
+  { name: 'Reports', icon: <FileText size={20} />, path: '/doctors/reports' },
+  { name: 'Earnings', icon: <PiggyBank size={20} />, path: '/doctors/earnings' },
+  { name: 'Settings', icon: <Settings size={20} />, path: '/doctors/settings' },
 ];
 
 const Sidebar = () => {

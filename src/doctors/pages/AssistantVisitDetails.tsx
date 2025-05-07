@@ -57,7 +57,7 @@ const AssistantVisitDetails = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => navigate('/assistant-visits')}>
+        <Button variant="ghost" onClick={() => navigate('/doctors/assistant-visits')}>
           <ArrowLeft size={20} />
         </Button>
         <h1 className="text-2xl font-bold text-welli-gray-800">Visit Details</h1>
