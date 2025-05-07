@@ -23,7 +23,7 @@ const CheckInsurance = () => {
     e.preventDefault();
     setLoading(true); setError(null); setResult(null);
     try {
-      let profile: any = null;
+      const profile: any = null;
       const userProfile = profile || {
         name: form.name,
         age: Number(form.age),
