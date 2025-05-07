@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { BadgeDollarSign, AlertTriangle, ArrowRight, Navigation, MapPin, CheckCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
+import { AlertTriangle, ArrowRight, Navigation, MapPin, CheckCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '../hooks/use-toast';
 
-import VisitCard, { Visit } from "@/components/dashboard/VisitCard";
-import EarningsSummary from "@/components/dashboard/EarningsSummary";
-import MapView from "@/components/dashboard/MapView";
+import VisitCard, { Visit } from "../components/dashboard/VisitCard";
+import EarningsSummary from "../components/dashboard/EarningsSummary";
+import MapView from "../components/dashboard/MapView";
 
 // Mock data with Indian names and locations
 const visitsData: Visit[] = [
@@ -79,11 +79,11 @@ const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleAcceptVisit = (visitId: string) => {
+  const handleAcceptVisit = () => {
     toast({
       title: "Visit Accepted",
       description: "The visit has been added to your schedule.",
-      variant: "success",
+      variant: "default",
     });
   };
 
@@ -238,7 +238,7 @@ const Dashboard = () => {
                         </Button>
                         <Button 
                           className="w-full gradient-cta"
-                          onClick={() => handleAcceptVisit(visit.id)}
+                          onClick={() => handleAcceptVisit()}
                         >
                           Accept Visit
                         </Button>
