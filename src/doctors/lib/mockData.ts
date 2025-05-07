@@ -450,4 +450,4 @@ export const notifications = [
     time: 'Yesterday',
     isRead: true,
   },
-]; 
+] as const; 

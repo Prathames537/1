@@ -8,7 +8,7 @@ import { BadgeDollarSign, AlertTriangle, ArrowRight, Navigation, MapPin, CheckCi
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
-import VisitCard, { Visit } from "../components/dashboard/VisitCard";
+import VisitCard from "../components/dashboard/VisitCard";
 import EarningsSummary from "../components/dashboard/EarningsSummary";
 import MapView from "../components/dashboard/MapView";
 import { visitsData, availableVisits } from '../lib/mockData';

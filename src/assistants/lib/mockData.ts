@@ -70,9 +70,9 @@ export const visitsData = [
 ] as const;
 
 export const availableVisits = [
-  { id: '6', patientName: 'Anita Desai', patientAge: 58, address: '56 Banjara Hills, Hyderabad, 500034', time: '10:45 AM', visitType: 'Blood Pressure Check', status: 'upcoming' as 'upcoming' },
+  { id: '6', patientName: 'Anita Desai', patientAge: 58, address: '56 Banjara Hills, Hyderabad, 500034', time: '10:45 AM', visitType: 'Blood Pressure Check', status: 'upcoming' as 'upcoming', isUrgent: false },
   { id: '7', patientName: 'Suresh Patel', patientAge: 82, address: '25 Salt Lake, Kolkata, 700091', time: '1:30 PM', visitType: 'Diabetes Screening', status: 'upcoming' as 'upcoming', isUrgent: true },
-  { id: '8', patientName: 'Meera Reddy', patientAge: 69, address: '15 Adyar, Chennai, 600020', time: '3:00 PM', visitType: 'Medication Review', status: 'upcoming' as 'upcoming' },
+  { id: '8', patientName: 'Meera Reddy', patientAge: 69, address: '15 Adyar, Chennai, 600020', time: '3:00 PM', visitType: 'Medication Review', status: 'upcoming' as 'upcoming', isUrgent: false },
 ] as const;
 
 // Locations for ViewAllLocations
