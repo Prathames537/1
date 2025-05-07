@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { Search, Bell, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';

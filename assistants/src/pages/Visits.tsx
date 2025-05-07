@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,56 +17,64 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue 
 } from '@/components/ui/select';
 import { Visit } from '@/components/dashboard/VisitCard';
-import { supabase } from '../../src/lib/supabaseClient';
+
+// Mock data
+const upcomingVisits: Visit[] = [
+  {
+    id: '1',
+    patientName: 'John Doe',
+    patientAge: 65,
+    address: '123 Main Street, Apt 4B, New York, NY 10001',
+    time: '9:00 AM',
+    visitType: 'Blood Test',
+    isUrgent: true,
+    status: 'upcoming'
+  },
+  {
+    id: '2',
+    patientName: 'Jane Smith',
+    patientAge: 78,
+    address: '456 Park Avenue, New York, NY 10022',
+    time: '11:30 AM',
+    visitType: 'X-Ray',
+    status: 'upcoming'
+  },
+  {
+    id: '3',
+    patientName: 'Robert Johnson',
+    patientAge: 72,
+    address: '789 Broadway, New York, NY 10003',
+    time: '2:15 PM',
+    visitType: 'Vitals Check',
+    status: 'upcoming'
+  }
+];
+
+const completedVisits: Visit[] = [
+  {
+    id: '4',
+    patientName: 'Mary Williams',
+    patientAge: 60,
+    address: '101 East Village, New York, NY 10009',
+    time: '10:00 AM',
+    visitType: 'Blood Test',
+    status: 'completed'
+  },
+  {
+    id: '5',
+    patientName: 'David Brown',
+    patientAge: 75,
+    address: '222 West End Avenue, New York, NY 10023',
+    time: '2:00 PM',
+    visitType: 'Vitals Check',
+    status: 'completed'
+  }
+];
 
 const Visits = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentDate] = useState(new Date());
-  const [upcomingVisits, setUpcomingVisits] = useState<Visit[]>([]);
-  const [completedVisits, setCompletedVisits] = useState<Visit[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   
-  useEffect(() => {
-    const fetchVisits = async () => {
-      setLoading(true);
-      setError(null);
-      // Fetch appointments and join with patient info
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('id, appointment_date, status, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)');
-      if (error) {
-        setError('Failed to fetch visits');
-        setLoading(false);
-        return;
-      }
-      // Map data to Visit type
-      const upcoming = (data || []).filter((appt: any) => appt.status === 'scheduled').map((appt: any) => ({
-        id: appt.id,
-        patientName: appt.patient?.name || '',
-        patientAge: 0, // TODO: Add age if available
-        address: '', // TODO: Add address if available
-        time: new Date(appt.appointment_date).toLocaleTimeString(),
-        visitType: '', // TODO: Add type if available
-        isUrgent: false, // TODO: Add if available
-        status: appt.status
-      }));
-      const completed = (data || []).filter((appt: any) => appt.status === 'completed').map((appt: any) => ({
-        id: appt.id,
-        patientName: appt.patient?.name || '',
-        patientAge: 0,
-        address: '',
-        time: new Date(appt.appointment_date).toLocaleTimeString(),
-        visitType: '',
-        status: appt.status
-      }));
-      setUpcomingVisits(upcoming);
-      setCompletedVisits(completed);
-      setLoading(false);
-    };
-    fetchVisits();
-  }, []);
-
   // Format date
   const formattedDate = currentDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -73,9 +82,6 @@ const Visits = () => {
     month: 'long',
     day: 'numeric'
   });
-
-  if (loading) return <div>Loading visits...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6 animate-fade-in">

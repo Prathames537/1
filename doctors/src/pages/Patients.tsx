@@ -1,11 +1,9 @@
-import 'react/jsx-runtime';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, Filter, FileText, Calendar, MessageSquare, Video, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../../src/lib/supabaseClient';
 
 interface Patient {
   id: string;
@@ -19,20 +17,7 @@ interface Patient {
   insuranceProvider?: string;
 }
 
-interface SupabaseUser {
-  id: string;
-  name: string;
-  role: string;
-  user_profiles?: {
-    id: string;
-    avatar_url?: string;
-    phone?: string;
-    address?: string;
-  };
-  created_at: string;
-}
-
-const PatientCard: React.FC<{ patient: Patient }> = ({ patient }: { patient: Patient }) => {
+const PatientCard: React.FC<{ patient: Patient }> = ({ patient }) => {
   const navigate = useNavigate();
   
   return (
@@ -77,7 +62,7 @@ const PatientCard: React.FC<{ patient: Patient }> = ({ patient }: { patient: Pat
   );
 };
 
-const PatientDetail: React.FC<{ patient: Patient }> = ({ patient }: { patient: Patient }) => {
+const PatientDetail: React.FC<{ patient: Patient }> = ({ patient }) => {
   const navigate = useNavigate();
   
   return (
@@ -194,40 +179,64 @@ const PatientDetail: React.FC<{ patient: Patient }> = ({ patient }: { patient: P
 const Patients = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [patients, setPatients] = useState<Patient[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   
-  useEffect(() => {
-    const fetchPatients = async () => {
-      setLoading(true);
-      setError(null);
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, name, role, user_profiles(id, avatar_url, phone, address), created_at')
-        .eq('role', 'patient');
-      if (error) {
-        setError('Failed to fetch patients');
-        setLoading(false);
-        return;
-      }
-      // Map data to Patient type
-      const mapped = (data as SupabaseUser[] || []).map((user) => ({
-        id: user.id,
-        name: user.name,
-        image: user.user_profiles?.avatar_url || '',
-        age: 0, // TODO: Add age if available in user_profiles
-        gender: '', // TODO: Add gender if available
-        lastVisit: '', // TODO: Fetch from appointments
-        condition: '', // TODO: Fetch from medical records
-        recordCount: 0, // TODO: Fetch from records
-        insuranceProvider: '', // TODO: Add if available
-      }));
-      setPatients(mapped);
-      setLoading(false);
-    };
-    fetchPatients();
-  }, []);
+  const patients: Patient[] = [
+    {
+      id: '1',
+      name: 'Sarah Johnson',
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
+      age: 42,
+      gender: 'Female',
+      lastVisit: 'March 15, 2023',
+      condition: 'Hypertension',
+      recordCount: 8,
+      insuranceProvider: 'Welli Health',
+    },
+    {
+      id: '2',
+      name: 'Robert Chen',
+      image: 'https://randomuser.me/api/portraits/men/76.jpg',
+      age: 56,
+      gender: 'Male',
+      lastVisit: 'March 10, 2023',
+      condition: 'Type 2 Diabetes',
+      recordCount: 12,
+      insuranceProvider: 'Blue Cross',
+    },
+    {
+      id: '3',
+      name: 'Emma Garcia',
+      image: 'https://randomuser.me/api/portraits/women/63.jpg',
+      age: 29,
+      gender: 'Female',
+      lastVisit: 'March 5, 2023',
+      condition: 'Migraine',
+      recordCount: 5,
+      insuranceProvider: 'None',
+    },
+    {
+      id: '4',
+      name: 'Michael Wilson',
+      image: 'https://randomuser.me/api/portraits/men/32.jpg',
+      age: 68,
+      gender: 'Male',
+      lastVisit: 'February 28, 2023',
+      condition: 'Arthritis',
+      recordCount: 15,
+      insuranceProvider: 'Medicare',
+    },
+    {
+      id: '5',
+      name: 'Olivia Martinez',
+      image: 'https://randomuser.me/api/portraits/women/28.jpg',
+      age: 35,
+      gender: 'Female',
+      lastVisit: 'February 25, 2023',
+      condition: 'Asthma',
+      recordCount: 7,
+      insuranceProvider: 'Aetna',
+    },
+  ];
   
   const filteredPatients = patients.filter(patient => 
     patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -235,9 +244,6 @@ const Patients = () => {
   );
   
   const navigate = useNavigate();
-
-  if (loading) return <div>Loading patients...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6">

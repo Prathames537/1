@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, User, MapPin, Phone, Mail, FileText, CheckCircle, MessageCircle, Video, Pill, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { supabase } from '../../../src/lib/supabaseClient';
 
 interface VisitDetails {
   id: string;
@@ -34,32 +33,46 @@ interface VisitDetails {
   }[];
 }
 
+// Mock data - in a real app, this would come from an API
+const visitDetails: VisitDetails = {
+  id: '1',
+  patientName: 'Sarah Johnson',
+  patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
+  address: '123 Main St, Apt 4B, New York, NY 10001',
+  date: '2024-03-15',
+  time: '10:30 AM',
+  status: 'scheduled',
+  type: 'follow-up',
+  assistant: 'Dr. Emily Chen',
+  assistantImage: 'https://randomuser.me/api/portraits/women/68.jpg',
+  patientContact: {
+    phone: '+1 (555) 123-4567',
+    email: 'sarah.johnson@example.com',
+  },
+  notes: 'Patient requires follow-up visit to monitor blood pressure medication effectiveness. Previous readings were slightly elevated.',
+  vitals: {
+    bloodPressure: '130/85 mmHg',
+    heartRate: '72 bpm',
+    temperature: '98.6°F',
+    oxygenLevel: '98%',
+  },
+  medications: [
+    {
+      name: 'Lisinopril',
+      dosage: '10mg',
+      frequency: 'Once daily',
+    },
+    {
+      name: 'Metoprolol',
+      dosage: '25mg',
+      frequency: 'Twice daily',
+    },
+  ],
+};
+
 const AssistantVisitDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [visitDetails, setVisitDetails] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchVisitDetails = async () => {
-      setLoading(true);
-      setError(null);
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('*, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)')
-        .eq('id', id)
-        .single();
-      if (error) {
-        setError('Failed to fetch visit details');
-        setLoading(false);
-        return;
-      }
-      setVisitDetails(data);
-      setLoading(false);
-    };
-    if (id) fetchVisitDetails();
-  }, [id]);
 
   const getStatusColor = (status: VisitDetails['status']) => {
     switch (status) {
@@ -73,9 +86,6 @@ const AssistantVisitDetails = () => {
         return 'bg-red-100 text-red-800';
     }
   };
-
-  if (loading) return <div>Loading visit details...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6">

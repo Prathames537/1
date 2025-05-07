@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -78,19 +79,3 @@
     @apply shadow-lg hover:shadow-xl transition-shadow duration-300;
   }
 }
-
-.welli-card {
-  @apply bg-white rounded-xl p-5 shadow-card border border-welli-light-green;
-}
-.stats-card {
-  @apply bg-white rounded-xl p-4 shadow-card;
-}
-.shadow-card {
-  @apply shadow-lg hover:shadow-xl transition-shadow duration-300;
-}
-.badge {
-  @apply px-2 py-0.5 rounded-full text-xs font-semibold;
-}
-.badge-green { @apply bg-welli-green text-white; }
-.badge-warning { @apply bg-yellow-400 text-white; }
-.badge-alert { @apply bg-red-500 text-white; }

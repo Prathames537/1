@@ -90,10 +90,10 @@ const Login = () => {
                     <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => setShowPatientLogin(true)}>
                       Login as Patient
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/doctors')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/doctors'}>
                       Login as Doctor
                     </Button>
-                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => navigate('/assistants')}>
+                    <Button className="w-full bg-welli-dark-green hover:bg-welli-green" onClick={() => window.location.href = '/assistants'}>
                       Login as Assistant
                     </Button>
                   </div>

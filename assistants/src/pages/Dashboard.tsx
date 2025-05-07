@@ -1,76 +1,91 @@
-import { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { Card, CardContent } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "../components/ui/alert";
-import { AlertTriangle, Navigation, MapPin, CheckCircle, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { BadgeDollarSign, AlertTriangle, ArrowRight, Navigation, MapPin, CheckCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useToast } from '../hooks/use-toast';
-import { supabase } from '../../src/lib/supabaseClient';
+import { useToast } from '@/hooks/use-toast';
 
-import VisitCard, { Visit } from "../components/dashboard/VisitCard";
-import EarningsSummary from "../components/dashboard/EarningsSummary";
-import MapView from "../components/dashboard/MapView";
+import VisitCard, { Visit } from "@/components/dashboard/VisitCard";
+import EarningsSummary from "@/components/dashboard/EarningsSummary";
+import MapView from "@/components/dashboard/MapView";
+
+// Mock data with Indian names and locations
+const visitsData: Visit[] = [
+  {
+    id: '1',
+    patientName: 'Rajesh Kumar',
+    patientAge: 65,
+    address: '42 Shyam Nagar, Delhi NCR, 110001',
+    time: '9:00 AM',
+    visitType: 'Blood Test',
+    isUrgent: true,
+    status: 'upcoming'
+  },
+  {
+    id: '2',
+    patientName: 'Priya Sharma',
+    patientAge: 78,
+    address: '105 Andheri West, Mumbai, 400053',
+    time: '11:30 AM',
+    visitType: 'X-Ray',
+    status: 'upcoming'
+  },
+  {
+    id: '3',
+    patientName: 'Vikram Mehta',
+    patientAge: 72,
+    address: '78 Indiranagar, Bangalore, 560038',
+    time: '2:15 PM',
+    visitType: 'Vitals Check',
+    status: 'upcoming'
+  }
+];
+
+const availableVisits: Visit[] = [
+  {
+    id: '6',
+    patientName: 'Anita Desai',
+    patientAge: 58,
+    address: '56 Banjara Hills, Hyderabad, 500034',
+    time: '10:45 AM',
+    visitType: 'Blood Pressure Check',
+    status: 'upcoming'
+  },
+  {
+    id: '7',
+    patientName: 'Suresh Patel',
+    patientAge: 82,
+    address: '25 Salt Lake, Kolkata, 700091',
+    time: '1:30 PM',
+    visitType: 'Diabetes Screening',
+    status: 'upcoming',
+    isUrgent: true
+  },
+  {
+    id: '8',
+    patientName: 'Meera Reddy',
+    patientAge: 69,
+    address: '15 Adyar, Chennai, 600020',
+    time: '3:00 PM',
+    visitType: 'Medication Review',
+    status: 'upcoming'
+  }
+];
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("today");
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [visitsData, setVisitsData] = useState<Visit[]>([]);
-  const [availableVisits, setAvailableVisits] = useState<Visit[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      setLoading(true);
-      setError(null);
-      // Fetch today's and available visits from Supabase
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('id, appointment_date, status, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)');
-      if (error) {
-        setError('Failed to fetch dashboard data');
-        setLoading(false);
-        return;
-      }
-      // Map data to Visit type
-      const today = (data || []).filter((appt: any) => appt.status === 'scheduled').map((appt: any) => ({
-        id: appt.id,
-        patientName: appt.patient?.name || '',
-        patientAge: 0, // TODO: Add age if available
-        address: '', // TODO: Add address if available
-        time: new Date(appt.appointment_date).toLocaleTimeString(),
-        visitType: '', // TODO: Add type if available
-        isUrgent: false, // TODO: Add if available
-        status: appt.status
-      }));
-      const available = (data || []).filter((appt: any) => appt.status === 'available').map((appt: any) => ({
-        id: appt.id,
-        patientName: appt.patient?.name || '',
-        patientAge: 0,
-        address: '',
-        time: new Date(appt.appointment_date).toLocaleTimeString(),
-        visitType: '',
-        status: appt.status
-      }));
-      setVisitsData(today);
-      setAvailableVisits(available);
-      setLoading(false);
-    };
-    fetchDashboardData();
-  }, []);
-
-  const handleAcceptVisit = () => {
+  const handleAcceptVisit = (visitId: string) => {
     toast({
       title: "Visit Accepted",
       description: "The visit has been added to your schedule.",
-      variant: "default",
+      variant: "success",
     });
   };
-
-  if (loading) return <div>Loading dashboard...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -223,7 +238,7 @@ const Dashboard = () => {
                         </Button>
                         <Button 
                           className="w-full gradient-cta"
-                          onClick={() => handleAcceptVisit()}
+                          onClick={() => handleAcceptVisit(visit.id)}
                         >
                           Accept Visit
                         </Button>
@@ -235,19 +250,63 @@ const Dashboard = () => {
             </TabsContent>
           </Tabs>
         </div>
-        {/* Earnings summary and map view */}
-        <div className="space-y-4">
-          // When rendering EarningsSummary, pass the required props
-          // Example values are provided, replace them with your actual data as needed
+
+        {/* Earnings widget */}
+        <div>
           <EarningsSummary 
-            today={1500}
-            thisWeek={9000}
-            thisMonth={35000}
-            changePercentage={5.2}
+            today={5250} 
+            thisWeek={32500} 
+            thisMonth={147500} 
+            changePercentage={12.5} 
           />
-          <MapView />
+          
+          {/* Quick stats */}
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Visits Today</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">3</div>
+                <p className="text-xs text-welli-textSecondary mt-1">
+                  2 completed, 1 remaining
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Avg. Rating</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">4.8</div>
+                <p className="text-xs text-welli-textSecondary mt-1">
+                  from 27 patient reviews
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Withdrawal shortcut */}
+          <Card className="mt-4 bg-gradient-to-r from-welli-main to-welli-accent text-white">
+            <CardContent className="flex items-center justify-between p-4">
+              <div>
+                <h3 className="font-semibold">Available for Withdrawal</h3>
+                <p className="text-2xl font-bold mt-1">$72,500</p>
+              </div>
+              <Button variant="secondary" size="sm" className="whitespace-nowrap" asChild>
+                <Link to="/earnings#withdraw">
+                  <BadgeDollarSign className="h-4 w-4 mr-1" />
+                  Withdraw
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
+
+      {/* Map */}
+      <MapView />
     </div>
   );
 };

@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Calendar, Clock, User, MapPin, Plus, Search, Filter, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../../src/lib/supabaseClient';
 
 interface Visit {
   id: string;
@@ -16,8 +15,43 @@ interface Visit {
   status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
   type: 'initial' | 'follow-up' | 'emergency';
   assistant: string;
-  assistantImage: string;
 }
+
+const visits: Visit[] = [
+  {
+    id: '1',
+    patientName: 'Sarah Johnson',
+    patientImage: 'https://randomuser.me/api/portraits/women/44.jpg',
+    address: '123 Main St, Apt 4B, New York, NY 10001',
+    date: '2024-03-15',
+    time: '10:30 AM',
+    status: 'scheduled',
+    type: 'follow-up',
+    assistant: 'Dr. Emily Chen',
+  },
+  {
+    id: '2',
+    patientName: 'Robert Chen',
+    patientImage: 'https://randomuser.me/api/portraits/men/76.jpg',
+    address: '456 Park Ave, Suite 2, New York, NY 10022',
+    date: '2024-03-15',
+    time: '2:00 PM',
+    status: 'in-progress',
+    type: 'initial',
+    assistant: 'Dr. Michael Brown',
+  },
+  {
+    id: '3',
+    patientName: 'Emma Garcia',
+    patientImage: 'https://randomuser.me/api/portraits/women/63.jpg',
+    address: '789 Broadway, New York, NY 10003',
+    date: '2024-03-16',
+    time: '11:00 AM',
+    status: 'scheduled',
+    type: 'emergency',
+    assistant: 'Dr. Sarah Wilson',
+  },
+];
 
 const VisitCard = ({ visit }: { visit: Visit }) => {
   const navigate = useNavigate();
@@ -75,49 +109,11 @@ const VisitCard = ({ visit }: { visit: Visit }) => {
 const AssistantVisits = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-  const [visits, setVisits] = useState<Visit[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchVisits = async () => {
-      setLoading(true);
-      setError(null);
-      // Fetch appointments and join with patient info
-      const { data, error } = await supabase
-        .from('appointments')
-        .select('id, appointment_date, status, patient:patient_id(id, name, user_profiles(avatar_url)), doctor:doctor_id(id, name)');
-      if (error) {
-        setError('Failed to fetch assistant visits');
-        setLoading(false);
-        return;
-      }
-      // Map data to Visit type
-      const mapped = (data || []).map((appt: any) => ({
-        id: appt.id,
-        patientName: appt.patient?.name || '',
-        patientImage: appt.patient?.user_profiles?.avatar_url || '',
-        address: '', // TODO: Add address if available
-        date: new Date(appt.appointment_date).toLocaleDateString(),
-        time: new Date(appt.appointment_date).toLocaleTimeString(),
-        status: appt.status,
-        type: '', // TODO: Add type if available
-        assistant: appt.doctor?.name || '',
-        assistantImage: '', // TODO: Add image if available
-      }));
-      setVisits(mapped);
-      setLoading(false);
-    };
-    fetchVisits();
-  }, []);
 
   const filteredVisits = visits.filter(visit =>
     visit.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     visit.address.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  if (loading) return <div>Loading assistant visits...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6">

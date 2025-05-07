@@ -28,10 +28,12 @@ import EmergencyHelpPage from "./pages/EmergencyHelpPage";
 import BloodBankPage from "./pages/BloodBankPage";
 import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 import Chatbot from "./pages/Chatbot";
-import DoctorsDashboard from "../doctors/src/pages/Dashboard";
-import AssistantsDashboard from "../assistants/src/pages/Dashboard";
-import AssistantsLayout from "../assistants/src/components/layout/Layout";
-import DoctorsMainLayout from "../doctors/src/components/layout/MainLayout";
+import AssistantsIndex from "./assistants/pages/Index";
+import AssistantsDashboard from "./assistants/pages/Dashboard";
+import AssistantsLayout from "./assistants/components/layout/Layout";
+import DoctorsIndex from "./doctors/pages/Index";
+import DoctorsDashboard from "./doctors/pages/Dashboard";
+import DoctorsMainLayout from "./doctors/components/layout/MainLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,8 +75,12 @@ const App = () => (
           <Route path="/blood-bank" element={<BloodBankPage />} />
           <Route path="/organ-repository" element={<OrganRepositoryPage />} />
           <Route path="/chatbot" element={<Chatbot />} />
-          <Route path="/assistants" element={<AssistantsLayout><AssistantsDashboard /></AssistantsLayout>} />
-          <Route path="/doctors" element={<DoctorsMainLayout><DoctorsDashboard /></DoctorsMainLayout>} />
+          <Route path="/assistants/*" element={<AssistantsLayout />}>
+            <Route index element={<AssistantsDashboard />} />
+          </Route>
+          <Route path="/doctors/*" element={<DoctorsMainLayout />}>
+            <Route index element={<DoctorsDashboard />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

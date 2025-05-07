@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,20 +64,34 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				welli: {
-					"light-green": "#F2FCE2",
-					"green": "#9BE869",
-					"dark-green": "#5CAD29",
-					"pale-green": "#F2FCE2",
-					"off-white": "#FFFFFF",
-					"text-dark": "#2D3748",
-					"text-medium": "#4A5568",
-					"text-light": "#718096"
-				}
+					green: '#A8E6A1',
+					'light-green': '#E3F9E0',
+					'dark-green': '#75C96D',
+					'accent-green': '#5FB158',
+					'gray-100': '#F9FAFB',
+					'gray-200': '#F2F4F7',
+					'gray-300': '#E4E7EC',
+					'gray-400': '#D0D5DD',
+					'gray-500': '#98A2B3',
+					'gray-600': '#667085',
+					'gray-700': '#344054',
+					'gray-800': '#1D2939',
+					alert: '#F04438',
+					warning: '#F79009',
+					success: '#12B76A',
+				},
+			},
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			boxShadow: {
+				'card': '0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06)',
+				'card-hover': '0px 4px 8px rgba(16, 24, 40, 0.12)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -95,49 +110,15 @@ export default {
 						height: '0'
 					}
 				},
-				'fade-in': {
-					'0%': {
-						opacity: '0',
-						transform: 'translateY(10px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateY(0)'
-					}
-				},
-				'slide-in': {
-					'0%': {
-						opacity: '0',
-						transform: 'translateX(-20px)'
-					},
-					'100%': {
-						opacity: '1',
-						transform: 'translateX(0)'
-					}
-				},
-				'pulse-slow': {
-					'0%, 100%': {
-						opacity: '1',
-					},
-					'50%': {
-						opacity: '0.8',
-					},
+				'pulse-light': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'fade-in': 'fade-in 0.5s ease-out',
-				'slide-in': 'slide-in 0.5s ease-out',
-				'pulse-slow': 'pulse-slow 3s infinite'
-			},
-			fontFamily: {
-				'poppins': ['Poppins', 'sans-serif']
-			},
-			backgroundImage: {
-				'hero-pattern': 'linear-gradient(120deg, #E2FECB 0%, #9BE869 100%)',
-				'green-gradient': 'linear-gradient(90deg, #9BE869 0%, #5CAD29 100%)',
-				'light-gradient': 'linear-gradient(180deg, rgba(226,254,203,0.3) 0%, rgba(255,255,255,0) 100%)'
+				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 			}
 		}
 	},

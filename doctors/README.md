@@ -1,37 +1,6 @@
-# Welli for Doctors
+# Welli
 
-## ⚠️ Important Notice
-This project is an original idea and implementation. Unauthorized copying, distribution, or use of this code or its concepts is strictly prohibited. All rights reserved.
-
-## 📝 License
-Copyright © 2024 Welli for Doctors. All rights reserved.
-
-This project is proprietary and confidential. No part of this software may be:
-- Copied
-- Modified
-- Distributed
-- Sold
-- Rented
-- Leased
-- Sub-licensed
-- Used for any commercial purpose
-
-without the express written permission of the copyright holder.
-
-## 🚀 Features
-- AI-powered medical assistance
-- Patient management system
-- Appointment scheduling
-- Medical records management
-- Video consultations
-- Real-time notifications
-- Comprehensive settings and preferences
-
-## 🛡️ Legal
-Any unauthorized use, reproduction, or distribution of this software or its components may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
-
-## 📧 Contact
-For inquiries about licensing or usage permissions, please contact the project owner.
+A modern web application for doctors to manage their practice, built with React, TypeScript, and Tailwind CSS.
 
 ## Features
 

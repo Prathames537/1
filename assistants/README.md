@@ -72,13 +72,3 @@ We welcome contributions! Please feel free to submit a Pull Request.
 
 ## License
 This project is licensed under the MIT License.
-
-## Dynamic Data
-
-All features now use Supabase for real-time, dynamic data (visits, earnings, modules, etc.).
-
-### Environment Variables
-- `VITE_SUPABASE_URL` (your Supabase project URL)
-- `VITE_SUPABASE_ANON_KEY` (your Supabase anon/public key)
-
-Set these in your `.env` or Vercel/Netlify dashboard.
