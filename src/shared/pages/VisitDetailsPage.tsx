@@ -1,154 +1,79 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, Calendar, Clock, MapPin, Upload, Check, AlertTriangle, User, Heart, FileText 
-} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Calendar, Clock, MapPin, User, BadgeAlert, FileText, CheckCircle, AlertTriangle, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow 
-} from '@/components/ui/table';
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger
-} from '@/components/ui/dialog';
-import { Progress } from '@/components/ui/progress';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { visits } from '../lib/mockData';
 
-const VisitDetails = () => {
-  const { id } = useParams<{ id: string }>();
+export interface VisitDetailsPageProps {
+  visit: any;
+  userType: 'assistant' | 'doctor';
+  backPath: string;
+}
+
+const VisitDetailsPage = ({ visit, userType, backPath }: VisitDetailsPageProps) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [visitStatus, setVisitStatus] = useState<'upcoming' | 'in-progress' | 'completed'>('upcoming');
-  const [uploading, setUploading] = useState(false);
-
-  const visit = visits.find(v => v.id === id);
   if (!visit) {
     return <div className="p-8 text-center text-red-500">Visit not found.</div>;
   }
-  const { patientData, visitData, vitalSigns, pastVisits } = visit;
 
-  const handleStartVisit = () => {
-    setVisitStatus('in-progress');
-    toast({
-      title: "Visit started",
-      description: "You've started the visit with John Doe",
-    });
-  };
+  // Parameterize fields for both data shapes
+  const patient = visit.patientData || visit;
+  const visitData = visit.visitData || visit;
+  const vitalSigns = visit.vitalSigns || visit.vitals || [];
+  const pastVisits = visit.pastVisits || [];
+  const medications = visit.medications || [];
+  const assistant = visit.assistant || (visitData && visitData.assistant);
+  const assistantImage = visit.assistantImage;
+  const status = visitData.status || visit.status;
+  const isUrgent = visitData.isUrgent || visit.isUrgent;
 
-  const handleCompleteVisit = () => {
-    setVisitStatus('completed');
-    toast({
-      title: "Visit completed",
-      description: "Visit has been marked as completed. Thank you!",
-    });
-  };
-
-  const handleUploadResults = () => {
-    setUploading(true);
-    setTimeout(() => {
-      setUploading(false);
-      toast({
-        title: "Results uploaded",
-        description: "Test results have been successfully uploaded",
-      });
-    }, 2000);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'upcoming':
+      case 'scheduled':
+        return 'bg-blue-100 text-blue-800';
+      case 'in-progress':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Header */}
       <div>
-        <Button onClick={() => navigate(-1)} variant="ghost" className="mb-4">
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back to Visits
+        <Button onClick={() => navigate(backPath)} variant="ghost" className="mb-4">
+          <ArrowLeft className="h-4 w-4 mr-2" /> Back
         </Button>
-        
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">{patientData.name}</h1>
+            <h1 className="text-2xl font-bold">{patient.name || patient.patientName}</h1>
             <div className="flex items-center gap-2 mt-1">
               <span className="text-welli-textSecondary">Visit #{visitData.id}</span>
               <span>•</span>
-              <Badge variant={visitData.isUrgent ? "destructive" : "outline"}>
-                {visitData.isUrgent ? 'Urgent' : visitData.type}
+              <Badge variant={isUrgent ? 'destructive' : 'outline'}>
+                {isUrgent ? 'Urgent' : visitData.type || visit.type}
               </Badge>
-              <Badge 
-                className={
-                  visitStatus === 'completed' ? 'bg-green-100 text-green-800' :
-                  visitStatus === 'in-progress' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-blue-100 text-blue-800'
-                }
-              >
-                {visitStatus.charAt(0).toUpperCase() + visitStatus.slice(1)}
+              <Badge className={getStatusColor(status)}>
+                {status.charAt(0).toUpperCase() + status.slice(1)}
               </Badge>
             </div>
           </div>
-
           <div className="flex gap-2">
-            {visitStatus === 'upcoming' && (
-              <Button onClick={handleStartVisit}>
-                Start Visit
-              </Button>
-            )}
-            {visitStatus === 'in-progress' && (
-              <Button onClick={handleCompleteVisit} variant="default">
-                <Check className="h-4 w-4 mr-2" />
-                Complete Visit
-              </Button>
-            )}
-            {visitStatus === 'completed' && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Results
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Upload Test Results</DialogTitle>
-                  </DialogHeader>
-                  <div className="py-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center">
-                      <Upload className="h-8 w-8 mx-auto text-gray-400" />
-                      <p className="mt-2 text-sm text-welli-textSecondary">
-                        Drag and drop files here, or click to select files
-                      </p>
-                      <p className="mt-1 text-xs text-welli-textSecondary">
-                        Supported formats: PDF, JPG, PNG (Max 10MB)
-                      </p>
-                    </div>
-                    <div className="mt-4">
-                      {uploading ? (
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span>bloodtest-results.pdf</span>
-                            <span>70%</span>
-                          </div>
-                          <Progress value={70} />
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                  <div className="flex justify-end">
-                    <Button variant="outline" className="mr-2">Cancel</Button>
-                    <Button onClick={handleUploadResults} disabled={uploading}>
-                      {uploading ? 'Uploading...' : 'Upload Files'}
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
+            {/* Parameterize actions if needed */}
+            <Button>Start Visit</Button>
+            <Button variant="outline">Complete Visit</Button>
           </div>
         </div>
       </div>
-
-      {/* Visit and Patient Info */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Visit Details */}
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Visit Details</CardTitle>
@@ -174,53 +99,30 @@ const VisitDetails = () => {
                   <MapPin className="h-5 w-5 text-welli-textSecondary mt-0.5" />
                   <div>
                     <p className="text-sm text-welli-textSecondary">Location</p>
-                    <p className="font-medium">{patientData.address}</p>
+                    <p className="font-medium">{patient.address}</p>
                   </div>
                 </div>
               </div>
-
               <div>
                 <h3 className="font-medium mb-2">Required Equipment</h3>
                 <ul className="list-disc pl-5 space-y-1">
-                  {visitData.requiredEquipment.map((item, index) => (
+                  {(visitData.requiredEquipment || []).map((item: string, index: number) => (
                     <li key={index} className="text-sm">{item}</li>
                   ))}
                 </ul>
-                
                 <h3 className="font-medium mt-4 mb-2">Special Notes</h3>
                 <p className="text-sm bg-welli-background p-3 rounded-md">
-                  {visitData.notes}
+                  {visitData.notes || visit.notes}
                 </p>
               </div>
             </div>
-
             <Separator className="my-6" />
-
             <div>
               <h3 className="font-medium mb-3">Service Protocol</h3>
-              <div className="space-y-3 text-sm">
-                <div className="bg-welli-background p-3 rounded-md">
-                  <p className="font-medium">1. Patient Identification</p>
-                  <p className="mt-1">Verify patient identity using two identifiers (name and date of birth).</p>
-                </div>
-                <div className="bg-welli-background p-3 rounded-md">
-                  <p className="font-medium">2. Preparation</p>
-                  <p className="mt-1">Explain procedure to patient and ensure they're comfortable.</p>
-                </div>
-                <div className="bg-welli-background p-3 rounded-md">
-                  <p className="font-medium">3. Blood Collection</p>
-                  <p className="mt-1">Use butterfly needle and draw from left arm as per patient preference.</p>
-                </div>
-                <div className="bg-welli-background p-3 rounded-md">
-                  <p className="font-medium">4. Post-Procedure</p>
-                  <p className="mt-1">Apply pressure to site for 2 minutes, apply bandage, and verify patient comfort.</p>
-                </div>
-              </div>
+              {/* Add protocol steps if available */}
             </div>
           </CardContent>
         </Card>
-
-        {/* Patient Info Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
@@ -234,60 +136,55 @@ const VisitDetails = () => {
               <div className="mt-2 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm">Age:</span>
-                  <span className="text-sm font-medium">{patientData.age}</span>
+                  <span className="text-sm font-medium">{patient.age}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Gender:</span>
-                  <span className="text-sm font-medium">{patientData.gender}</span>
+                  <span className="text-sm font-medium">{patient.gender}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Contact:</span>
-                  <span className="text-sm font-medium">{patientData.contact}</span>
+                  <span className="text-sm font-medium">{patient.contact || patient.phone}</span>
                 </div>
               </div>
             </div>
-
             <Separator />
-
             <div>
               <p className="text-sm text-welli-textSecondary">Insurance</p>
               <div className="mt-2 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-sm">Provider:</span>
-                  <span className="text-sm font-medium">{patientData.insuranceProvider}</span>
+                  <span className="text-sm font-medium">{patient.insuranceProvider}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">ID:</span>
-                  <span className="text-sm font-medium">{patientData.insuranceId}</span>
+                  <span className="text-sm font-medium">{patient.insuranceId || patient.insuranceNumber}</span>
                 </div>
               </div>
             </div>
-
             <Separator />
-
             <div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-welli-textSecondary">Allergies</p>
-                {patientData.allergies.length > 0 && (
+                {patient.allergies && patient.allergies.length > 0 && (
                   <AlertTriangle className="h-4 w-4 text-amber-500" />
                 )}
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
-                {patientData.allergies.map((allergy, index) => (
+                {(patient.allergies || []).map((allergy: string, index: number) => (
                   <Badge key={index} variant="outline" className="bg-red-50">
                     {allergy}
                   </Badge>
                 ))}
               </div>
             </div>
-
             <div>
               <div className="flex items-center gap-1">
                 <Heart className="h-4 w-4 text-welli-textSecondary" />
                 <p className="text-sm text-welli-textSecondary">Medical History</p>
               </div>
               <div className="mt-2 space-y-1">
-                {patientData.medicalHistory.map((condition, index) => (
+                {(patient.medicalHistory || []).map((condition: string, index: number) => (
                   <div key={index} className="text-sm">{condition}</div>
                 ))}
               </div>
@@ -295,15 +192,12 @@ const VisitDetails = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Tabs for additional data */}
       <Tabs defaultValue="medical-data">
         <TabsList>
           <TabsTrigger value="medical-data">Medical Data</TabsTrigger>
           <TabsTrigger value="past-visits">Past Visits</TabsTrigger>
           <TabsTrigger value="payment">Payment Info</TabsTrigger>
         </TabsList>
-        
         <TabsContent value="medical-data" className="mt-4">
           <Card>
             <CardHeader>
@@ -311,7 +205,7 @@ const VisitDetails = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {vitalSigns.map((vital, index) => (
+                {(vitalSigns || []).map((vital: any, index: number) => (
                   <Card key={index}>
                     <CardContent className="p-4">
                       <p className="text-sm text-welli-textSecondary">{vital.name}</p>
@@ -320,32 +214,10 @@ const VisitDetails = () => {
                   </Card>
                 ))}
               </div>
-              
-              <div className="mt-6">
-                <h3 className="text-lg font-medium mb-3">Recent Test Results</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="border rounded-md p-4">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-welli-textSecondary" />
-                      <span>Blood Test Results</span>
-                    </div>
-                    <p className="text-sm text-welli-textSecondary mt-1">Uploaded April 30, 2025</p>
-                    <Button size="sm" variant="outline" className="mt-2">View Report</Button>
-                  </div>
-                  <div className="border rounded-md p-4">
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-welli-textSecondary" />
-                      <span>Chest X-Ray Report</span>
-                    </div>
-                    <p className="text-sm text-welli-textSecondary mt-1">Uploaded February 5, 2025</p>
-                    <Button size="sm" variant="outline" className="mt-2">View Report</Button>
-                  </div>
-                </div>
-              </div>
+              {/* Add test results if available */}
             </CardContent>
           </Card>
         </TabsContent>
-        
         <TabsContent value="past-visits" className="mt-4">
           <Card>
             <CardHeader>
@@ -362,7 +234,7 @@ const VisitDetails = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {pastVisits.map((visit, index) => (
+                  {(pastVisits || []).map((visit: any, index: number) => (
                     <TableRow key={index}>
                       <TableCell>{visit.date}</TableCell>
                       <TableCell>{visit.type}</TableCell>
@@ -377,7 +249,6 @@ const VisitDetails = () => {
             </CardContent>
           </Card>
         </TabsContent>
-        
         <TabsContent value="payment" className="mt-4">
           <Card>
             <CardHeader>
@@ -390,8 +261,8 @@ const VisitDetails = () => {
                   <Card className="bg-welli-background">
                     <CardContent className="p-4">
                       <div className="flex justify-between items-center mb-2">
-                        <span>Base pay (Blood Test)</span>
-                        <span className="font-medium">${visitData.paymentAmount}</span>
+                        <span>Base pay ({visitData.type})</span>
+                        <span className="font-medium">${visitData.paymentAmount || 0}</span>
                       </div>
                       <div className="flex justify-between items-center text-sm text-welli-textSecondary mb-2">
                         <span>Travel allowance</span>
@@ -404,12 +275,11 @@ const VisitDetails = () => {
                       <Separator className="my-2" />
                       <div className="flex justify-between items-center mt-2 font-semibold">
                         <span>Total</span>
-                        <span>${visitData.paymentAmount + 35}</span>
+                        <span>${(visitData.paymentAmount || 0) + 35}</span>
                       </div>
                     </CardContent>
                   </Card>
                 </div>
-                
                 <div>
                   <h3 className="font-medium mb-2">Insurance Coverage</h3>
                   <Card className="border-dashed">
@@ -417,11 +287,11 @@ const VisitDetails = () => {
                       <div className="flex flex-col space-y-2">
                         <div className="flex justify-between">
                           <span>Provider</span>
-                          <span className="font-medium">{patientData.insuranceProvider}</span>
+                          <span className="font-medium">{patient.insuranceProvider}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Policy Number</span>
-                          <span className="font-medium">{patientData.insuranceId}</span>
+                          <span className="font-medium">{patient.insuranceId || patient.insuranceNumber}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Coverage Type</span>
@@ -430,10 +300,9 @@ const VisitDetails = () => {
                       </div>
                     </CardContent>
                   </Card>
-                  
                   <div className="mt-4 text-sm text-welli-textSecondary">
                     <p>
-                      <strong>Note:</strong> Payment will be processed after visit completion 
+                      <strong>Note:</strong> Payment will be processed after visit completion
                       and will be available in your earnings dashboard within 24 hours.
                     </p>
                   </div>
@@ -447,4 +316,4 @@ const VisitDetails = () => {
   );
 };
 
-export default VisitDetails;
+export default VisitDetailsPage; 

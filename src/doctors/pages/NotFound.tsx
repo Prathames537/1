@@ -6,16 +6,16 @@ const NotFound = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    console.error("Attempted to access non-existent route - redirecting to dashboard");
+    console.error("Attempted to access non-existent route - redirecting to patients");
     toast({
       title: "Page not found",
-      description: "Redirecting you to the dashboard",
+      description: "Redirecting you to the patients list",
       variant: "destructive",
     });
     
     // Redirect to dashboard after a short delay
     const redirectTimer = setTimeout(() => {
-      navigate('/doctors');
+      navigate('/patients');
     }, 1500);
     
     return () => clearTimeout(redirectTimer);
@@ -29,7 +29,7 @@ const NotFound = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold mb-2">Redirecting to Dashboard</h1>
+        <h1 className="text-2xl font-bold mb-2">Redirecting to Patients</h1>
         <p className="text-welli-gray-600">Taking you to a safe place...</p>
       </div>
     </div>

@@ -1,11 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import Visits from "./pages/Visits";
-import VisitDetails from "./pages/VisitDetails";
-import Earnings from "./pages/Earnings";
+import VisitsPage from '../shared/pages/VisitsPage';
+import VisitDetailsPage from '../shared/pages/VisitDetailsPage';
 import LearningHub from "./pages/LearningHub";
 import ModuleDetails from "./pages/ModuleDetails";
 import Settings from "./pages/Settings";
@@ -15,9 +13,37 @@ import StartNavigation from "./pages/StartNavigation";
 import MarkVisitComplete from "./pages/MarkVisitComplete";
 import ViewAllLocations from "./pages/ViewAllLocations";
 import FloatingChat from "./components/support/FloatingChat";
-import EarningDetails from "./pages/EarningDetails";
+import { visits as visitsData } from './lib/mockData';
 
 const queryClient = new QueryClient();
+
+function SharedVisitsWrapper() {
+  return (
+    <VisitsPage
+      visits={visitsData.map(v => ({
+        id: v.id,
+        patientName: v.patientData?.name || '',
+        patientAge: v.patientData?.age,
+        address: v.patientData?.address || '',
+        time: v.visitData?.time || '',
+        visitType: v.visitData?.type || '',
+        isUrgent: v.visitData?.isUrgent,
+        status: v.visitData?.status || '',
+        onClickPath: `/assistants/visits/${v.id}`,
+      }))}
+      userType="assistant"
+      navPrefix="assistants"
+      showAge
+      title="Scheduled Visits"
+    />
+  );
+}
+
+function SharedVisitDetailsWrapper() {
+  const { id } = useParams();
+  const visit = visitsData.find(v => v.id === id);
+  return <VisitDetailsPage visit={visit} userType="assistant" backPath="/assistants/visits" />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -25,11 +51,8 @@ const App = () => (
       <Routes>
         <Route path="/" element={<Index />} />
         <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/visits" element={<Visits />} />
-          <Route path="/visits/:id" element={<VisitDetails />} />
-          <Route path="/earnings" element={<Earnings />} />
-          <Route path="/earnings/:id" element={<EarningDetails />} />
+          <Route path="/visits" element={<SharedVisitsWrapper />} />
+          <Route path="/visits/:id" element={<SharedVisitDetailsWrapper />} />
           <Route path="/learning" element={<LearningHub />} />
           <Route path="/learning/:id" element={<ModuleDetails />} />
           <Route path="/settings" element={<Settings />} />
