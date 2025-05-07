@@ -64,16 +64,16 @@ export const modules = [
 
 // Dashboard visits (Indian names and locations)
 export const visitsData = [
-  { id: '1', patientName: 'Rajesh Kumar', patientAge: 65, address: '42 Shyam Nagar, Delhi NCR, 110001', time: '9:00 AM', visitType: 'Blood Test', isUrgent: true, status: 'upcoming' },
-  { id: '2', patientName: 'Priya Sharma', patientAge: 78, address: '105 Andheri West, Mumbai, 400053', time: '11:30 AM', visitType: 'X-Ray', status: 'upcoming' },
-  { id: '3', patientName: 'Vikram Mehta', patientAge: 72, address: '78 Indiranagar, Bangalore, 560038', time: '2:15 PM', visitType: 'Vitals Check', status: 'upcoming' },
-];
+  { id: '1', patientName: 'Rajesh Kumar', patientAge: 65, address: '42 Shyam Nagar, Delhi NCR, 110001', time: '9:00 AM', visitType: 'Blood Test', isUrgent: true, status: 'upcoming' as 'upcoming' },
+  { id: '2', patientName: 'Priya Sharma', patientAge: 78, address: '105 Andheri West, Mumbai, 400053', time: '11:30 AM', visitType: 'X-Ray', status: 'upcoming' as 'upcoming' },
+  { id: '3', patientName: 'Vikram Mehta', patientAge: 72, address: '78 Indiranagar, Bangalore, 560038', time: '2:15 PM', visitType: 'Vitals Check', status: 'upcoming' as 'upcoming' },
+] as const;
 
 export const availableVisits = [
-  { id: '6', patientName: 'Anita Desai', patientAge: 58, address: '56 Banjara Hills, Hyderabad, 500034', time: '10:45 AM', visitType: 'Blood Pressure Check', status: 'upcoming' },
-  { id: '7', patientName: 'Suresh Patel', patientAge: 82, address: '25 Salt Lake, Kolkata, 700091', time: '1:30 PM', visitType: 'Diabetes Screening', status: 'upcoming', isUrgent: true },
-  { id: '8', patientName: 'Meera Reddy', patientAge: 69, address: '15 Adyar, Chennai, 600020', time: '3:00 PM', visitType: 'Medication Review', status: 'upcoming' },
-];
+  { id: '6', patientName: 'Anita Desai', patientAge: 58, address: '56 Banjara Hills, Hyderabad, 500034', time: '10:45 AM', visitType: 'Blood Pressure Check', status: 'upcoming' as 'upcoming' },
+  { id: '7', patientName: 'Suresh Patel', patientAge: 82, address: '25 Salt Lake, Kolkata, 700091', time: '1:30 PM', visitType: 'Diabetes Screening', status: 'upcoming' as 'upcoming', isUrgent: true },
+  { id: '8', patientName: 'Meera Reddy', patientAge: 69, address: '15 Adyar, Chennai, 600020', time: '3:00 PM', visitType: 'Medication Review', status: 'upcoming' as 'upcoming' },
+] as const;
 
 // Locations for ViewAllLocations
 export const locations = [

@@ -114,7 +114,7 @@ const Dashboard = () => {
             </div>
             
             <TabsContent value="today" className="space-y-4 mt-0">
-              {visitsData.map((visit: Visit) => (
+              {visitsData.map((visit) => (
                 <VisitCard key={visit.id} visit={visit} />
               ))}
 
@@ -135,7 +135,7 @@ const Dashboard = () => {
             
             <TabsContent value="available" className="mt-0">
               <div className="space-y-4">
-                {availableVisits.map((visit: Visit) => (
+                {availableVisits.map((visit) => (
                   <Card key={visit.id} className="overflow-hidden hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-2">

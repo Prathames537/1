@@ -28,17 +28,6 @@ import {
 } from "@/components/ui/select";
 import { locations } from '../lib/mockData';
 
-interface Location {
-  id: string;
-  patientName: string;
-  address: string;
-  city: string;
-  visitType: string;
-  time: string;
-  isUrgent: boolean;
-  distance: string;
-}
-
 const ViewAllLocations = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');

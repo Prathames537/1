@@ -426,5 +426,28 @@ export const notifications = [
     time: '30 minutes ago',
     isRead: false,
   },
-  // ...add other notifications from Notifications.tsx
+  {
+    id: '2',
+    type: 'message',
+    title: 'New Message from Patient',
+    description: 'Robert Chen sent you a message regarding his medication.',
+    time: '1 hour ago',
+    isRead: false,
+  },
+  {
+    id: '3',
+    type: 'report',
+    title: 'Lab Report Ready',
+    description: "Emma Garcia's blood test results are now available.",
+    time: '2 hours ago',
+    isRead: true,
+  },
+  {
+    id: '4',
+    type: 'system',
+    title: 'System Update',
+    description: 'Your profile has been updated successfully.',
+    time: 'Yesterday',
+    isRead: true,
+  },
 ]; 

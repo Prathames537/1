@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Search, Award, TrendingUp, BookOpen } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import ModuleCard, { Module } from '../components/learning/ModuleCard';
+import ModuleCard from '../components/learning/ModuleCard';
 import { modules } from '../lib/mockData';
 
 const LearningHub = () => {
