@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Bot, SendHorizontal, AlertCircle, FileText, Stethoscope, Pill, Heart, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AIBot = () => {
   const [messages, setMessages] = useState([

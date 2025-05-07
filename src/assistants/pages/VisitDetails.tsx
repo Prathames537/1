@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, Calendar, Clock, MapPin, Upload, Check, AlertTriangle, User, Heart, FileText 
 } from 'lucide-react';

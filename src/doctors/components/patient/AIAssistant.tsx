@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { Bot, SendHorizontal, X, AlertCircle, Check, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Bot, SendHorizontal, X, AlertCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -110,8 +109,7 @@ SCREENING TIMELINE:
 - Blood pressure monitoring: Next 7 days
 - Echocardiogram: Schedule within 30 days
 - Follow-up visit: In 3-4 weeks`;
-      }
-      else {
+      } else {
         aiResponse = `Based on ${patient.name}'s medical profile, I've analyzed the following information:
 
 KEY OBSERVATIONS:
@@ -127,11 +125,10 @@ DIAGNOSTIC CONSIDERATIONS:
 
 Would you like me to analyze specific aspects of the patient's condition in more detail?`;
       }
-      
       setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
     }, 1500);
   };
-  
+
   return (
     <div className="bg-white rounded-xl shadow-card mb-6 overflow-hidden">
       <div className="bg-welli-green p-4 flex justify-between items-center">
@@ -144,7 +141,6 @@ Would you like me to analyze specific aspects of the patient's condition in more
           <X size={18} />
         </Button>
       </div>
-      
       <div className="h-96 overflow-y-auto p-4 bg-welli-gray-100">
         {messages.map((message, index) => (
           <div 
@@ -168,7 +164,6 @@ Would you like me to analyze specific aspects of the patient's condition in more
             </div>
           </div>
         ))}
-        
         {analyzingData && (
           <div className="flex justify-start mb-4">
             <div className="max-w-3/4 rounded-lg p-3 bg-white border border-welli-gray-200">
@@ -187,7 +182,6 @@ Would you like me to analyze specific aspects of the patient's condition in more
           </div>
         )}
       </div>
-      
       {showSuggestions && (
         <div className="p-3 border-t border-welli-gray-200">
           <p className="text-sm text-welli-gray-600 mb-2">Suggested questions:</p>
@@ -206,7 +200,6 @@ Would you like me to analyze specific aspects of the patient's condition in more
           </div>
         </div>
       )}
-      
       <div className="p-3 border-t border-welli-gray-200">
         <div className="flex gap-2">
           <input
@@ -224,7 +217,6 @@ Would you like me to analyze specific aspects of the patient's condition in more
             <SendHorizontal size={18} />
           </Button>
         </div>
-        
         <div className="flex items-center mt-2 px-2">
           <AlertCircle size={14} className="text-welli-gray-500 mr-2" />
           <p className="text-xs text-welli-gray-500">

@@ -1,5 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, User, MapPin, Phone, Mail, FileText, CheckCircle, MessageCircle, Video, Pill, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Calendar, Clock, User, MapPin, Phone, Mail, FileText, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
