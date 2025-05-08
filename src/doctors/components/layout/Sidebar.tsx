@@ -3,7 +3,7 @@ import { CalendarDays, Users, FileText, Video, MessageCircle, BarChart3, PiggyBa
 
 // Sidebar menu items config
 const menuItems = [
-  { name: 'Dashboard', icon: <BarChart3 size={20} />, path: '/doctors' },
+  { name: 'Dashboard', icon: <BarChart3 size={20} />, path: '/doctors/dashboard' },
   { name: 'Appointments', icon: <CalendarDays size={20} />, path: '/doctors/appointments' },
   { name: 'Patients', icon: <Users size={20} />, path: '/doctors/patients' },
   { name: 'Assistant Visits', icon: <Video size={20} />, path: '/doctors/assistant-visits' },
