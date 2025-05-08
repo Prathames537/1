@@ -3,10 +3,10 @@
 
 // import { supabase } from '@/lib/supabaseClient';
 
-export async function getUserProfile(userId: string) {
+export async function getUserProfile() {
   throw new Error('Supabase not available');
 }
 
-export async function updateUserProfile(userId: string, profile: any) {
+export async function updateUserProfile() {
   throw new Error('Supabase not available');
 }

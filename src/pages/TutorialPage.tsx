@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useEffect, useState } from "react";
-import { supabase } from '@/lib/supabaseClient';
 
 const TutorialPage = () => {
   const [steps, setSteps] = useState<any[]>([]);
@@ -13,19 +12,11 @@ const TutorialPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTutorials = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase.from('tutorials').select('*').order('step_number', { ascending: true });
-        if (error) throw error;
-        setSteps(data || []);
-      } catch (err: any) {
-        setError("Failed to load tutorials");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTutorials();
+    setLoading(true);
+    setTimeout(() => {
+      setSteps([]);
+      setLoading(false);
+    }, 1000);
   }, []);
 
   if (loading) return <div>Loading...</div>;

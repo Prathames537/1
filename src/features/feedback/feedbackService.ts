@@ -3,7 +3,7 @@
 
 // import { supabase } from '@/lib/supabaseClient';
 
-export async function submitFeedback(feedback: { message: string; user_id?: string }) {
+export async function submitFeedback() {
   throw new Error('Supabase not available');
 }
 

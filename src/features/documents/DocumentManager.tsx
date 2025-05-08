@@ -17,17 +17,12 @@ export const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  // No-op fetchDocuments
-  const fetchDocuments = async () => {
-    setDocuments([]);
-  };
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async () => {
     setIsUploading(true);
     setTimeout(() => setIsUploading(false), 1000);
   };
 
-  const deleteDocument = async (id: string, url: string) => {
+  const deleteDocument = async (id: string) => {
     setDocuments(docs => docs.filter(doc => doc.id !== id));
   };
 
@@ -93,7 +88,7 @@ export const DocumentManager: React.FC = () => {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => deleteDocument(doc.id, doc.url)}
+                  onClick={() => deleteDocument(doc.id)}
                 >
                   <X className="h-4 w-4" />
                 </Button>

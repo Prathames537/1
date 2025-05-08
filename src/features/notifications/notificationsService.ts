@@ -3,10 +3,10 @@
 
 // import { supabase } from '@/lib/supabaseClient';
 
-export async function sendNotification(notification: { message: string; user_id?: string }) {
+export async function sendNotification() {
   throw new Error('Supabase not available');
 }
 
-export async function getNotifications(userId: string) {
+export async function getNotifications() {
   throw new Error('Supabase not available');
 }

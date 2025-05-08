@@ -39,11 +39,11 @@ export const EnhancedReminderSystem: React.FC = () => {
     }, 1000);
   };
 
-  const toggleReminder = async (id: string, current: boolean) => {
+  const toggleReminder = async () => {
     fetchReminders();
   };
 
-  const deleteReminder = async (id: string) => {
+  const deleteReminder = async () => {
     fetchReminders();
   };
 
@@ -153,12 +153,12 @@ export const EnhancedReminderSystem: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={reminder.isActive}
-                  onCheckedChange={() => toggleReminder(reminder.id, reminder.isActive)}
+                  onCheckedChange={() => toggleReminder()}
                 />
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => deleteReminder(reminder.id)}
+                  onClick={() => deleteReminder()}
                 >
                   Delete
                 </Button>

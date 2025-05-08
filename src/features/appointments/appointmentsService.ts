@@ -3,18 +3,18 @@
 
 // import { supabase } from '@/lib/supabaseClient';
 
-export async function createAppointment(data: any) {
+export async function createAppointment() {
   throw new Error('Supabase not available');
 }
 
-export async function getAppointments(userId: string) {
+export async function getAppointments() {
   throw new Error('Supabase not available');
 }
 
-export async function updateAppointment(id: string, updates: any) {
+export async function updateAppointment() {
   throw new Error('Supabase not available');
 }
 
-export async function deleteAppointment(id: string) {
+export async function deleteAppointment() {
   throw new Error('Supabase not available');
 }
