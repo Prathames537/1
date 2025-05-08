@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import MainLayout from "./components/layout/MainLayout";
 import Appointments from "./pages/Appointments";
@@ -29,26 +29,24 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/patients" replace />} />
-          <Route path="/appointments" element={<MainLayout><Appointments /></MainLayout>} />
-          <Route path="/patients" element={<MainLayout><Patients /></MainLayout>} />
-          <Route path="/patients/:patientId" element={<MainLayout><PatientProfile /></MainLayout>} />
-          <Route path="/consultations" element={<MainLayout><Consultations /></MainLayout>} />
-          <Route path="/reports" element={<MainLayout><Reports /></MainLayout>} />
-          <Route path="/settings" element={<MainLayout><Settings /></MainLayout>} />
-          <Route path="/notifications" element={<MainLayout><Notifications /></MainLayout>} />
-          <Route path="/ai-assistant" element={<MainLayout><AIBot /></MainLayout>} />
-          <Route path="/doctors/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
-          <Route path="/doctors/reports/:id" element={<MainLayout><ReportDetails /></MainLayout>} />
-          <Route path="/doctors/consultations/:id" element={<MainLayout><ConsultationDetails /></MainLayout>} />
-          <Route path="/earnings" element={<MainLayout><EarningsPage earnings={earnings} currency="₹" routePrefix="/doctors" fieldLabel="consultationType" title="Earnings" /></MainLayout>} />
-          <Route path="/earnings/:id" element={<MainLayout><EarningDetailsPage earnings={earnings} currency="₹" fieldLabel="consultationType" routePrefix="/doctors" /></MainLayout>} />
-          <Route path="/dashboard" element={<MainLayout><DashboardPage title="Doctor Dashboard" summaryCards={<div>Summary Cards</div>} mainList={<div>Main List</div>} /></MainLayout>} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/patients" replace />} />
+        <Route path="appointments" element={<MainLayout><Appointments /></MainLayout>} />
+        <Route path="patients" element={<MainLayout><Patients /></MainLayout>} />
+        <Route path="patients/:patientId" element={<MainLayout><PatientProfile /></MainLayout>} />
+        <Route path="consultations" element={<MainLayout><Consultations /></MainLayout>} />
+        <Route path="reports" element={<MainLayout><Reports /></MainLayout>} />
+        <Route path="settings" element={<MainLayout><Settings /></MainLayout>} />
+        <Route path="notifications" element={<MainLayout><Notifications /></MainLayout>} />
+        <Route path="ai-assistant" element={<MainLayout><AIBot /></MainLayout>} />
+        <Route path="doctors/appointments/:id" element={<MainLayout><AppointmentDetails /></MainLayout>} />
+        <Route path="doctors/reports/:id" element={<MainLayout><ReportDetails /></MainLayout>} />
+        <Route path="doctors/consultations/:id" element={<MainLayout><ConsultationDetails /></MainLayout>} />
+        <Route path="earnings" element={<MainLayout><EarningsPage earnings={earnings} currency="₹" routePrefix="/doctors" fieldLabel="consultationType" title="Earnings" /></MainLayout>} />
+        <Route path="earnings/:id" element={<MainLayout><EarningDetailsPage earnings={earnings} currency="₹" fieldLabel="consultationType" routePrefix="/doctors" /></MainLayout>} />
+        <Route path="dashboard" element={<MainLayout><DashboardPage title="Doctor Dashboard" summaryCards={<div>Summary Cards</div>} mainList={<div>Main List</div>} /></MainLayout>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </TooltipProvider>
   </QueryClientProvider>
 );
