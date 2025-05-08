@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-const LOCAL_AI_URL = "http://localhost:8000/chat";
+// Replace LOCAL_AI_URL with Hugging Face Inference API endpoint for flan-t5-small
+const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small";
 
 type Message = {
   id: string;
@@ -110,7 +111,7 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     setUserInput("");
     setIsLoading(true);
 
-    // Call Hugging Face Inference API for a concise AI response with service recommendation
+    // Use Hugging Face Inference API for a concise AI response
     // Limit history to last 10 messages
     const maxHistory = 10;
     const historyMessages = [...messages, userMessage].slice(-maxHistory);
@@ -119,15 +120,15 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
     try {
-      const res = await fetch(LOCAL_AI_URL, {
+      const res = await fetch(HF_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inputs: prompt, parameters: { max_new_tokens: 100, temperature: 0.3 } }),
+        body: JSON.stringify({ inputs: prompt }),
       });
       let reply = '';
       if (res.ok) {
         const data = await res.json();
-        reply = data[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
+        reply = data?.[0]?.generated_text?.trim() || data?.generated_text?.trim() || 'Sorry, I could not answer that.';
       } else {
         reply = 'Sorry, I could not get a response from the AI.';
       }
