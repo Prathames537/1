@@ -66,7 +66,7 @@ const App = () => (
           <Route path="/view-all-locations" element={<ViewAllLocations />} />
           <Route path="/earnings" element={<EarningsPage earnings={earningsHistory} currency="₹" routePrefix="/assistants" fieldLabel="visitType" title="Earnings" />} />
           <Route path="/earnings/:id" element={<EarningDetailsPage earnings={earningsHistory} currency="₹" fieldLabel="visitType" routePrefix="/assistants" />} />
-          <Route path="/dashboard" element={<DashboardPage userType="assistant" />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

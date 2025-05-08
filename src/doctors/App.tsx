@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useParams, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import MainLayout from "./components/layout/MainLayout";
 import Appointments from "./pages/Appointments";
@@ -17,12 +17,10 @@ import NotFound from "./pages/NotFound";
 import AppointmentDetails from "./pages/AppointmentDetails";
 import ReportDetails from "./pages/ReportDetails";
 import ConsultationDetails from "./pages/ConsultationDetails";
-import VisitsPage from '../shared/pages/VisitsPage';
-import VisitDetailsPage from '../shared/pages/VisitDetailsPage';
 import EarningsPage from '../shared/pages/EarningsPage';
 import EarningDetailsPage from '../shared/pages/EarningDetailsPage';
 import DashboardPage from '../shared/pages/DashboardPage';
-import { visits, earnings } from './lib/mockData';
+import { earnings } from './lib/mockData';
 
 const queryClient = new QueryClient();
 
