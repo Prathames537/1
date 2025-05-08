@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, Image, X } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Document {
   id: string;
@@ -17,14 +18,41 @@ export const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileUpload = async () => {
+  const fetchDocuments = async () => {
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) setDocuments(data || []);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsUploading(true);
-    setTimeout(() => setIsUploading(false), 1000);
+    const file = e.target.files?.[0];
+    if (!file) return setIsUploading(false);
+    // Upload file to Supabase Storage (if configured) or handle as needed
+    // For now, just add a record to the documents table
+    const { error } = await supabase.from('documents').insert([
+      {
+        name: file.name,
+        type: file.type,
+        date: new Date().toISOString(),
+        url: '', // Add file URL if using storage
+        // user_id: (add user id if available)
+      },
+    ]);
+    setIsUploading(false);
+    if (!error) fetchDocuments();
   };
 
   const deleteDocument = async (id: string) => {
-    setDocuments(docs => docs.filter(doc => doc.id !== id));
+    await supabase.from('documents').delete().eq('id', id);
+    fetchDocuments();
   };
+
+  useEffect(() => {
+    fetchDocuments();
+  }, []);
 
   return (
     <div className="container mx-auto p-4 space-y-6">

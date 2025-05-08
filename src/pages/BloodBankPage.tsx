@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-// import { supabase } from '@/lib/supabaseClient';
+import React, { useState, useEffect, FormEvent } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const BloodBankPage: React.FC = () => {
   const [bloodGroup, setBloodGroup] = useState('A+');
@@ -9,9 +9,14 @@ const BloodBankPage: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // No-op fetchRequests
   const fetchRequests = async () => {
-    setRequests([]);
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('blood_bank_requests')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) setRequests(data || []);
+    setLoading(false);
   };
 
   const handleLocation = () => {
@@ -23,18 +28,30 @@ const BloodBankPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    const { error } = await supabase.from('blood_bank_requests').insert([
+      {
+        blood_group: bloodGroup,
+        units,
+        description,
+        location_lat: location?.lat,
+        location_lng: location?.lng,
+        // user_id: (add user id if available)
+      },
+    ]);
+    if (!error) {
       setDescription('');
       setUnits(1);
       setBloodGroup('A+');
       setLocation(null);
-      setLoading(false);
       fetchRequests();
-    }, 1000);
+    }
+    setLoading(false);
   };
+
+  useEffect(() => { fetchRequests(); }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">

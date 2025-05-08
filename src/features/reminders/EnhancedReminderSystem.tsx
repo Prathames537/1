@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Pill, StretchHorizontal, Dumbbell } from 'lucide-react';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Reminder {
   id: string;
@@ -26,25 +27,47 @@ export const EnhancedReminderSystem: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchReminders = async () => {
-    setReminders([]);
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('reminders')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) setReminders(data || []);
+    setLoading(false);
   };
 
   const handleAddReminder = async () => {
     if (!newReminder.title || !newReminder.time) return;
     setLoading(true);
-    setTimeout(() => {
+    const { error } = await supabase.from('reminders').insert([
+      {
+        reminder_text: newReminder.title,
+        reminder_time: newReminder.time,
+        days: newReminder.days,
+        type: newReminder.type,
+        is_active: newReminder.isActive,
+        // user_id: (add user id if available)
+      },
+    ]);
+    if (!error) {
       setNewReminder({ type: 'medication', days: [], isActive: true });
-      setLoading(false);
       fetchReminders();
-    }, 1000);
+    }
+    setLoading(false);
   };
 
-  const toggleReminder = async () => {
+  const toggleReminder = async (id: string, isActive: boolean) => {
+    setLoading(true);
+    await supabase.from('reminders').update({ is_active: !isActive }).eq('id', id);
     fetchReminders();
+    setLoading(false);
   };
 
-  const deleteReminder = async () => {
+  const deleteReminder = async (id: string) => {
+    setLoading(true);
+    await supabase.from('reminders').delete().eq('id', id);
     fetchReminders();
+    setLoading(false);
   };
 
   const getIcon = (type: string) => {
@@ -59,6 +82,8 @@ export const EnhancedReminderSystem: React.FC = () => {
         return <Bell className="h-5 w-5" />;
     }
   };
+
+  useEffect(() => { fetchReminders(); }, []);
 
   return (
     <div className="container mx-auto p-4 space-y-6">
@@ -153,12 +178,12 @@ export const EnhancedReminderSystem: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={reminder.isActive}
-                  onCheckedChange={() => toggleReminder()}
+                  onCheckedChange={(checked) => toggleReminder(reminder.id, reminder.isActive)}
                 />
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => deleteReminder()}
+                  onClick={() => deleteReminder(reminder.id)}
                 >
                   Delete
                 </Button>

@@ -170,6 +170,73 @@ create table if not exists emergency_help (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
+-- VISITS TABLE
+create table if not exists visits (
+  id uuid primary key default uuid_generate_v4(),
+  patient_id uuid references users(id),
+  doctor_id uuid references users(id),
+  visit_date timestamp with time zone not null,
+  visit_type text,
+  status text,
+  notes text,
+  address text,
+  is_urgent boolean default false,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- EARNINGS TABLE
+create table if not exists earnings (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references users(id),
+  date timestamp with time zone not null,
+  patient_name text,
+  consultation_type text,
+  amount numeric,
+  status text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- MODULES TABLE
+create table if not exists modules (
+  id uuid primary key default uuid_generate_v4(),
+  title text,
+  description text,
+  duration text,
+  progress int,
+  image text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- REPORTS TABLE
+create table if not exists reports (
+  id uuid primary key default uuid_generate_v4(),
+  patient_id uuid references users(id),
+  doctor_id uuid references users(id),
+  date timestamp with time zone not null,
+  type text,
+  status text,
+  results jsonb,
+  notes text,
+  file_url text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- CONSULTATIONS TABLE
+create table if not exists consultations (
+  id uuid primary key default uuid_generate_v4(),
+  patient_id uuid references users(id),
+  doctor_id uuid references users(id),
+  date timestamp with time zone not null,
+  time text,
+  status text,
+  type text,
+  symptoms jsonb,
+  diagnosis text,
+  prescription jsonb,
+  notes text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
 -- =========================
 -- ENABLE RLS AND ADD POLICIES
 -- =========================

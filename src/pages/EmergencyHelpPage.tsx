@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-// import { supabase } from '@/lib/supabaseClient';
+import React, { useState, useEffect, FormEvent } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const EmergencyHelpPage: React.FC = () => {
   const [description, setDescription] = useState('');
@@ -7,9 +7,14 @@ const EmergencyHelpPage: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // No-op fetchRequests
   const fetchRequests = async () => {
-    setRequests([]);
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('emergency_help')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (!error) setRequests(data || []);
+    setLoading(false);
   };
 
   const handleLocation = () => {
@@ -21,16 +26,28 @@ const EmergencyHelpPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    const { error } = await supabase.from('emergency_help').insert([
+      {
+        description,
+        location_lat: location?.lat,
+        location_lng: location?.lng,
+        // user_id: (add user id if available)
+      },
+    ]);
+    if (!error) {
       setDescription('');
       setLocation(null);
-      setLoading(false);
       fetchRequests();
-    }, 1000);
+    }
+    setLoading(false);
   };
+
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
