@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 const TutorialPage = () => {
   const [steps, setSteps] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -20,7 +19,6 @@ const TutorialPage = () => {
   }, []);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
 
   return (
     <div className="min-h-screen flex flex-col">

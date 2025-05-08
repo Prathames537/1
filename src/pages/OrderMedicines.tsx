@@ -11,10 +11,6 @@ const OrderMedicines = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMedicines = async () => {
-    setMedicines([]);
-  };
-
   const handleQtyChange = (name: string, val: number) => {
     setOrderQty(q => ({ ...q, [name]: val }));
   };

@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ const BookAppointment = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await bookAppointment(form);
+    await bookAppointment();
     if (!error) {
       setForm({ serviceType: "", date: "", time: "", name: "", phone: "", description: "" });
     }

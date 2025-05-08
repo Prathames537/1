@@ -18,19 +18,17 @@ const UserProfilePage = () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getUserProfile(userId);
-        if (data) {
-          setProfile(data);
-          setForm(data);
-        }
+        await getUserProfile();
+        setProfile(null);
+        setForm({});
       } catch (err: any) {
-        setError("Failed to load profile: " + (err?.message || 'Unknown error'));
+        setError("Profile not available: " + (err?.message || 'Unknown error'));
       } finally {
         setLoading(false);
       }
     };
     fetchProfile();
-  }, [userId]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -40,8 +38,7 @@ const UserProfilePage = () => {
     setLoading(true);
     setError(null);
     try {
-      await updateUserProfile(userId, form);
-      setProfile((prev) => ({ ...prev, ...form } as UserProfile));
+      await updateUserProfile();
       setEdit(false);
     } catch (err: any) {
       setError("Failed to update profile: " + (err?.message || 'Unknown error'));
@@ -49,7 +46,6 @@ const UserProfilePage = () => {
       setLoading(false);
     }
   };
-
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -59,22 +55,7 @@ const UserProfilePage = () => {
       <Navbar />
       <main className="flex-grow container mx-auto py-12">
         <h1 className="text-3xl font-bold mb-6">User Profile</h1>
-        {edit ? (
-          <div className="space-y-4 max-w-md">
-            <input name="name" value={form.name || ""} onChange={handleChange} placeholder="Name" className="input" />
-            <input name="email" value={form.email || ""} onChange={handleChange} placeholder="Email" className="input" />
-            <input name="phone" value={form.phone || ""} onChange={handleChange} placeholder="Phone" className="input" />
-            <button onClick={handleSave} className="btn btn-primary">Save</button>
-            <button onClick={() => setEdit(false)} className="btn btn-secondary">Cancel</button>
-          </div>
-        ) : (
-          <div className="space-y-2 max-w-md">
-            <div><strong>Name:</strong> {profile?.name}</div>
-            <div><strong>Email:</strong> {profile?.email}</div>
-            <div><strong>Phone:</strong> {profile?.phone}</div>
-            <button onClick={() => setEdit(true)} className="btn btn-primary mt-4">Edit</button>
-          </div>
-        )}
+        <div className="text-red-600">Profile features are currently unavailable.</div>
       </main>
       <Footer />
     </div>

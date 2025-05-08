@@ -9,15 +9,12 @@ export function useAppointments() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  const bookAppointment = async (form: AppointmentForm) => {
+  const bookAppointment = async () => {
     setLoading(true);
     setError(null);
     setSuccess(false);
     try {
-      await createAppointment({
-        userId: "guest",
-        ...form,
-      });
+      await createAppointment();
       setSuccess(true);
     } catch (err: any) {
       setError(err.message || "Failed to book appointment");
