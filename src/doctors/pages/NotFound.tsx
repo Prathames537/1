@@ -15,7 +15,7 @@ const NotFound = () => {
     
     // Redirect to dashboard after a short delay
     const redirectTimer = setTimeout(() => {
-      navigate('/patients');
+      navigate('/doctors/patients');
     }, 1500);
     
     return () => clearTimeout(redirectTimer);
