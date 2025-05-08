@@ -1,11 +1,21 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { appointments } from '../lib/mockData';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const AppointmentDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const appointment = appointments.find(a => a.id === id);
+  const [appointment, setAppointment] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchAppointment = async () => {
+      const { data, error } = await supabase.from('appointments').select('*').eq('id', id).single();
+      if (!error) setAppointment(data);
+    };
+    if (id) fetchAppointment();
+  }, [id]);
+
   if (!appointment) {
     return <div className="p-8 text-center text-red-500">Appointment not found.</div>;
   }

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Filter, FileText, Calendar, MessageSquare, Video, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
-import { patients } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Patient {
   id: string;
@@ -178,10 +178,19 @@ const PatientDetail: React.FC<{ patient: Patient }> = ({ patient }) => {
 };
 
 const Patients = () => {
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   
-  const filteredPatients = patients.filter(patient => 
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const { data, error } = await supabase.from('patients').select('*');
+      if (!error) setPatients(data || []);
+    };
+    fetchPatients();
+  }, []);
+  
+  const filteredPatients = patients.filter((patient: Patient) =>
     patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.condition.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -230,7 +239,7 @@ const Patients = () => {
           </div>
           
           <div className="space-y-4">
-            {filteredPatients.map(patient => (
+            {filteredPatients.map((patient: Patient) => (
               <div key={patient.id} onClick={() => navigate(`/doctors/patients/${patient.id}`)} className="cursor-pointer">
                 <PatientCard patient={patient} />
               </div>

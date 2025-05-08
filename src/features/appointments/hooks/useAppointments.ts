@@ -12,7 +12,7 @@ export function useAppointments() {
     setError(null);
     setSuccess(false);
     try {
-      await createAppointment();
+      await createAppointment({ patient_id: '', doctor_id: '', appointment_date: '' });
       setSuccess(true);
     } catch (err: any) {
       setError(err.message || "Failed to book appointment");

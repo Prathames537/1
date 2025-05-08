@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileText, Search, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,15 +7,24 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { reports } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 export default function Reports() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
+  const [reports, setReports] = useState<any[]>([]);
   const navigate = useNavigate();
 
-  const filteredReports = reports.filter(report => {
+  useEffect(() => {
+    const fetchReports = async () => {
+      const { data, error } = await supabase.from('reports').select('*');
+      if (!error) setReports(data || []);
+    };
+    fetchReports();
+  }, []);
+
+  const filteredReports = reports.filter((report: any) => {
     const matchesSearch = report.patientName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = filterType === "all" || report.type === filterType;
     return matchesSearch && matchesType;
@@ -94,7 +103,7 @@ export default function Reports() {
                   <h4 className="font-medium">Results</h4>
                   <ScrollArea className="h-[200px] rounded-md border p-2">
                     <div className="space-y-2">
-                      {report.results.map((result, index) => (
+                      {report.results.map((result: any, index: number) => (
                         <div key={index} className="flex justify-between text-sm">
                           <span>{result.name}</span>
                           <div className="flex items-center gap-2">

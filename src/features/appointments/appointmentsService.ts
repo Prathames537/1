@@ -3,13 +3,22 @@
 
 import { supabase } from '@/lib/supabaseClient';
 
-export async function createAppointment(appointment) {
+export interface Appointment {
+  id?: string;
+  patient_id: string;
+  doctor_id: string;
+  appointment_date: string;
+  status?: string;
+  created_at?: string;
+}
+
+export async function createAppointment(appointment: Appointment): Promise<any> {
   const { data, error } = await supabase.from('appointments').insert([appointment]);
   if (error) throw error;
   return data;
 }
 
-export async function getAppointments(userId) {
+export async function getAppointments(userId: string): Promise<any[]> {
   const { data, error } = await supabase
     .from('appointments')
     .select('*')
@@ -19,7 +28,7 @@ export async function getAppointments(userId) {
   return data;
 }
 
-export async function updateAppointment(id, updates) {
+export async function updateAppointment(id: string, updates: Partial<Appointment>): Promise<any> {
   const { data, error } = await supabase
     .from('appointments')
     .update(updates)
@@ -28,7 +37,7 @@ export async function updateAppointment(id, updates) {
   return data;
 }
 
-export async function deleteAppointment(id) {
+export async function deleteAppointment(id: string): Promise<any> {
   const { data, error } = await supabase
     .from('appointments')
     .delete()

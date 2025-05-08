@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar, Clock, Search, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,14 +7,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { consultations } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 export default function Consultations() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [consultations, setConsultations] = useState<any[]>([]);
   const navigate = useNavigate();
 
-  const filteredConsultations = consultations.filter(consultation =>
+  useEffect(() => {
+    const fetchConsultations = async () => {
+      const { data, error } = await supabase.from('consultations').select('*');
+      if (!error) setConsultations(data || []);
+    };
+    fetchConsultations();
+  }, []);
+
+  const filteredConsultations = consultations.filter((consultation: any) =>
     consultation.patientName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -88,7 +97,7 @@ export default function Consultations() {
                     <div>
                       <h4 className="font-medium">Symptoms</h4>
                       <div className="flex flex-wrap gap-2 mt-2">
-                        {consultation.symptoms.map((symptom, index) => (
+                        {consultation.symptoms.map((symptom: any, index: number) => (
                           <Badge key={index} variant="outline">{symptom}</Badge>
                         ))}
                       </div>
@@ -104,7 +113,7 @@ export default function Consultations() {
                         <h4 className="font-medium">Prescription</h4>
                         <ScrollArea className="h-[100px] rounded-md border p-2">
                           <div className="space-y-2">
-                            {consultation.prescription.medicines.map((medicine, index) => (
+                            {consultation.prescription.medicines.map((medicine: any, index: number) => (
                               <div key={index} className="flex justify-between text-sm">
                                 <span>{medicine.name}</span>
                                 <span className="text-muted-foreground">

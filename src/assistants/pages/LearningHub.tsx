@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -6,14 +6,23 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Award, TrendingUp, BookOpen } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ModuleCard from '../components/learning/ModuleCard';
-import { modules } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 const LearningHub = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [modules, setModules] = useState<any[]>([]);
   
+  useEffect(() => {
+    const fetchModules = async () => {
+      const { data, error } = await supabase.from('modules').select('*');
+      if (!error) setModules(data || []);
+    };
+    fetchModules();
+  }, []);
+
   const completedModules = modules.filter(module => module.progress === 100).length;
   const totalModules = modules.length;
-  const completionPercentage = (completedModules / totalModules) * 100;
+  const completionPercentage = totalModules > 0 ? (completedModules / totalModules) * 100 : 0;
   
   // Filter modules based on search term
   const filteredModules = modules.filter(module =>

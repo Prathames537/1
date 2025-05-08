@@ -1,11 +1,19 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { consultations } from '../lib/mockData';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
 
 const ConsultationDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const consultation = consultations.find(c => c.id === id);
+  const [consultation, setConsultation] = useState<any>(null);
+  useEffect(() => {
+    const fetchConsultation = async () => {
+      const { data, error } = await supabase.from('consultations').select('*').eq('id', id).single();
+      if (!error) setConsultation(data);
+    };
+    if (id) fetchConsultation();
+  }, [id]);
   if (!consultation) {
     return <div className="p-8 text-center text-red-500">Consultation not found.</div>;
   }
@@ -27,7 +35,7 @@ const ConsultationDetails = () => {
         <div className="mt-4">
           <h3 className="font-medium">Symptoms</h3>
           <ul className="list-disc ml-6">
-            {consultation.symptoms.map((symptom, i) => (
+            {consultation.symptoms.map((symptom: any, i: number) => (
               <li key={i}>{symptom}</li>
             ))}
           </ul>
@@ -40,7 +48,7 @@ const ConsultationDetails = () => {
           <div className="mt-4">
             <h3 className="font-medium">Prescription</h3>
             <ul className="list-disc ml-6">
-              {consultation.prescription.medicines.map((med, i) => (
+              {consultation.prescription.medicines.map((med: any, i: number) => (
                 <li key={i}>{med.name}: {med.dosage} for {med.duration}</li>
               ))}
             </ul>

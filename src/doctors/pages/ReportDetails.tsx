@@ -1,14 +1,20 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { reports } from '../lib/mockData';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const ReportDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const report = reports.find(r => r.id === id);
-  if (!report) {
-    return <div className="p-8 text-center text-red-500">Report not found.</div>;
-  }
+  const [report, setReport] = useState<any>(null);
+  useEffect(() => {
+    const fetchReport = async () => {
+      const { data, error } = await supabase.from('reports').select('*').eq('id', id).single();
+      if (!error) setReport(data);
+    };
+    if (id) fetchReport();
+  }, [id]);
+  if (!report) return <div>Report not found.</div>;
   return (
     <div className="space-y-6 animate-fade-in">
       <Button variant="ghost" size="icon" onClick={() => navigate('/doctors/reports')}>
@@ -27,7 +33,7 @@ const ReportDetails = () => {
         <div className="mt-4">
           <h3 className="font-medium">Results</h3>
           <ul className="list-disc ml-6">
-            {report.results.map((result, i) => (
+            {report.results.map((result: any, i: number) => (
               <li key={i}>{result.name}: {result.value} {result.unit} (Normal: {result.normalRange})</li>
             ))}
           </ul>

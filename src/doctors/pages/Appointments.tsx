@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, Clock, Video, MessageCircle, Plus, Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
-import { appointments } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Appointment {
   id: string;
@@ -55,9 +55,18 @@ const AppointmentCard = ({ appointment }: { appointment: Appointment }) => {
 };
 
 const Appointments = () => {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredAppointments = appointments.filter(appointment =>
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      const { data, error } = await supabase.from('appointments').select('*');
+      if (!error) setAppointments(data || []);
+    };
+    fetchAppointments();
+  }, []);
+
+  const filteredAppointments = appointments.filter((appointment: Appointment) =>
     appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     appointment.reason.toLowerCase().includes(searchTerm.toLowerCase())
   );

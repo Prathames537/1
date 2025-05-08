@@ -16,9 +16,9 @@ interface Document {
 
 export const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = async (): Promise<void> => {
     const { data, error } = await supabase
       .from('documents')
       .select('*')
@@ -26,7 +26,7 @@ export const DocumentManager: React.FC = () => {
     if (!error) setDocuments(data || []);
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     setIsUploading(true);
     const file = e.target.files?.[0];
     if (!file) return setIsUploading(false);
@@ -45,7 +45,7 @@ export const DocumentManager: React.FC = () => {
     if (!error) fetchDocuments();
   };
 
-  const deleteDocument = async (id: string) => {
+  const deleteDocument = async (id: string): Promise<void> => {
     await supabase.from('documents').delete().eq('id', id);
     fetchDocuments();
   };

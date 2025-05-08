@@ -11,10 +11,9 @@ import {
   BookOpen, CheckCircle, Clock, ArrowLeft, Award, ChevronRight, ListChecks 
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Module } from '../components/learning/ModuleCard';
 import LessonContent, { Lesson } from '../components/learning/LessonContent';
 import { patientPrivacyLessons } from '../components/learning/LessonData';
-import { modules } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 const moduleLessons: Record<string, Lesson[]> = {
   '3': patientPrivacyLessons
@@ -22,27 +21,30 @@ const moduleLessons: Record<string, Lesson[]> = {
 
 const ModuleDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const [module, setModule] = useState<any>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [module, setModule] = useState<Module | null>(null);
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [currentLessonIndex, setCurrentLessonIndex] = useState<number>(0);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    if (id) {
-      const moduleData = modules.find(m => m.id === id);
-      if (moduleData) {
-        setModule(moduleData);
-        
-        const moduleLessonData = moduleLessons[id] || [];
-        setLessons(moduleLessonData);
-        
-        setCompletedLessons(new Set());
-      }
-    }
+    const fetchModule = async () => {
+      const { data, error } = await supabase.from('modules').select('*').eq('id', id).single();
+      if (!error) setModule(data);
+    };
+    if (id) fetchModule();
   }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      const moduleData = moduleLessons[id] || [];
+      setLessons(moduleData);
+      
+      setCompletedLessons(new Set());
+    }
+  }, [id, module]);
 
   const handleLessonComplete = () => {
     if (!lessons[currentLessonIndex]) return;

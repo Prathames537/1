@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Bell, Calendar, MessageCircle, FileText } from 'lucide-react';
-import { notifications } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Notification {
   id: string;
@@ -38,7 +39,19 @@ const NotificationItem = ({ notification }: { notification: Notification }) => {
 };
 
 const Notifications = () => {
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const { data, error } = await supabase.from('notifications').select('*');
+      if (!error) {
+        setNotifications(data || []);
+        setUnreadCount(data.filter((n: Notification) => !n.isRead).length);
+      }
+    };
+    fetchNotifications();
+  }, []);
 
   return (
     <div className="space-y-6">

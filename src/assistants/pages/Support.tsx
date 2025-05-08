@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Card, CardContent, CardHeader, CardTitle, CardDescription 
 } from "@/components/ui/card";
@@ -15,12 +15,21 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
-import { faqs } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 const Support = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [messageText, setMessageText] = useState("");
+  const [faqs, setFaqs] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      const { data, error } = await supabase.from('faqs').select('*');
+      if (!error) setFaqs(data || []);
+    };
+    fetchFaqs();
+  }, []);
 
   const handleSendMessage = () => {
     if (!messageText.trim()) return;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Card, 
@@ -26,14 +26,23 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { locations } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 const ViewAllLocations = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [city, setCity] = useState('all');
   const [visitType, setVisitType] = useState('all');
+  const [locations, setLocations] = useState<any[]>([]);
   
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const { data, error } = await supabase.from('locations').select('*');
+      if (!error) setLocations(data || []);
+    };
+    fetchLocations();
+  }, []);
+
   const filteredLocations = locations.filter(location => {
     const matchesSearch = 
       location.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||

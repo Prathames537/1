@@ -1,18 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, MessageCircle, Pill, FileText, User, Heart, Shield, AlertCircle, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import AIAssistant from '../components/patient/AIAssistant';
-import { patients } from '../lib/mockData';
+import { supabase } from '@/lib/supabaseClient';
 
 const PatientProfile = () => {
   const { patientId } = useParams<{ patientId: string }>();
   const [showAIAssistant, setShowAIAssistant] = useState(false);
+  const [patient, setPatient] = useState<any>(null);
   
-  // Find the patient based on the route parameter
-  const patient = patients.find(p => p.id === patientId) || patients[0]; // Fallback to first patient
+  useEffect(() => {
+    const fetchPatient = async () => {
+      const { data, error } = await supabase.from('patients').select('*').eq('id', patientId).single();
+      if (!error) setPatient(data);
+    };
+    if (patientId) fetchPatient();
+  }, [patientId]);
+  
+  if (!patient) return <div>Patient not found.</div>;
   
   return (
     <div className="space-y-6">
@@ -122,7 +130,7 @@ const PatientProfile = () => {
             <h3 className="font-medium text-lg mb-4">Latest Vitals</h3>
             
             <div className="space-y-3">
-              {patient.vitals?.slice(0, 3).map((vital, index) => (
+              {patient.vitals?.slice(0, 3).map((vital: any, index: number) => (
                 <div 
                   key={index} 
                   className={`flex items-center justify-between p-3 rounded-md ${
@@ -180,7 +188,7 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.medicalRecords?.map((record, idx) => (
+                  {patient.medicalRecords?.map((record: any, idx: number) => (
                     <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <div className="flex items-center gap-2 mb-2">
                         {record.type === 'visit' ? (
@@ -209,7 +217,7 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.prescriptions?.map((prescription, idx) => (
+                  {patient.prescriptions?.map((prescription: any, idx: number) => (
                     <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -249,7 +257,7 @@ const PatientProfile = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  {patient.familyHistory?.map((member, idx) => (
+                  {patient.familyHistory?.map((member: any, idx: number) => (
                     <div key={idx} className="border border-welli-gray-200 rounded-md p-4">
                       <h4 className="font-medium flex items-center gap-2">
                         <User size={16} />
@@ -261,7 +269,7 @@ const PatientProfile = () => {
                       <div className="mt-2">
                         <p className="text-sm font-medium text-welli-gray-700">Health Conditions:</p>
                         <div className="flex flex-wrap gap-2 mt-1">
-                          {member.healthConditions.map((condition, i) => (
+                          {member.healthConditions.map((condition: any, i: number) => (
                             <Badge key={i} variant="secondary">{condition}</Badge>
                           ))}
                         </div>

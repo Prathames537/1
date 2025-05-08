@@ -3,13 +3,21 @@
 
 import { supabase } from '@/lib/supabaseClient';
 
-export async function sendNotification(notification) {
+export interface Notification {
+  id?: string;
+  user_id: string;
+  message: string;
+  is_read?: boolean;
+  created_at?: string;
+}
+
+export async function sendNotification(notification: Notification): Promise<any> {
   const { data, error } = await supabase.from('notifications').insert([notification]);
   if (error) throw error;
   return data;
 }
 
-export async function getNotifications(userId) {
+export async function getNotifications(userId: string): Promise<any[]> {
   const { data, error } = await supabase
     .from('notifications')
     .select('*')

@@ -178,7 +178,7 @@ export const EnhancedReminderSystem: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Switch
                   checked={reminder.isActive}
-                  onCheckedChange={(checked) => toggleReminder(reminder.id, reminder.isActive)}
+                  onCheckedChange={() => toggleReminder(reminder.id, reminder.isActive)}
                 />
                 <Button
                   variant="destructive"

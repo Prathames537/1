@@ -12,27 +12,34 @@ import StartNavigation from "./pages/StartNavigation";
 import MarkVisitComplete from "./pages/MarkVisitComplete";
 import ViewAllLocations from "./pages/ViewAllLocations";
 import FloatingChat from "./components/support/FloatingChat";
-import { visits as visitsData } from './lib/mockData';
 import EarningsPage from '../shared/pages/EarningsPage';
 import EarningDetailsPage from '../shared/pages/EarningDetailsPage';
 import { Card } from '@/components/ui/card';
-import { useState } from 'react';
-import { earningsHistory } from './lib/mockData';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 const queryClient = new QueryClient();
 
 function SharedVisitsWrapper() {
+  const [visits, setVisits] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchVisits = async () => {
+      const { data, error } = await supabase.from('visits').select('*');
+      if (!error) setVisits(data || []);
+    };
+    fetchVisits();
+  }, []);
   return (
     <VisitsPage
-      visits={visitsData.map(v => ({
+      visits={visits.map(v => ({
         id: v.id,
-        patientName: v.patientData?.name || '',
-        patientAge: v.patientData?.age,
-        address: v.patientData?.address || '',
-        time: v.visitData?.time || '',
-        visitType: v.visitData?.type || '',
-        isUrgent: v.visitData?.isUrgent,
-        status: v.visitData?.status || '',
+        patientName: v.patient_name || '',
+        patientAge: v.patient_age,
+        address: v.address || '',
+        time: v.time || '',
+        visitType: v.visit_type || '',
+        isUrgent: v.is_urgent,
+        status: v.status || '',
         onClickPath: `/assistants/visits/${v.id}`,
       }))}
       userType="assistant"
@@ -45,24 +52,25 @@ function SharedVisitsWrapper() {
 
 function SharedVisitDetailsWrapper() {
   const { id } = useParams();
-  const visit = visitsData.find(v => v.id === id);
+  const [visit, setVisit] = useState<any>(null);
+  useEffect(() => {
+    const fetchVisit = async () => {
+      const { data, error } = await supabase.from('visits').select('*').eq('id', id).single();
+      if (!error) setVisit(data);
+    };
+    if (id) fetchVisit();
+  }, [id]);
   return <VisitDetailsPage visit={visit} userType="assistant" backPath="/assistants/visits" />;
 }
 
 const AssistantDashboard = () => {
-  // Example mock data
-  const [summary] = useState({
-    visits: 12,
-    earnings: 4500,
-    modules: 3,
-    supportTickets: 1,
-  });
-  const [upcomingVisits] = useState([
-    { patient: 'John Doe', time: '2024-06-10 10:00', type: 'Home Visit' },
-    { patient: 'Jane Smith', time: '2024-06-11 14:00', type: 'Follow-up' },
-    { patient: 'Alice Brown', time: '2024-06-12 09:00', type: 'Checkup' },
-  ]);
-
+  const [summary] = useState({ visits: 0, earnings: 0, modules: 0, supportTickets: 0 });
+  const [upcomingVisits] = useState<any[]>([]);
+  useEffect(() => {
+    // Fetch summary and upcoming visits from Supabase
+    // Example: fetch visits, earnings, modules, support tickets
+    // Set state accordingly
+  }, []);
   return (
     <div className="space-y-6 animate-fade-in">
       <h1 className="text-2xl font-bold mb-4">Assistant Dashboard</h1>
@@ -88,28 +96,38 @@ const AssistantDashboard = () => {
   );
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <Routes>
-      <Route path="/" element={<Navigate to="dashboard" replace />} />
-      <Route element={<Layout />}>
-        <Route path="visits" element={<SharedVisitsWrapper />} />
-        <Route path="visits/:id" element={<SharedVisitDetailsWrapper />} />
-        <Route path="learning" element={<LearningHub />} />
-        <Route path="learning/:id" element={<ModuleDetails />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="support" element={<Support />} />
-        <Route path="start-navigation" element={<StartNavigation />} />
-        <Route path="mark-visit-complete" element={<MarkVisitComplete />} />
-        <Route path="view-all-locations" element={<ViewAllLocations />} />
-        <Route path="earnings" element={<EarningsPage earnings={earningsHistory} currency="₹" routePrefix="/assistants" fieldLabel="visitType" title="Earnings" />} />
-        <Route path="earnings/:id" element={<EarningDetailsPage earnings={earningsHistory} currency="₹" fieldLabel="visitType" routePrefix="/assistants" />} />
-        <Route path="dashboard" element={<AssistantDashboard />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-    <FloatingChat />
-  </QueryClientProvider>
-);
+const App = () => {
+  const [earnings, setEarnings] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchEarnings = async () => {
+      const { data, error } = await supabase.from('earnings').select('*');
+      if (!error) setEarnings(data || []);
+    };
+    fetchEarnings();
+  }, []);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Routes>
+        <Route path="/" element={<Navigate to="dashboard" replace />} />
+        <Route element={<Layout />}>
+          <Route path="visits" element={<SharedVisitsWrapper />} />
+          <Route path="visits/:id" element={<SharedVisitDetailsWrapper />} />
+          <Route path="learning" element={<LearningHub />} />
+          <Route path="learning/:id" element={<ModuleDetails />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="support" element={<Support />} />
+          <Route path="start-navigation" element={<StartNavigation />} />
+          <Route path="mark-visit-complete" element={<MarkVisitComplete />} />
+          <Route path="view-all-locations" element={<ViewAllLocations />} />
+          <Route path="earnings" element={<EarningsPage earnings={earnings} currency="₹" routePrefix="/assistants" fieldLabel="visitType" title="Earnings" />} />
+          <Route path="earnings/:id" element={<EarningDetailsPage earnings={earnings} currency="₹" fieldLabel="visitType" routePrefix="/assistants" />} />
+          <Route path="dashboard" element={<AssistantDashboard />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <FloatingChat />
+    </QueryClientProvider>
+  );
+};
 
 export default App;
