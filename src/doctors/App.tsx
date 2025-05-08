@@ -30,7 +30,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <Routes>
-        <Route path="/" element={<Navigate to="/patients" replace />} />
+        <Route path="/" element={<Navigate to="patients" replace />} />
         <Route path="appointments" element={<MainLayout><Appointments /></MainLayout>} />
         <Route path="patients" element={<MainLayout><Patients /></MainLayout>} />
         <Route path="patients/:patientId" element={<MainLayout><PatientProfile /></MainLayout>} />

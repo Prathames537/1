@@ -6,7 +6,7 @@ const Index = () => {
   
   useEffect(() => {
     // Redirect to the dashboard
-    navigate("/visits");
+    navigate("visits");
   }, [navigate]);
 
   return null; // No need to render anything as we're redirecting
