@@ -11,18 +11,18 @@ interface SidebarLink {
 }
 
 const sidebarLinks: SidebarLink[] = [
-  { title: 'Dashboard', icon: Home, path: '/dashboard' },
-  { title: 'Visits', icon: Calendar, path: '/visits' },
-  { title: 'Earnings', icon: BadgeDollarSign, path: '/earnings' },
-  { title: 'Learning Hub', icon: BookOpen, path: '/learning' },
-  { title: 'Settings', icon: Settings, path: '/settings' },
-  { title: 'Support', icon: MessageSquare, path: '/support' },
+  { title: 'Dashboard', icon: Home, path: '/assistants/dashboard' },
+  { title: 'Visits', icon: Calendar, path: '/assistants/visits' },
+  { title: 'Earnings', icon: BadgeDollarSign, path: '/assistants/earnings' },
+  { title: 'Learning Hub', icon: BookOpen, path: '/assistants/learning' },
+  { title: 'Settings', icon: Settings, path: '/assistants/settings' },
+  { title: 'Support', icon: MessageSquare, path: '/assistants/support' },
 ];
 
 const quickActionLinks: SidebarLink[] = [
-  { title: 'Start Navigation', icon: Navigation, path: '/start-navigation' },
-  { title: 'Mark Visit Complete', icon: CheckCircle, path: '/mark-visit-complete' },
-  { title: 'View All Locations', icon: MapPin, path: '/view-all-locations' },
+  { title: 'Start Navigation', icon: Navigation, path: '/assistants/start-navigation' },
+  { title: 'Mark Visit Complete', icon: CheckCircle, path: '/assistants/mark-visit-complete' },
+  { title: 'View All Locations', icon: MapPin, path: '/assistants/view-all-locations' },
 ];
 
 const Sidebar = () => {
@@ -31,7 +31,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleAIChatClick = () => {
-    navigate('/support');
+    navigate('/assistants/support');
     setTimeout(() => {
       const chatbotElement = document.querySelector('[data-ai-chatbot]');
       if (chatbotElement) {

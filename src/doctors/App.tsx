@@ -45,10 +45,19 @@ const App = () => (
         <Route path="earnings" element={<MainLayout><EarningsPage earnings={earnings} currency="₹" routePrefix="/doctors" fieldLabel="consultationType" title="Earnings" /></MainLayout>} />
         <Route path="earnings/:id" element={<MainLayout><EarningDetailsPage earnings={earnings} currency="₹" fieldLabel="consultationType" routePrefix="/doctors" /></MainLayout>} />
         <Route path="dashboard" element={<MainLayout><DashboardPage title="Doctor Dashboard" summaryCards={<div>Summary Cards</div>} mainList={<div>Main List</div>} /></MainLayout>} />
+        <Route path="assistant-visits" element={<MainLayout><AssistantVisits /></MainLayout>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </TooltipProvider>
   </QueryClientProvider>
+);
+
+// Placeholder for Assistant Visits
+const AssistantVisits = () => (
+  <div className="p-8 text-center text-welli-green">
+    <h1 className="text-2xl font-bold mb-4">Assistant Visits</h1>
+    <p>This is a placeholder page for Assistant Visits. Feature coming soon!</p>
+  </div>
 );
 
 export default App;
