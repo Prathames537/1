@@ -31,13 +31,17 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleAIChatClick = () => {
-    navigate('/assistants/support');
-    setTimeout(() => {
-      const chatbotElement = document.querySelector('[data-ai-chatbot]');
-      if (chatbotElement) {
-        chatbotElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
+    if (window.openWelliAssistantAI) {
+      window.openWelliAssistantAI();
+    } else {
+      navigate('/assistants/support');
+      setTimeout(() => {
+        const chatbotElement = document.querySelector('[data-ai-chatbot]');
+        if (chatbotElement) {
+          chatbotElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
   };
 
   return (

@@ -1,10 +1,11 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Clock, MapPin, Stethoscope, Thermometer, Activity, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import ChatBotDialog from "@/components/ChatBot/ChatBotDialog";
+import { useState } from "react";
 
 const AssistantDetailsPage = () => {
   const assistant = {
@@ -23,6 +24,8 @@ const AssistantDetailsPage = () => {
     { name: "Oxygen Saturation", icon: <Activity className="w-5 h-5" /> },
     { name: "Respiratory Rate", icon: <Activity className="w-5 h-5" /> }
   ];
+
+  const [aiOpen, setAiOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -112,6 +115,14 @@ const AssistantDetailsPage = () => {
             <p className="text-welli-text-medium mb-6">
               Once your initial health check is complete, you'll be connected with a doctor via video consultation through the assistant's tablet.
             </p>
+            <Link to="/assistant-ai">
+              <Button className="bg-welli-main hover:bg-welli-green text-white mb-4">
+                Open Assistant AI Bot (Full Page)
+              </Button>
+            </Link>
+            <Button className="bg-welli-dark-green hover:bg-welli-green text-white ml-2 mb-4" onClick={() => setAiOpen(true)}>
+              Chat with Assistant AI (Quick)
+            </Button>
             <Link to="/doctor-consultation">
               <Button className="bg-welli-dark-green hover:bg-welli-green text-white">
                 Learn About the Doctor Consultation
@@ -119,6 +130,7 @@ const AssistantDetailsPage = () => {
             </Link>
           </div>
         </div>
+        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="assistant" />
       </main>
       <Footer />
     </div>

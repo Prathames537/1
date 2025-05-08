@@ -30,6 +30,8 @@ import OrganRepositoryPage from "./pages/OrganRepositoryPage";
 import Chatbot from "./pages/Chatbot";
 import AssistantsApp from "./assistants/App";
 import DoctorsApp from "./doctors/App";
+import AssistantAIPage from "./pages/AssistantAIPage";
+import InsuranceAIPage from "./pages/InsuranceAIPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,6 +75,8 @@ const App = () => (
           <Route path="/chatbot" element={<Chatbot />} />
           <Route path="/assistants/*" element={<AssistantsApp />} />
           <Route path="/doctors/*" element={<DoctorsApp />} />
+          <Route path="/assistant-ai" element={<AssistantAIPage />} />
+          <Route path="/insurance-ai" element={<InsuranceAIPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

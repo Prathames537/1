@@ -2,13 +2,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Mic, MicOff, Volume2, VolumeX, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-// Replace LOCAL_AI_URL with Hugging Face Inference API endpoint for flan-t5-small
+// Use local FastAPI backend for all bot types, fallback to Hugging Face if configured
+const LOCAL_AI_URL = "http://localhost:8000";
 const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY || "";
 
 type Message = {
   id: string;
@@ -37,9 +39,10 @@ const INITIAL_MESSAGE: Message = {
 type ChatBotDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  botType?: 'assistant' | 'insurance' | 'doctor' | 'patient' | 'default';
 };
 
-const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
+const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialogProps) => {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -97,6 +100,28 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     return () => clearInterval(interval);
   }, [alarms, isSpeakerOn]);
 
+  const getSystemPrompt = () => {
+    if (botType === 'doctor') {
+      return "You are Doctor AI. Provide medical advice, diagnosis, and next steps. Always remind the user to consult a real doctor for emergencies.";
+    }
+    if (botType === 'patient') {
+      return "You are Patient AI. Help users navigate Welli services, book appointments, order medicines, and set reminders. Answer in a friendly, helpful tone.";
+    }
+    if (botType === 'assistant') {
+      return "You are Welli's Assistant AI. Help field assistants with visit checklists, navigation, and patient support. Answer in 1–2 sentences.";
+    }
+    if (botType === 'insurance') {
+      return "You are Welli's Insurance AI. Help users understand insurance, calculate premiums, and check eligibility. Only show premium if the user is healthy (BMI < 27, non-smoker, no chronic diseases).";
+    }
+    return "You are Welli's Health Assistant. Answer in 1–2 sentences and recommend one Welli service.";
+  };
+
+  const getApiUrl = () => {
+    if (botType === "insurance") return `${LOCAL_AI_URL}/insurance-ai`;
+    if (botType === "assistant") return `${LOCAL_AI_URL}/assistant-ai`;
+    return `${LOCAL_AI_URL}/chat`;
+  };
+
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
@@ -111,20 +136,25 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     setUserInput("");
     setIsLoading(true);
 
-    // Use Hugging Face Inference API for a concise AI response
     // Limit history to last 10 messages
     const maxHistory = 10;
     const historyMessages = [...messages, userMessage].slice(-maxHistory);
-    const systemPrompt =
-      "You are Welli's Health Assistant. Answer in 1–2 sentences and recommend one Welli service.";
+    const systemPrompt = getSystemPrompt();
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
+
+    const url = HF_API_URL;
+    const fetchOptions: any = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${HF_API_KEY}`,
+      },
+      body: JSON.stringify({ inputs: prompt }),
+    };
+
     try {
-      const res = await fetch(HF_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inputs: prompt }),
-      });
+      const res = await fetch(url, fetchOptions);
       let reply = '';
       if (res.ok) {
         const data = await res.json();
@@ -204,7 +234,11 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl h-[80vh] flex flex-col">
+      <DialogContent className="max-w-2xl h-[80vh] flex flex-col" aria-describedby="welli-assistant-desc" data-ai-chatbot>
+        <DialogTitle className="sr-only">Welli Health Assistant</DialogTitle>
+        <DialogDescription id="welli-assistant-desc" className="sr-only">
+          Chat with the Welli Health Assistant for help with appointments, medicines, reminders, and more.
+        </DialogDescription>
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-medium">Welli Health Assistant</h2>
           <Button variant="ghost" size="icon" onClick={() => { setMessages([INITIAL_MESSAGE]); toast.success("Conversation cleared"); }}>

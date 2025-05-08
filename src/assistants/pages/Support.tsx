@@ -16,12 +16,20 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabaseClient';
+import ChatBotDialog from "@/components/ChatBot/ChatBotDialog";
+
+declare global {
+  interface Window {
+    openWelliAssistantAI?: () => void;
+  }
+}
 
 const Support = () => {
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [messageText, setMessageText] = useState("");
   const [faqs, setFaqs] = useState<any[]>([]);
+  const [aiOpen, setAiOpen] = useState(false);
 
   useEffect(() => {
     const fetchFaqs = async () => {
@@ -29,6 +37,11 @@ const Support = () => {
       if (!error) setFaqs(data || []);
     };
     fetchFaqs();
+  }, []);
+
+  useEffect(() => {
+    window.openWelliAssistantAI = () => setAiOpen(true);
+    return () => { delete window.openWelliAssistantAI; };
   }, []);
 
   const handleSendMessage = () => {
@@ -312,6 +325,7 @@ const Support = () => {
           </Card>
         </div>
       </div>
+      <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="assistant" />
     </div>
   );
 };

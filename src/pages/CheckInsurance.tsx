@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Shield, Users, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import ChatBotDialog from "@/components/ChatBot/ChatBotDialog";
 
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ const CheckInsurance = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [aiOpen, setAiOpen] = useState(false);
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
@@ -155,7 +157,14 @@ const CheckInsurance = () => {
                   <Shield className="w-8 h-8 text-welli-dark-green mr-3" />
                   <h2 className="text-xl font-semibold text-welli-text-dark">Why Choose Welli Insurance?</h2>
                 </div>
-                
+                <Link to="/insurance-ai">
+                  <Button className="bg-welli-main hover:bg-welli-green text-white mb-4 w-full">
+                    Open Insurance AI Bot (Full Page)
+                  </Button>
+                </Link>
+                <Button className="bg-welli-dark-green hover:bg-welli-green text-white mb-4 w-full" onClick={() => setAiOpen(true)}>
+                  Chat with Insurance AI (Quick)
+                </Button>
                 <ul className="space-y-4 mb-6">
                   <li className="flex items-start">
                     <div className="bg-white rounded-full p-1 mr-3 mt-1">
@@ -192,6 +201,7 @@ const CheckInsurance = () => {
             </div>
           </div>
         </div>
+        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="insurance" />
       </main>
       <Footer />
     </div>
