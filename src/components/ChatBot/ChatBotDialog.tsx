@@ -9,7 +9,7 @@ import ChatMessage from "./ChatMessage";
 
 // Use local FastAPI backend for all bot types, fallback to Hugging Face if configured
 const LOCAL_AI_URL = "http://localhost:8000";
-const HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base";
+const HF_API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-V3-0324";
 const HF_API_KEY = import.meta.env.VITE_HF_API_KEY || "";
 
 type Message = {
