@@ -8,7 +8,6 @@ import { Users, User, Calendar, HeartPulse, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from '@/lib/supabaseClient';
 
 const defaultMember = { name: "", relation: "", dob: "", gender: "", age: "", medical: "", allergies: "" };
 
@@ -25,11 +24,7 @@ const FamilyAccountPage = () => {
   const [aiTips, setAiTips] = useState<{ [idx: number]: { tips: string; risk: string } }>({});
 
   useEffect(() => {
-    const fetchFamily = async () => {
-      const { data } = await supabase.from('family_members').select('*');
-      setFamilyList(data || []);
-    };
-    fetchFamily();
+    setFamilyList([]);
   }, [saved]);
 
   useEffect(() => {

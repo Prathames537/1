@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { supabase } from '@/lib/supabaseClient';
 
 const FreeTrialBookingPage = () => {
   const [date, setDate] = useState<Date>();
@@ -29,17 +28,7 @@ const FreeTrialBookingPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await supabase.from('free_trial_bookings').insert([
-      {
-        name,
-        phone,
-        address,
-        date: date ? date.toISOString() : null,
-        time_slot: timeSlot,
-        symptoms,
-      }
-    ]);
-    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(true), 1000);
   };
 
   return (

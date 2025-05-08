@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import { Pill, Search, ShoppingCart, ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { supabase } from '@/lib/supabaseClient';
 
 const OrderMedicines = () => {
   const [medicines, setMedicines] = useState<any[]>([]);
@@ -12,13 +11,8 @@ const OrderMedicines = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchMedicines();
-  }, []);
-
   const fetchMedicines = async () => {
-    const { data } = await supabase.from('medicines').select('*');
-    setMedicines(data || []);
+    setMedicines([]);
   };
 
   const handleQtyChange = (name: string, val: number) => {
@@ -27,22 +21,11 @@ const OrderMedicines = () => {
 
   const handleOrder = async (medicine: any) => {
     setLoading(medicine.name); setSuccess(null); setError(null);
-    try {
-      await supabase.from('medicine_orders').insert([
-        {
-          medicine_id: medicine.id,
-          medicine_name: medicine.name,
-          quantity: orderQty[medicine.name] || 1,
-          price: medicine.price,
-        },
-      ]);
+    setTimeout(() => {
       setSuccess(`Order placed for ${medicine.name}`);
       setOrderQty(q => ({ ...q, [medicine.name]: 1 }));
-    } catch (err: any) {
-      setError(`Failed to order ${medicine.name}`);
-    } finally {
       setLoading(null);
-    }
+    }, 1000);
   };
 
   return (

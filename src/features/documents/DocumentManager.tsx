@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText, Image, X } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
 
 interface Document {
   id: string;
@@ -18,72 +17,18 @@ export const DocumentManager: React.FC = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
-
+  // No-op fetchDocuments
   const fetchDocuments = async () => {
-    const { data } = await supabase
-      .from('documents')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (data) {
-      setDocuments(
-        data.map((doc: any) => ({
-          id: doc.id,
-          name: doc.name,
-          type: doc.type,
-          date: doc.created_at,
-          url: doc.url,
-        }))
-      );
-    }
+    setDocuments([]);
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files) return;
     setIsUploading(true);
-    try {
-      const file = files[0];
-      const filePath = `${Date.now()}-${file.name}`;
-      // Upload to Supabase Storage
-      const { error: storageError } = await supabase.storage
-        .from('documents')
-        .upload(filePath, file);
-      if (storageError) throw storageError;
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('documents')
-        .getPublicUrl(filePath);
-      // Save metadata to table
-      const { error: docError } = await supabase
-        .from('documents')
-        .insert([
-          {
-            name: file.name,
-            type: file.type,
-            url: publicUrlData.publicUrl,
-          },
-        ]);
-      if (docError) throw docError;
-      fetchDocuments();
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    } finally {
-      setIsUploading(false);
-    }
+    setTimeout(() => setIsUploading(false), 1000);
   };
 
   const deleteDocument = async (id: string, url: string) => {
-    // Remove from Supabase Storage
-    const fileName = url.split('/').pop()?.split('?')[0];
-    if (fileName) {
-      await supabase.storage.from('documents').remove([fileName]);
-    }
-    // Remove from table
-    await supabase.from('documents').delete().eq('id', id);
-    fetchDocuments();
+    setDocuments(docs => docs.filter(doc => doc.id !== id));
   };
 
   return (

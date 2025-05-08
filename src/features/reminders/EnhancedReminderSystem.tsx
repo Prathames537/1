@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Bell, Pill, StretchHorizontal, Dumbbell } from 'lucide-react';
-import { supabase } from '@/lib/supabaseClient';
 
 interface Reminder {
   id: string;
@@ -26,42 +25,25 @@ export const EnhancedReminderSystem: React.FC = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchReminders();
-  }, []);
-
   const fetchReminders = async () => {
-    const { data } = await supabase
-      .from('reminders')
-      .select('*')
-      .order('created_at', { ascending: false });
-    setReminders(data || []);
+    setReminders([]);
   };
 
   const handleAddReminder = async () => {
     if (!newReminder.title || !newReminder.time) return;
     setLoading(true);
-    await supabase.from('reminders').insert([
-      {
-        title: newReminder.title,
-        type: newReminder.type,
-        time: newReminder.time,
-        days: newReminder.days,
-        isActive: true,
-      },
-    ]);
-    setNewReminder({ type: 'medication', days: [], isActive: true });
-    setLoading(false);
-    fetchReminders();
+    setTimeout(() => {
+      setNewReminder({ type: 'medication', days: [], isActive: true });
+      setLoading(false);
+      fetchReminders();
+    }, 1000);
   };
 
   const toggleReminder = async (id: string, current: boolean) => {
-    await supabase.from('reminders').update({ isActive: !current }).eq('id', id);
     fetchReminders();
   };
 
   const deleteReminder = async (id: string) => {
-    await supabase.from('reminders').delete().eq('id', id);
     fetchReminders();
   };
 

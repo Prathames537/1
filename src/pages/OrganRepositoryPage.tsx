@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+// import { supabase } from '@/lib/supabaseClient';
 
 const ORGAN_TYPES = [
   'Kidney',
@@ -20,16 +20,9 @@ const OrganRepositoryPage: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
-
+  // No-op fetchRequests
   const fetchRequests = async () => {
-    const { data } = await supabase
-      .from('organ_repository_requests')
-      .select('*')
-      .order('created_at', { ascending: false });
-    setRequests(data || []);
+    setRequests([]);
   };
 
   const handleLocation = () => {
@@ -44,21 +37,14 @@ const OrganRepositoryPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await supabase.from('organ_repository_requests').insert([
-      {
-        organ_type: organType,
-        blood_type: bloodType,
-        description,
-        location_lat: location?.lat,
-        location_lng: location?.lng,
-      },
-    ]);
-    setDescription('');
-    setOrganType('Kidney');
-    setBloodType('A+');
-    setLocation(null);
-    setLoading(false);
-    fetchRequests();
+    setTimeout(() => {
+      setDescription('');
+      setOrganType('Kidney');
+      setBloodType('A+');
+      setLocation(null);
+      setLoading(false);
+      fetchRequests();
+    }, 1000);
   };
 
   return (

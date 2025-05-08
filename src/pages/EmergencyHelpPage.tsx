@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
+// import { supabase } from '@/lib/supabaseClient';
 
 const EmergencyHelpPage: React.FC = () => {
   const [description, setDescription] = useState('');
@@ -7,16 +7,9 @@ const EmergencyHelpPage: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
-
+  // No-op fetchRequests
   const fetchRequests = async () => {
-    const { data } = await supabase
-      .from('emergency_help')
-      .select('*')
-      .order('created_at', { ascending: false });
-    setRequests(data || []);
+    setRequests([]);
   };
 
   const handleLocation = () => {
@@ -31,17 +24,12 @@ const EmergencyHelpPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await supabase.from('emergency_help').insert([
-      {
-        description,
-        location_lat: location?.lat,
-        location_lng: location?.lng,
-      },
-    ]);
-    setDescription('');
-    setLocation(null);
-    setLoading(false);
-    fetchRequests();
+    setTimeout(() => {
+      setDescription('');
+      setLocation(null);
+      setLoading(false);
+      fetchRequests();
+    }, 1000);
   };
 
   return (
