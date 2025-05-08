@@ -28,14 +28,6 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/doctors/:path*",
-      "destination": "/doctors/index.html"
-    },
-    {
-      "source": "/assistants/:path*",
-      "destination": "/assistants/index.html"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
