@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const OrderMedicines = () => {
-  const [medicines, setMedicines] = useState<any[]>([]);
+  const [medicines] = useState<any[]>([]);
   const [orderQty, setOrderQty] = useState<{ [key: string]: number }>({});
   const [loading, setLoading] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

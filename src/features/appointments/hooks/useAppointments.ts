@@ -2,8 +2,6 @@ import { useState } from "react";
 import { createAppointment } from "../appointmentsService";
 // import { getAuth } from "firebase/auth";
 
-import type { AppointmentForm } from '../appointmentsTypes';
-
 export function useAppointments() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
