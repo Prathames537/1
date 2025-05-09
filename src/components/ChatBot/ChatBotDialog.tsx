@@ -104,7 +104,7 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
       return "You are Doctor AI. Provide medical advice, diagnosis, and next steps. Always remind the user to consult a real doctor for emergencies.";
     }
     if (botType === 'patient') {
-      return "You are Patient AI. Help users navigate Welli services, book appointments, order medicines, and set reminders. Answer in a friendly, helpful tone.";
+      return "You are Welli's Health Assistant for patients. For each question, give a short, sweet, and direct answer related to the user's question. If a Welli service is relevant to the question, briefly recommend it at the end. If no service is relevant, just answer the question without recommending anything.";
     }
     if (botType === 'assistant') {
       return "You are Welli's Assistant AI. Help field assistants with visit checklists, navigation, and patient support. Answer in 1–2 sentences.";
