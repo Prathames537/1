@@ -134,9 +134,9 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     const maxHistory = 3;
     const historyMessages = [...messages, userMessage].slice(-maxHistory);
     const systemPrompt = getSystemPrompt();
-    const history = historyMessages.map(m => `User: ${m.role === 'user' ? m.content : ''}${m.role === 'assistant' ? `\nAssistant: ${m.content}` : ''}`).join("\n");
+    // Build chat history as alternating User/Assistant lines
+    const history = historyMessages.map(m => m.role === 'user' ? `User: ${m.content}` : `Assistant: ${m.content}`).join("\n");
     // Always end with the latest user message and 'Assistant:'
-    const lastUser = historyMessages[historyMessages.length - 1];
     const prompt = `${systemPrompt}\n\n${history}\nAssistant:`;
 
     try {
