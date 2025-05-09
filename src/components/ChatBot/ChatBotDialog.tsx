@@ -138,21 +138,15 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
 
     try {
-      const res = await fetch(HF_API_URL, {
+      const res = await fetch("/api/ai-chat", {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${HF_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inputs: prompt,
-          parameters: { max_new_tokens: 512, temperature: 0.7 }
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: prompt })
       });
       let reply = '';
       if (res.ok) {
         const data = await res.json();
-        reply = data?.[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
+        reply = data?.answer?.trim() || 'Sorry, I could not answer that.';
       } else {
         reply = 'Sorry, I could not get a response from the AI.';
       }
