@@ -65,8 +65,8 @@ export default function Chatbot() {
     setMessages(newMessages);
     setInput("");
 
-    // Only send the latest user message as the prompt
-    const prompt = input;
+    // Add a minimal system prompt
+    const prompt = `You are a helpful health assistant.\nUser: ${input}`;
 
     try {
       const res = await fetch(HF_API_URL, {

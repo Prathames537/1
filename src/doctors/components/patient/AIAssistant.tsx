@@ -34,6 +34,9 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ patient, onClose }) => {
     setShowSuggestions(false);
     setAnalyzingData(true);
 
+    // For real AI integration, prepend a system prompt here:
+    // const prompt = `You are a helpful health assistant.\nUser: ${message}`;
+
     // Only send the latest user message as the prompt (simulate AI response)
     setTimeout(() => {
       setAnalyzingData(false);

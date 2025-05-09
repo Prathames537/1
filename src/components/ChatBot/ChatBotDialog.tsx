@@ -107,8 +107,8 @@ const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
     setUserInput("");
     setIsLoading(true);
 
-    // Only send the latest user message as the prompt
-    const prompt = userInput;
+    // Add a minimal system prompt
+    const prompt = `You are a helpful health assistant.\nUser: ${userInput}`;
 
     try {
       const res = await fetch("/api/ai-chat", {
