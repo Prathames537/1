@@ -113,7 +113,15 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
       return "You are Welli's Insurance AI. Help users understand insurance, calculate premiums, and check eligibility. Only show premium if the user is healthy (BMI < 27, non-smoker, no chronic diseases).";
     }
     // General Health Assistant (default)
-    return `Context: Welli offers the following services: \n- Appointment booking (consult a doctor)\n- Medicine delivery\n- Insurance checks\n- At-home diagnostics and lab tests\n- Vaccinations\n- Dietitian and therapy consultations\n- Emergency help\n\nInstructions: You are Welli's General Health Assistant. For each user question, give a short, direct, and helpful answer. If a Welli service is truly relevant to the question, briefly recommend it at the end. If not, just answer the question. Avoid repeating the same recommendation for every question. Be friendly and concise.`;
+    return `You are Welli's Health Assistant. Answer user health questions briefly and helpfully. If a Welli service is relevant, recommend it at the end. Otherwise, just answer the question.
+
+Example:
+User: hi
+Assistant: Hi! How can I help you today?
+
+User: What is diabetes?
+Assistant: Diabetes is a condition where your body has trouble regulating blood sugar. If you need help managing diabetes, Welli offers dietitian consultations.
+`;
   };
 
   const handleSendMessage = async () => {
