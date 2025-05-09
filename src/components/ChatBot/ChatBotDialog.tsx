@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useRef, useEffect } from "react";
 import { Send, Mic, MicOff, Volume2, VolumeX, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,10 +5,6 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
-
-// Use Hugging Face API directly from frontend
-const HF_API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct";
-const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
   id: string;
@@ -134,8 +129,8 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
 
     // Limit history to last 3 pairs (user+assistant)
     const maxPairs = 3;
-    let pairs: Message[] = [];
     const allMessages = [...messages, userMessage];
+    const pairs: Message[] = [];
     for (let i = allMessages.length - 1; i >= 0 && pairs.length < maxPairs * 2; i--) {
       pairs.unshift(allMessages[i]);
     }
@@ -157,7 +152,7 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
       }
       const botResponse: Message = { id: Date.now().toString() + '-bot', role: 'assistant', content: reply, timestamp: new Date() };
       setMessages(prev => [...prev, botResponse]);
-    } catch (err) {
+    } catch {
       setIsLoading(false);
       const errorMsg: Message = { id: Date.now().toString() + '-error', role: 'assistant', content: 'Error connecting to AI. Please try again later.', timestamp: new Date() };
       setMessages(prev => [...prev, errorMsg]);

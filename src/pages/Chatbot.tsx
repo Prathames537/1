@@ -70,7 +70,7 @@ export default function Chatbot() {
 
     // Limit history to last 3 pairs (user+assistant)
     const maxPairs = 3;
-    let pairs: ChatMessage[] = [];
+    const pairs: ChatMessage[] = [];
     for (let i = newMessages.length - 1; i >= 0 && pairs.length < maxPairs * 2; i--) {
       pairs.unshift(newMessages[i]);
     }
@@ -107,7 +107,7 @@ export default function Chatbot() {
       const aiMsg: ChatMessage = { role: "assistant", content: reply };
       setMessages((msgs: ChatMessage[]) => [...msgs, aiMsg]);
       await saveHistory();
-    } catch (err: any) {
+    } catch {
       setError("Failed to get response from AI. Please try again.");
     } finally {
       setLoading(false);
