@@ -13,8 +13,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing question' });
   }
 
-  // (Optional) TODO: Search Welli knowledge base for relevant context here
-  // For now, just use the question as the prompt
+  // The prompt is constructed by the frontend and should follow Welli's requirements.
+  // This backend just forwards the prompt and post-processes the answer.
   const prompt = question;
 
   try {

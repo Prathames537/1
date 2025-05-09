@@ -28,10 +28,12 @@ type Alarm = {
   repeat?: "daily" | "weekly" | "none";
 };
 
+const WELLISYSTEMPROMPT = `You are Welli's Health Assistant. Answer user health questions in 1–2 sentences, directly and briefly. Do not greet, do not apologize, do not ask follow-up questions, do not repeat yourself, and do not give extra advice. If a Welli service is relevant, recommend it at the end. Otherwise, just answer the question.`;
+
 const INITIAL_MESSAGE: Message = {
   id: "welcome",
   role: "assistant",
-  content: "Hello! I'm your Welli Health Assistant. How can I help you today? You can ask me about scheduling appointments, ordering medicines, setting medication reminders, or any health concerns.",
+  content: "How can I help you?",
   timestamp: new Date(),
 };
 
@@ -113,7 +115,7 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
       return "You are Welli's Insurance AI. Help users understand insurance, calculate premiums, and check eligibility. Only show premium if the user is healthy (BMI < 27, non-smoker, no chronic diseases).";
     }
     // General Health Assistant (default)
-    return `You are Welli's Health Assistant. Answer user health questions in 1–2 sentences, directly and briefly. Do not greet, do not apologize, do not ask follow-up questions, do not repeat yourself, and do not give extra advice. If a Welli service is relevant, recommend it at the end. Otherwise, just answer the question.`;
+    return WELLISYSTEMPROMPT;
   };
 
   const handleSendMessage = async () => {
@@ -130,14 +132,15 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     setUserInput("");
     setIsLoading(true);
 
-    // Limit history to last 3 messages for speed
-    const maxHistory = 3;
-    const historyMessages = [...messages, userMessage].slice(-maxHistory);
-    const systemPrompt = getSystemPrompt();
-    // Build chat history as alternating User/Assistant lines
-    const history = historyMessages.map(m => m.role === 'user' ? `User: ${m.content}` : `Assistant: ${m.content}`).join("\n");
-    // Always end with the latest user message and 'Assistant:'
-    const prompt = `${systemPrompt}\n\n${history}\nAssistant:`;
+    // Limit history to last 3 pairs (user+assistant)
+    const maxPairs = 3;
+    let pairs: Message[] = [];
+    const allMessages = [...messages, userMessage];
+    for (let i = allMessages.length - 1; i >= 0 && pairs.length < maxPairs * 2; i--) {
+      pairs.unshift(allMessages[i]);
+    }
+    const history = pairs.map(m => m.role === 'user' ? `User: ${m.content}` : `Assistant: ${m.content}`).join("\n");
+    const prompt = `System: ${getSystemPrompt()}\n${history}\nAssistant:`;
 
     try {
       const res = await fetch("/api/ai-chat", {
