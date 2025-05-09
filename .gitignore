@@ -50,3 +50,10 @@ coverage/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Python virtual environments
+venv/
+venv311/
+__pycache__/
+*.py[cod]
+*$py.class

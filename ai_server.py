@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional, Any
 import uvicorn
 import datetime
+from deepseek_prover import query_deepseek_prover
 
 app = FastAPI()
 
@@ -164,28 +165,15 @@ def feedback_ai(req: FeedbackRequest):
     return FeedbackAIResponse(analysis=analysis, urgent=urgent)
 
 # --- General Chatbot (existing) ---
-FAQ = [
-    ("appointment", "You can book an appointment with a doctor using our appointment booking service. Would you like to proceed?"),
-    ("medicine", "You can order medicines directly from Welli. Would you like to order now?"),
-    ("reminder", "I can help you set up health reminders. Would you like to add a new reminder?"),
-    ("emergency", "If this is an emergency, please use our emergency help service or call your local emergency number."),
-    ("blood bank", "You can find blood banks and request blood through our blood bank service. Would you like to search now?"),
-    ("organ", "Our organ repository helps you find or register for organ donation. Would you like to learn more?"),
-    ("provider", "I can help you find healthcare providers near you. Would you like to search for a provider?"),
-    ("health tip", "Remember to stay hydrated and get regular exercise! Would you like more health tips?"),
-    ("prescription", "You can manage your prescriptions in the Welli app. Would you like to view or renew a prescription?"),
-]
-
-DEFAULT_RESPONSE = "I'm Welli's Health Assistant. I can help with appointments, medicine orders, reminders, emergency help, blood bank, organ repository, and more. How can I assist you today?"
-
 @app.post("/chat", response_model=List[ChatResponse])
 def chat(req: ChatRequest):
-    prompt = req.inputs.lower()
-    for keyword, answer in FAQ:
-        if keyword in prompt:
-            return [ChatResponse(generated_text=answer)]
-    # Fallback: echo or generic
-    return [ChatResponse(generated_text=DEFAULT_RESPONSE)]
+    prompt = req.inputs
+    try:
+        # Use DeepSeek-Prover-V2-671B for response
+        response = query_deepseek_prover(prompt, **req.parameters)
+        return [ChatResponse(generated_text=response)]
+    except Exception as e:
+        return [ChatResponse(generated_text=f"AI Error: {str(e)}")]
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000) 

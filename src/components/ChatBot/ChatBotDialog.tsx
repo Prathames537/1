@@ -7,10 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-// Use local FastAPI backend for all bot types, fallback to Hugging Face if configured
+// Use local FastAPI backend for all bot types
 const LOCAL_AI_URL = "http://localhost:8000";
-const HF_API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-R1";
-const HF_API_KEY = import.meta.env.VITE_HF_API_KEY || "";
 
 type Message = {
   id: string;
@@ -143,14 +141,14 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
 
-    const url = HF_API_URL;
+    // Use backend endpoint
+    const url = `${LOCAL_AI_URL}/chat`;
     const fetchOptions: any = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${HF_API_KEY}`,
       },
-      body: JSON.stringify({ inputs: prompt }),
+      body: JSON.stringify({ inputs: prompt, parameters: {} }),
     };
 
     try {
@@ -158,7 +156,8 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
       let reply = '';
       if (res.ok) {
         const data = await res.json();
-        reply = data?.[0]?.generated_text?.trim() || data?.generated_text?.trim() || 'Sorry, I could not answer that.';
+        // Our backend returns a list of { generated_text }
+        reply = data?.[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
       } else {
         reply = 'Sorry, I could not get a response from the AI.';
       }
