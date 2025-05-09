@@ -10,27 +10,17 @@ interface Message {
   time: string;
 }
 
-// Initial bot messages
 const initialMessages: Message[] = [
   {
     id: 1,
     sender: 'bot',
-    text: "Hello! I'm your AI healthcare assistant. I can help you with:\n\n• Scheduling appointments\n• Finding healthcare providers\n• Answering medical questions\n• Managing prescriptions\n• Providing health tips\n\nHow can I assist you today?",
+    text: "Hello! I'm your Welli Assistant AI. I can help you with:\n\n• Patient information\n• Visit checklists\n• Navigation\n• Prior instructions\n• General support\n\nHow can I assist you today?",
     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 ];
 
-// Enhanced responses with more context and helpful information
-const botResponses: Record<string, string> = {
-  "appointment": "I can help you schedule an appointment. Please provide:\n1. Preferred date and time\n2. Type of healthcare provider needed\n3. Any specific requirements or concerns\n\nI'll find the best available options for you.",
-  "provider": "I can help you find healthcare providers based on:\n• Your location\n• Specialization needed\n• Insurance coverage\n• Availability\n\nWould you like to search for a specific type of provider?",
-  "prescription": "For prescription management, I can:\n• Help you refill medications\n• Set up medication reminders\n• Track your prescriptions\n• Connect you with pharmacies\n\nWhat would you like to do with your prescriptions?",
-  "emergency": "For medical emergencies:\n1. Call emergency services immediately\n2. Stay with the patient\n3. Provide first aid if trained\n4. Follow emergency protocols\n\nWould you like me to connect you with emergency services?",
-  "insurance": "I can help you with insurance-related queries about:\n• Coverage details\n• Claims processing\n• Network providers\n• Policy information\n\nWhat specific insurance information do you need?",
-  "records": "For health records, I can help you:\n• Access your medical history\n• Share records with providers\n• Update personal information\n• Track health metrics\n\nWhat would you like to do with your health records?",
-  "billing": "For billing and payments:\n• View outstanding bills\n• Make payments\n• Set up payment plans\n• Review insurance claims\n\nWhat billing assistance do you need?",
-  "general": "I can provide general health information about:\n• Common conditions\n• Preventive care\n• Wellness tips\n• Health resources\n\nWhat health information are you looking for?",
-};
+const LOCAL_AI_URL = "http://localhost:8000";
+const ASSISTANT_SYSTEM_PROMPT = `You are Welli's Assistant AI. Help field assistants with visit checklists, navigation, patient information, and support. Answer questions about the patient, estimate travel time if asked, and relay any prior instructions from the patient.`;
 
 const AIChatbot = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -46,55 +36,56 @@ const AIChatbot = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputText.trim()) return;
 
-    // Add user message
     const userMessage: Message = {
       id: messages.length + 1,
       sender: 'user',
       text: inputText,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
-    
     setMessages(prev => [...prev, userMessage]);
     setInputText("");
     setIsTyping(true);
 
-    // Simulate AI processing
-    setTimeout(() => {
-      const userMessageLower = inputText.toLowerCase();
-      let botResponse = "I'm here to help with your healthcare needs. You can ask me about:\n\n• Appointments\n• Finding providers\n• Prescriptions\n• Insurance\n• Health records\n• Billing\n• General health information\n\nWhat would you like to know more about?";
-      
-      // Enhanced keyword matching
-      if (userMessageLower.includes("appointment") || userMessageLower.includes("schedule") || userMessageLower.includes("book")) {
-        botResponse = botResponses.appointment;
-      } else if (userMessageLower.includes("provider") || userMessageLower.includes("doctor") || userMessageLower.includes("specialist")) {
-        botResponse = botResponses.provider;
-      } else if (userMessageLower.includes("prescription") || userMessageLower.includes("medication") || userMessageLower.includes("drug")) {
-        botResponse = botResponses.prescription;
-      } else if (userMessageLower.includes("emergency") || userMessageLower.includes("urgent") || userMessageLower.includes("911")) {
-        botResponse = botResponses.emergency;
-      } else if (userMessageLower.includes("insurance") || userMessageLower.includes("coverage") || userMessageLower.includes("claim")) {
-        botResponse = botResponses.insurance;
-      } else if (userMessageLower.includes("record") || userMessageLower.includes("history") || userMessageLower.includes("medical")) {
-        botResponse = botResponses.records;
-      } else if (userMessageLower.includes("bill") || userMessageLower.includes("payment") || userMessageLower.includes("cost")) {
-        botResponse = botResponses.billing;
-      } else if (userMessageLower.includes("health") || userMessageLower.includes("wellness") || userMessageLower.includes("care")) {
-        botResponse = botResponses.general;
+    // Prepare chat history for context
+    const maxHistory = 10;
+    const historyMessages = [...messages, userMessage].slice(-maxHistory);
+    const history = historyMessages.map(m => `${m.sender}: ${m.text}`).join("\n");
+    const prompt = [`system: ${ASSISTANT_SYSTEM_PROMPT}`, history].join("\n") + "\nassistant:";
+
+    try {
+      const res = await fetch(`${LOCAL_AI_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inputs: prompt, parameters: {} })
+      });
+      let reply = '';
+      if (res.ok) {
+        const data = await res.json();
+        reply = data?.[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
+      } else {
+        reply = 'Sorry, I could not get a response from the AI.';
       }
-      
       const botMessage: Message = {
         id: messages.length + 2,
         sender: 'bot',
-        text: botResponse,
+        text: reply,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
-      
       setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      const botMessage: Message = {
+        id: messages.length + 2,
+        sender: 'bot',
+        text: 'Error connecting to AI. Please try again later.',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -130,7 +121,6 @@ const AIChatbot = () => {
             </div>
           </div>
         ))}
-        
         {isTyping && (
           <div className="flex justify-start">
             <div className="bg-gray-100 p-3 rounded-lg flex items-center gap-2">
@@ -143,11 +133,10 @@ const AIChatbot = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
       <div className="p-4 border-t bg-white">
         <div className="flex gap-2">
           <Input 
-            placeholder="Type your healthcare question..." 
+            placeholder="Type your assistant question..." 
             value={inputText}
             onChange={e => setInputText(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
