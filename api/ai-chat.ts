@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
       body: JSON.stringify({
         inputs: prompt,
-        parameters: { max_new_tokens: 256, temperature: 0.7 },
+        parameters: { max_new_tokens: 80, temperature: 0.7 },
       }),
     });
     if (!hfRes.ok) {

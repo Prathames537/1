@@ -130,8 +130,8 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     setUserInput("");
     setIsLoading(true);
 
-    // Limit history to last 10 messages
-    const maxHistory = 10;
+    // Limit history to last 3 messages for speed
+    const maxHistory = 3;
     const historyMessages = [...messages, userMessage].slice(-maxHistory);
     const systemPrompt = getSystemPrompt();
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
