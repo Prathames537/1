@@ -26,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       },
       body: JSON.stringify({
         inputs: prompt,
-        parameters: { max_new_tokens: 80, temperature: 0.7 },
+        parameters: { max_new_tokens: 40, temperature: 0.7 },
       }),
     });
     if (!hfRes.ok) {
@@ -34,7 +34,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({ error: 'Hugging Face API error', details: err });
     }
     const data = await hfRes.json();
-    const answer = data?.[0]?.generated_text || 'Sorry, I could not answer that.';
+    let answer = data?.[0]?.generated_text || 'Sorry, I could not answer that.';
+    // Post-process: trim to first 2 sentences
+    const sentences = answer.match(/[^.!?]+[.!?]+/g);
+    if (sentences && sentences.length > 2) {
+      answer = sentences.slice(0, 2).join(' ').trim();
+    }
     return res.status(200).json({ answer });
   } catch (err) {
     return res.status(500).json({ error: 'Server error', details: String(err) });
