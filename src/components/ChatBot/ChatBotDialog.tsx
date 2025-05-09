@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
 // Use Hugging Face API directly from frontend
-const HF_API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-Prover-V2-671B";
+const HF_API_URL = "https://api-inference.huggingface.co/models/meta-llama/Llama-3.1-8B-Instruct";
 const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
