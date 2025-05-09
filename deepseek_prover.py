@@ -14,7 +14,7 @@ def query_deepseek_prover(prompt, api_key=None, max_new_tokens=512, temperature=
 
     Args:
         prompt (str): The user input or document to analyze.
-        api_key (str): Your Hugging Face API key. If None, will use VITE_HF_API_KEY env variable.
+        api_key (str): Your Hugging Face API key. If None, will try various env variables.
         max_new_tokens (int): Maximum number of tokens to generate.
         temperature (float): Sampling temperature.
 
@@ -25,9 +25,14 @@ def query_deepseek_prover(prompt, api_key=None, max_new_tokens=512, temperature=
         Exception: If the API call fails or rate limit is hit.
     """
     if api_key is None:
-        api_key = os.getenv("VITE_HF_API_KEY")
+        # Try multiple possible environment variable names
+        api_key = (os.getenv("VITE_HF_API_KEY") or 
+                  os.getenv("HF_API_KEY") or 
+                  os.getenv("HUGGINGFACE_API_KEY") or
+                  os.getenv("NEXT_PUBLIC_HF_API_KEY"))
+                  
     if not api_key:
-        raise ValueError("Hugging Face API key not provided. Set VITE_HF_API_KEY in your environment.")
+        raise ValueError("Hugging Face API key not provided. Please set one of these environment variables: VITE_HF_API_KEY, HF_API_KEY, or HUGGINGFACE_API_KEY.")
 
     headers = {
         "Authorization": f"Bearer {api_key}",
