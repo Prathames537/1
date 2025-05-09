@@ -29,101 +29,31 @@ const AIAssistant: React.FC<AIAssistantProps> = ({ patient, onClose }) => {
   
   const handleSendMessage = (message: string = input) => {
     if (!message.trim()) return;
-    
-    // Add user message
     setMessages(prev => [...prev, { role: 'user', content: message }]);
     setInput('');
     setShowSuggestions(false);
     setAnalyzingData(true);
-    
-    // Simulate AI thinking/analyzing
+
+    // Only send the latest user message as the prompt (simulate AI response)
     setTimeout(() => {
       setAnalyzingData(false);
-      
-      // Generate AI response based on user message
+      // Here, you would call your AI backend with just the latest message as prompt
+      // For now, keep the simulated logic as before
       let aiResponse = '';
       
       if (message.toLowerCase().includes('risk') && message.toLowerCase().includes('cardiovascular')) {
         aiResponse = `Based on ${patient.name}'s profile, I've identified several cardiovascular risk factors:
-
-1. Family history: Father and paternal grandfather had cardiovascular issues
-2. Hypertension: Latest reading shows BP at 140/90 mmHg (elevated)
-3. Cholesterol: Slightly elevated at 210 mg/dL
-
-RECOMMENDATION:
-- Consider statin therapy if lifestyle modifications don't improve cholesterol
-- Increase monitoring frequency to every 3 months
-- Screen for other metabolic disorders`;
-      } 
-      else if (message.toLowerCase().includes('headaches')) {
-        aiResponse = `Analyzing the patient's headache reports and medical history:
-
-Potential causes for ${patient.name}'s headaches:
-1. Hypertension (primary suspect given BP readings)
-2. Stress-related tension headaches
-3. Medication side effects (Lisinopril can cause headaches in ~10% of patients)
-
-RECOMMENDATION:
-- Assess headache patterns with a 2-week diary
-- Consider 24-hour ambulatory blood pressure monitoring
-- Rule out vision problems with basic ophthalmologic screening`;
-      }
-      else if (message.toLowerCase().includes('family history') || message.toLowerCase().includes('genetic')) {
-        aiResponse = `Genetic analysis of ${patient.name}'s family history indicates:
-
-KEY FINDINGS:
-- Strong pattern of cardiovascular disease (paternal line)
-- Diabetes present in paternal side
-- Breast cancer in maternal line
-
-GENETIC RISK ASSESSMENT:
-- HIGH: Cardiovascular disease (recommend genetic counseling)
-- MODERATE: Type 2 diabetes
-- STANDARD: Breast cancer risk (follow standard screening protocols)
-
-Consider offering genetic testing for cardiovascular risk factors.`;
-      }
-      else if (message.toLowerCase().includes('medication') || message.toLowerCase().includes('alternative')) {
-        aiResponse = `Current medication: Lisinopril 10mg daily
-
-Alternative treatment options for ${patient.name}'s hypertension:
-1. ACE Inhibitors: Current class (Lisinopril) - consider monitoring for headache side effect
-2. ARBs: Losartan 50mg - may have fewer side effects
-3. Calcium Channel Blockers: Amlodipine 5mg - good option if headaches persist
-4. Diuretics: Hydrochlorothiazide 12.5mg - may complement current therapy
-
-RECOMMENDATION:
-Consider adding low-dose hydrochlorothiazide as adjunct therapy if blood pressure remains elevated at next visit.`;
-      }
-      else if (message.toLowerCase().includes('test') || message.toLowerCase().includes('follow-up')) {
-        aiResponse = `Recommended follow-up tests for ${patient.name}'s hypertension:
-
-PRIORITY TESTS:
-1. Comprehensive metabolic panel (assess kidney function)
-2. Lipid panel (monitor cholesterol levels)
-3. 24-hour ambulatory blood pressure monitoring
-4. Echocardiogram (to check for left ventricular hypertrophy)
-
-SCREENING TIMELINE:
-- Metabolic panel: Within 2 weeks
-- Blood pressure monitoring: Next 7 days
-- Echocardiogram: Schedule within 30 days
-- Follow-up visit: In 3-4 weeks`;
+\n1. Family history: Father and paternal grandfather had cardiovascular issues\n2. Hypertension: Latest reading shows BP at 140/90 mmHg (elevated)\n3. Cholesterol: Slightly elevated at 210 mg/dL\n\nRECOMMENDATION:\n- Consider statin therapy if lifestyle modifications don't improve cholesterol\n- Increase monitoring frequency to every 3 months\n- Screen for other metabolic disorders`;
+      } else if (message.toLowerCase().includes('headaches')) {
+        aiResponse = `Analyzing the patient's headache reports and medical history:\n\nPotential causes for ${patient.name}'s headaches:\n1. Hypertension (primary suspect given BP readings)\n2. Stress-related tension headaches\n3. Medication side effects (Lisinopril can cause headaches in ~10% of patients)\n\nRECOMMENDATION:\n- Assess headache patterns with a 2-week diary\n- Consider 24-hour ambulatory blood pressure monitoring\n- Rule out vision problems with basic ophthalmologic screening`;
+      } else if (message.toLowerCase().includes('family history') || message.toLowerCase().includes('genetic')) {
+        aiResponse = `Genetic analysis of ${patient.name}'s family history indicates:\n\nKEY FINDINGS:\n- Strong pattern of cardiovascular disease (paternal line)\n- Diabetes present in paternal side\n- Breast cancer in maternal line\n\nGENETIC RISK ASSESSMENT:\n- HIGH: Cardiovascular disease (recommend genetic counseling)\n- MODERATE: Type 2 diabetes\n- STANDARD: Breast cancer risk (follow standard screening protocols)\n\nConsider offering genetic testing for cardiovascular risk factors.`;
+      } else if (message.toLowerCase().includes('medication') || message.toLowerCase().includes('alternative')) {
+        aiResponse = `Current medication: Lisinopril 10mg daily\n\nAlternative treatment options for ${patient.name}'s hypertension:\n1. ACE Inhibitors: Current class (Lisinopril) - consider monitoring for headache side effect\n2. ARBs: Losartan 50mg - may have fewer side effects\n3. Calcium Channel Blockers: Amlodipine 5mg - good option if headaches persist\n4. Diuretics: Hydrochlorothiazide 12.5mg - may complement current therapy\n\nRECOMMENDATION:\nConsider adding low-dose hydrochlorothiazide as adjunct therapy if blood pressure remains elevated at next visit.`;
+      } else if (message.toLowerCase().includes('test') || message.toLowerCase().includes('follow-up')) {
+        aiResponse = `Recommended follow-up tests for ${patient.name}'s hypertension:\n\nPRIORITY TESTS:\n1. Comprehensive metabolic panel (assess kidney function)\n2. Lipid panel (monitor cholesterol levels)\n3. 24-hour ambulatory blood pressure monitoring\n4. Echocardiogram (to check for left ventricular hypertrophy)\n\nSCREENING TIMELINE:\n- Metabolic panel: Within 2 weeks\n- Blood pressure monitoring: Next 7 days\n- Echocardiogram: Schedule within 30 days\n- Follow-up visit: In 3-4 weeks`;
       } else {
-        aiResponse = `Based on ${patient.name}'s medical profile, I've analyzed the following information:
-
-KEY OBSERVATIONS:
-- Hypertension requiring medication management
-- Elevated cholesterol requiring monitoring
-- Family history significant for cardiovascular disease
-- Recent reports of headaches that may be related to blood pressure
-
-DIAGNOSTIC CONSIDERATIONS:
-- Primary Hypertension (Stage 1)
-- Possible Metabolic Syndrome
-- Family history suggesting genetic cardiovascular risk
-
-Would you like me to analyze specific aspects of the patient's condition in more detail?`;
+        aiResponse = `Based on ${patient.name}'s medical profile, I've analyzed the following information:\n\nKEY OBSERVATIONS:\n- Hypertension requiring medication management\n- Elevated cholesterol requiring monitoring\n- Family history significant for cardiovascular disease\n- Recent reports of headaches that may be related to blood pressure\n\nDIAGNOSTIC CONSIDERATIONS:\n- Primary Hypertension (Stage 1)\n- Possible Metabolic Syndrome\n- Family history suggesting genetic cardiovascular risk\n\nWould you like me to analyze specific aspects of the patient's condition in more detail?`;
       }
       setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
     }, 1500);

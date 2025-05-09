@@ -130,7 +130,7 @@ const AssistantDetailsPage = () => {
             </Link>
           </div>
         </div>
-        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="assistant" />
+        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} />
       </main>
       <Footer />
     </div>

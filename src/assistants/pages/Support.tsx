@@ -325,7 +325,7 @@ const Support = () => {
           </Card>
         </div>
       </div>
-      <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="assistant" />
+      <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} />
     </div>
   );
 };

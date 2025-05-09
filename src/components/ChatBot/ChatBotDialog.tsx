@@ -23,8 +23,6 @@ type Alarm = {
   repeat?: "daily" | "weekly" | "none";
 };
 
-const WELLISYSTEMPROMPT = `You are Welli's Health Assistant. Answer user health questions in 1–2 sentences, directly and briefly. Do not greet, do not apologize, do not ask follow-up questions, do not repeat yourself, and do not give extra advice. If a Welli service is relevant, recommend it at the end. Otherwise, just answer the question.`;
-
 const INITIAL_MESSAGE: Message = {
   id: "welcome",
   role: "assistant",
@@ -35,10 +33,9 @@ const INITIAL_MESSAGE: Message = {
 type ChatBotDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  botType?: 'assistant' | 'insurance' | 'doctor' | 'patient' | 'default';
 };
 
-const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialogProps) => {
+const ChatBotDialog = ({ open, onOpenChange }: ChatBotDialogProps) => {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -96,23 +93,6 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     return () => clearInterval(interval);
   }, [alarms, isSpeakerOn]);
 
-  const getSystemPrompt = () => {
-    if (botType === 'doctor') {
-      return "You are Doctor AI. Provide medical advice, diagnosis, and next steps. Always remind the user to consult a real doctor for emergencies.";
-    }
-    if (botType === 'patient') {
-      return "You are Welli's Health Assistant for patients. For each question, give a short, sweet, and direct answer related to the user's question. If a Welli service is relevant to the question, briefly recommend it at the end. If no service is relevant, just answer the question without recommending anything.";
-    }
-    if (botType === 'assistant') {
-      return "You are Welli's Assistant AI. Help field assistants with visit checklists, navigation, and patient support. Answer in 1–2 sentences.";
-    }
-    if (botType === 'insurance') {
-      return "You are Welli's Insurance AI. Help users understand insurance, calculate premiums, and check eligibility. Only show premium if the user is healthy (BMI < 27, non-smoker, no chronic diseases).";
-    }
-    // General Health Assistant (default)
-    return WELLISYSTEMPROMPT;
-  };
-
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
@@ -127,15 +107,8 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     setUserInput("");
     setIsLoading(true);
 
-    // Limit history to last 3 pairs (user+assistant)
-    const maxPairs = 3;
-    const allMessages = [...messages, userMessage];
-    const pairs: Message[] = [];
-    for (let i = allMessages.length - 1; i >= 0 && pairs.length < maxPairs * 2; i--) {
-      pairs.unshift(allMessages[i]);
-    }
-    const history = pairs.map(m => m.role === 'user' ? `User: ${m.content}` : `Assistant: ${m.content}`).join("\n");
-    const prompt = `System: ${getSystemPrompt()}\n${history}\nAssistant:`;
+    // Only send the latest user message as the prompt
+    const prompt = userInput;
 
     try {
       const res = await fetch("/api/ai-chat", {

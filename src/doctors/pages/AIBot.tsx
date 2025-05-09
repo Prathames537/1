@@ -24,178 +24,30 @@ const AIBot = () => {
   
   const handleSendMessage = (message: string = input) => {
     if (!message.trim()) return;
-    
     setMessages(prev => [...prev, { role: 'user', content: message }]);
     setInput('');
     setShowSuggestions(false);
     setAnalyzingData(true);
-    
+
+    // Only send the latest user message as the prompt (simulate AI response)
     setTimeout(() => {
       setAnalyzingData(false);
-      
+      // Here, you would call your AI backend with just the latest message as prompt
+      // For now, keep the simulated logic as before
       let aiResponse = '';
-      
       if (message.toLowerCase().includes('chest pain')) {
-        aiResponse = `For a patient presenting with chest pain, here's a systematic approach:
-
-1. Immediate Assessment:
-   - Check vital signs (BP, HR, O2 saturation)
-   - Perform ECG
-   - Assess pain characteristics (location, radiation, duration)
-
-2. Differential Diagnosis:
-   - Cardiac: MI, angina, pericarditis
-   - Pulmonary: PE, pneumothorax, pneumonia
-   - GI: GERD, esophageal spasm
-   - Musculoskeletal: Costochondritis, muscle strain
-
-3. Next Steps:
-   - Order cardiac enzymes
-   - Consider chest X-ray
-   - Assess risk factors
-   - Consider stress test if stable
-
-Would you like me to elaborate on any of these aspects?`;
+        aiResponse = `For a patient presenting with chest pain, here's a systematic approach:\n\n1. Immediate Assessment:\n   - Check vital signs (BP, HR, O2 saturation)\n   - Perform ECG\n   - Assess pain characteristics (location, radiation, duration)\n\n2. Differential Diagnosis:\n   - Cardiac: MI, angina, pericarditis\n   - Pulmonary: PE, pneumothorax, pneumonia\n   - GI: GERD, esophageal spasm\n   - Musculoskeletal: Costochondritis, muscle strain\n\n3. Next Steps:\n   - Order cardiac enzymes\n   - Consider chest X-ray\n   - Assess risk factors\n   - Consider stress test if stable\n\nWould you like me to elaborate on any of these aspects?`;
+      } else if (message.toLowerCase().includes('diabetes')) {
+        aiResponse = `Latest treatment options for Type 2 Diabetes:\n\n1. First-line Medications:\n   - Metformin (still gold standard)\n   - SGLT2 inhibitors (empagliflozin, dapagliflozin)\n   - GLP-1 receptor agonists (semaglutide, liraglutide)\n\n2. New Developments:\n   - Tirzepatide (dual GIP/GLP-1 receptor agonist)\n   - Oral semaglutide\n   - Implantable glucose sensors\n\n3. Lifestyle Interventions:\n   - Low-carb diets\n   - Intermittent fasting\n   - High-intensity interval training\n\n4. Monitoring:\n   - Continuous glucose monitoring\n   - AI-powered glucose prediction\n   - Remote patient monitoring\n\nWould you like more details on any specific treatment option?`;
+      } else if (message.toLowerCase().includes('lab report')) {
+        aiResponse = `When analyzing lab reports, I can help identify:\n\n1. Common Abnormalities:\n   - CBC abnormalities\n   - Electrolyte imbalances\n   - Liver function tests\n   - Kidney function markers\n   - Lipid profiles\n   - Thyroid function tests\n\n2. Critical Values:\n   - Potassium > 6.0 mEq/L\n   - Sodium < 120 mEq/L\n   - Glucose > 400 mg/dL\n   - Creatinine > 4.0 mg/dL\n\n3. Patterns:\n   - Anemia types\n   - Infection markers\n   - Metabolic disorders\n   - Endocrine abnormalities\n\nPlease share the specific lab values you'd like me to analyze.`;
+      } else if (message.toLowerCase().includes('hypertension')) {
+        aiResponse = `Alternative medications for hypertension:\n\n1. First-line Options:\n   - ACE inhibitors (lisinopril, enalapril)\n   - ARBs (losartan, valsartan)\n   - Calcium channel blockers (amlodipine, diltiazem)\n   - Thiazide diuretics (hydrochlorothiazide)\n\n2. Second-line Options:\n   - Beta blockers (metoprolol, carvedilol)\n   - Alpha blockers (doxazosin)\n   - Centrally acting agents (clonidine)\n\n3. Combination Therapies:\n   - ACE inhibitor + CCB\n   - ARB + diuretic\n   - CCB + beta blocker\n\n4. Special Considerations:\n   - Renal protection (ACE/ARB)\n   - Heart failure (beta blockers)\n   - Diabetes (ACE/ARB)\n   - Elderly (CCB)\n\nWould you like specific dosing recommendations?`;
+      } else if (message.toLowerCase().includes('risk')) {
+        aiResponse = `Risk factors for cardiovascular disease:\n\n1. Non-modifiable:\n   - Age (>45 men, >55 women)\n   - Family history\n   - Gender\n   - Ethnicity\n\n2. Modifiable:\n   - Hypertension\n   - Hyperlipidemia\n   - Diabetes\n   - Smoking\n   - Obesity\n   - Physical inactivity\n   - Poor diet\n   - Stress\n\n3. Emerging Risk Factors:\n   - Sleep apnea\n   - Chronic kidney disease\n   - Autoimmune diseases\n   - Air pollution exposure\n\n4. Assessment Tools:\n   - Framingham Risk Score\n   - ASCVD Risk Calculator\n   - Coronary calcium scoring\n   - Carotid intima-media thickness\n\nWould you like me to explain any specific risk factor in detail?`;
+      } else {
+        aiResponse = `I can help you with various medical tasks:\n\n1. Diagnosis Support:\n   - Symptom analysis\n   - Differential diagnosis\n   - Risk assessment\n\n2. Treatment Planning:\n   - Medication options\n   - Dosage calculations\n   - Drug interactions\n   - Alternative therapies\n\n3. Research:\n   - Latest guidelines\n   - Clinical trials\n   - Evidence-based medicine\n   - Medical literature\n\n4. Patient Education:\n   - Condition explanations\n   - Treatment options\n   - Lifestyle modifications\n   - Follow-up care\n\nWhat specific medical assistance do you need?`;
       }
-      else if (message.toLowerCase().includes('diabetes')) {
-        aiResponse = `Latest treatment options for Type 2 Diabetes:
-
-1. First-line Medications:
-   - Metformin (still gold standard)
-   - SGLT2 inhibitors (empagliflozin, dapagliflozin)
-   - GLP-1 receptor agonists (semaglutide, liraglutide)
-
-2. New Developments:
-   - Tirzepatide (dual GIP/GLP-1 receptor agonist)
-   - Oral semaglutide
-   - Implantable glucose sensors
-
-3. Lifestyle Interventions:
-   - Low-carb diets
-   - Intermittent fasting
-   - High-intensity interval training
-
-4. Monitoring:
-   - Continuous glucose monitoring
-   - AI-powered glucose prediction
-   - Remote patient monitoring
-
-Would you like more details on any specific treatment option?`;
-      }
-      else if (message.toLowerCase().includes('lab report')) {
-        aiResponse = `When analyzing lab reports, I can help identify:
-
-1. Common Abnormalities:
-   - CBC abnormalities
-   - Electrolyte imbalances
-   - Liver function tests
-   - Kidney function markers
-   - Lipid profiles
-   - Thyroid function tests
-
-2. Critical Values:
-   - Potassium > 6.0 mEq/L
-   - Sodium < 120 mEq/L
-   - Glucose > 400 mg/dL
-   - Creatinine > 4.0 mg/dL
-
-3. Patterns:
-   - Anemia types
-   - Infection markers
-   - Metabolic disorders
-   - Endocrine abnormalities
-
-Please share the specific lab values you'd like me to analyze.`;
-      }
-      else if (message.toLowerCase().includes('hypertension')) {
-        aiResponse = `Alternative medications for hypertension:
-
-1. First-line Options:
-   - ACE inhibitors (lisinopril, enalapril)
-   - ARBs (losartan, valsartan)
-   - Calcium channel blockers (amlodipine, diltiazem)
-   - Thiazide diuretics (hydrochlorothiazide)
-
-2. Second-line Options:
-   - Beta blockers (metoprolol, carvedilol)
-   - Alpha blockers (doxazosin)
-   - Centrally acting agents (clonidine)
-
-3. Combination Therapies:
-   - ACE inhibitor + CCB
-   - ARB + diuretic
-   - CCB + beta blocker
-
-4. Special Considerations:
-   - Renal protection (ACE/ARB)
-   - Heart failure (beta blockers)
-   - Diabetes (ACE/ARB)
-   - Elderly (CCB)
-
-Would you like specific dosing recommendations?`;
-      }
-      else if (message.toLowerCase().includes('cardiovascular')) {
-        aiResponse = `Risk factors for cardiovascular disease:
-
-1. Non-modifiable:
-   - Age (>45 men, >55 women)
-   - Family history
-   - Gender
-   - Ethnicity
-
-2. Modifiable:
-   - Hypertension
-   - Hyperlipidemia
-   - Diabetes
-   - Smoking
-   - Obesity
-   - Physical inactivity
-   - Poor diet
-   - Stress
-
-3. Emerging Risk Factors:
-   - Sleep apnea
-   - Chronic kidney disease
-   - Autoimmune diseases
-   - Air pollution exposure
-
-4. Assessment Tools:
-   - Framingham Risk Score
-   - ASCVD Risk Calculator
-   - Coronary calcium scoring
-   - Carotid intima-media thickness
-
-Would you like me to explain any specific risk factor in detail?`;
-      }
-      else {
-        aiResponse = `I can help you with various medical tasks:
-
-1. Diagnosis Support:
-   - Symptom analysis
-   - Differential diagnosis
-   - Risk assessment
-
-2. Treatment Planning:
-   - Medication options
-   - Dosage calculations
-   - Drug interactions
-   - Alternative therapies
-
-3. Research:
-   - Latest guidelines
-   - Clinical trials
-   - Evidence-based medicine
-   - Medical literature
-
-4. Patient Education:
-   - Condition explanations
-   - Treatment options
-   - Lifestyle modifications
-   - Follow-up care
-
-What specific medical assistance do you need?`;
-      }
-      
       setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
     }, 1500);
   };

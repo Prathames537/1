@@ -201,7 +201,7 @@ const CheckInsurance = () => {
             </div>
           </div>
         </div>
-        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} botType="insurance" />
+        <ChatBotDialog open={aiOpen} onOpenChange={setAiOpen} />
       </main>
       <Footer />
     </div>

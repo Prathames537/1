@@ -11,8 +11,6 @@ interface ChatMessage {
   createdAt?: any;
 }
 
-const WELLISYSTEMPROMPT = `You are Welli's Health Assistant. Answer user health questions in 1–2 sentences, directly and briefly. Do not greet, do not apologize, do not ask follow-up questions, do not repeat yourself, and do not give extra advice. If a Welli service is relevant, recommend it at the end. Otherwise, just answer the question.`;
-
 export default function Chatbot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -35,7 +33,7 @@ export default function Chatbot() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
-  // Load chat history for logged-in user
+  // Load chat history
   // Removed unused fetchHistory function
 //   const auth = getAuth();
 //   const user = auth.currentUser;
@@ -63,23 +61,12 @@ export default function Chatbot() {
     setLoading(true); setError(null);
 
     const userMsg: ChatMessage = { role: "user", content: input };
-    // Build the new messages array locally for both UI and prompt history
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
 
-    // Limit history to last 3 pairs (user+assistant)
-    const maxPairs = 3;
-    const pairs: ChatMessage[] = [];
-    for (let i = newMessages.length - 1; i >= 0 && pairs.length < maxPairs * 2; i--) {
-      pairs.unshift(newMessages[i]);
-    }
-    const historyLines = pairs.map(m => m.role === 'user' ? `User: ${m.content}` : `Assistant: ${m.content}`);
-    const prompt = [
-      `System: ${WELLISYSTEMPROMPT}`,
-      ...historyLines,
-      'Assistant:'
-    ].join("\n");
+    // Only send the latest user message as the prompt
+    const prompt = input;
 
     try {
       const res = await fetch(HF_API_URL, {

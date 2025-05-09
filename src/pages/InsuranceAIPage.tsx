@@ -11,7 +11,7 @@ const InsuranceAIPage = () => {
       <main className="flex-grow pt-32 pb-16">
         <div className="container mx-auto px-6">
           <h1 className="text-3xl font-bold mb-6 text-welli-text-dark">Insurance AI Bot</h1>
-          <ChatBotDialog open={open} onOpenChange={setOpen} botType="insurance" />
+          <ChatBotDialog open={open} onOpenChange={setOpen} />
         </div>
       </main>
       <Footer />
