@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const LOCAL_AI_URL = "http://localhost:8000/chat";
+const HF_API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-Prover-V2-671B";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -76,9 +77,12 @@ export default function Chatbot() {
     ].join("\n") + "\nassistant:";
 
     try {
-      const res = await fetch(LOCAL_AI_URL, {
+      const res = await fetch(HF_API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Authorization": `Bearer ${HF_API_KEY}`,
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           inputs: prompt,
           parameters: {
@@ -96,7 +100,7 @@ export default function Chatbot() {
         reply = "Sorry, I couldn't get a response from the AI.";
       }
       const aiMsg: ChatMessage = { role: "assistant", content: reply };
-      setMessages(msgs => [...msgs, aiMsg]);
+      setMessages((msgs: ChatMessage[]) => [...msgs, aiMsg]);
       await saveHistory();
     } catch (err: any) {
       setError("Failed to get response from AI. Please try again.");

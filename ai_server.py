@@ -5,6 +5,7 @@ from typing import List, Dict, Optional, Any
 import uvicorn
 import datetime
 from deepseek_prover import query_deepseek_prover
+import os
 
 app = FastAPI()
 
@@ -173,7 +174,18 @@ def chat(req: ChatRequest):
         response = query_deepseek_prover(prompt, **req.parameters)
         return [ChatResponse(generated_text=response)]
     except Exception as e:
-        return [ChatResponse(generated_text=f"AI Error: {str(e)}")]
+        # List which env vars were checked for the API key
+        envs_checked = [
+            f"HF_API_KEY={os.getenv('HF_API_KEY')}",
+            f"HUGGINGFACE_API_KEY={os.getenv('HUGGINGFACE_API_KEY')}",
+            f"VITE_HF_API_KEY={os.getenv('VITE_HF_API_KEY')}",
+            f"NEXT_PUBLIC_HF_API_KEY={os.getenv('NEXT_PUBLIC_HF_API_KEY')}"
+        ]
+        debug_info = " | ".join(envs_checked)
+        return [ChatResponse(generated_text=f"AI Error: {str(e)}\n[DEBUG ENV] {debug_info}")]
+
+# Print all environment variables at startup for debugging
+print("[DEBUG] ENV VARS AT STARTUP:", dict(os.environ))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000) 

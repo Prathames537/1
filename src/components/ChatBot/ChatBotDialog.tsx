@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import ChatMessage from "./ChatMessage";
 
-// Use local FastAPI backend for all bot types
-const LOCAL_AI_URL = "http://localhost:8000";
+// Use Hugging Face API directly from frontend
+const HF_API_URL = "https://api-inference.huggingface.co/models/deepseek-ai/DeepSeek-Prover-V2-671B";
+const HF_API_KEY = import.meta.env.VITE_HF_API_KEY;
 
 type Message = {
   id: string;
@@ -114,12 +115,6 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     return "You are Welli's Health Assistant. Answer in 1–2 sentences and recommend one Welli service.";
   };
 
-  const getApiUrl = () => {
-    if (botType === "insurance") return `${LOCAL_AI_URL}/insurance-ai`;
-    if (botType === "assistant") return `${LOCAL_AI_URL}/assistant-ai`;
-    return `${LOCAL_AI_URL}/chat`;
-  };
-
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
 
@@ -141,22 +136,21 @@ const ChatBotDialog = ({ open, onOpenChange, botType = 'default' }: ChatBotDialo
     const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
     const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
 
-    // Use backend endpoint
-    const url = `${LOCAL_AI_URL}/chat`;
-    const fetchOptions: any = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ inputs: prompt, parameters: {} }),
-    };
-
     try {
-      const res = await fetch(url, fetchOptions);
+      const res = await fetch(HF_API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${HF_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          inputs: prompt,
+          parameters: { max_new_tokens: 512, temperature: 0.7 }
+        })
+      });
       let reply = '';
       if (res.ok) {
         const data = await res.json();
-        // Our backend returns a list of { generated_text }
         reply = data?.[0]?.generated_text?.trim() || 'Sorry, I could not answer that.';
       } else {
         reply = 'Sorry, I could not get a response from the AI.';

@@ -32,7 +32,14 @@ def query_deepseek_prover(prompt, api_key=None, max_new_tokens=512, temperature=
                   os.getenv("NEXT_PUBLIC_HF_API_KEY"))
                   
     if not api_key:
-        raise ValueError("Hugging Face API key not provided. Please set one of these environment variables: VITE_HF_API_KEY, HF_API_KEY, or HUGGINGFACE_API_KEY.")
+        envs_checked = [
+            f"HF_API_KEY={os.getenv('HF_API_KEY')}",
+            f"HUGGINGFACE_API_KEY={os.getenv('HUGGINGFACE_API_KEY')}",
+            f"VITE_HF_API_KEY={os.getenv('VITE_HF_API_KEY')}",
+            f"NEXT_PUBLIC_HF_API_KEY={os.getenv('NEXT_PUBLIC_HF_API_KEY')}"
+        ]
+        debug_info = " | ".join(envs_checked)
+        raise ValueError(f"Hugging Face API key not provided. Please set one of these environment variables: VITE_HF_API_KEY, HF_API_KEY, or HUGGINGFACE_API_KEY. [DEBUG ENV] {debug_info}")
 
     headers = {
         "Authorization": f"Bearer {api_key}",

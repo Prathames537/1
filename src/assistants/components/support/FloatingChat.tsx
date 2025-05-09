@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { X, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import AIChatbot from './AIChatbot';
 import { Badge } from '@/components/ui/badge';
 
 const FloatingChat = () => {
@@ -65,7 +64,7 @@ const FloatingChat = () => {
           </div>
           
           <div className={`transition-all duration-300 ${isMinimized ? 'hidden' : 'block'}`}>
-            <AIChatbot />
+            {/* AIChatbot component is removed as per the instructions */}
           </div>
         </Card>
       )}
