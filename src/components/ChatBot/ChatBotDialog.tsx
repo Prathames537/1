@@ -142,8 +142,10 @@ Assistant: Diabetes is a condition where your body has trouble regulating blood 
     const maxHistory = 3;
     const historyMessages = [...messages, userMessage].slice(-maxHistory);
     const systemPrompt = getSystemPrompt();
-    const history = historyMessages.map(m => `${m.role}: ${m.content}`).join("\n");
-    const prompt = [`system: ${systemPrompt}`, history].join("\n") + "\nassistant:";
+    const history = historyMessages.map(m => `User: ${m.role === 'user' ? m.content : ''}${m.role === 'assistant' ? `\nAssistant: ${m.content}` : ''}`).join("\n");
+    // Always end with the latest user message and 'Assistant:'
+    const lastUser = historyMessages[historyMessages.length - 1];
+    const prompt = `${systemPrompt}\n\n${history}\nAssistant:`;
 
     try {
       const res = await fetch("/api/ai-chat", {
